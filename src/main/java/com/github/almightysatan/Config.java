@@ -34,13 +34,13 @@ public interface Config {
     /**
      *
      */
-    void writeMissingEntries() throws IOException;
+    void populate() throws IOException;
 
     /**
      * Cleans up dead entries from the storage location.
      * An entry is dead if no {@link ConfigEntry} references its path.
      */
-    void cleanUp() throws IOException;
+    void strip() throws IOException;
 
     /**
      * Closes the corresponding data storage location.
