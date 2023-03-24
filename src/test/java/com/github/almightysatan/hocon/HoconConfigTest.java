@@ -23,13 +23,15 @@ public class HoconConfigTest {
         ConfigEntry<Integer> intConfigEntry = new GenericConfigEntry<>(config, "hocon.exampleInt", null, 0);
         ConfigEntry<Boolean> boolConfigEntry = new GenericConfigEntry<>(config, "hocon.exampleBool", null, false);
         ConfigEntry<Double> floatConfigEntry = new GenericConfigEntry<>(config, "hocon.exampleDouble", null, 0.0D);
+        ConfigEntry<String> nonExistingStringConfigEntry = new GenericConfigEntry<>(config, "hocon.doesnotexist", null, "default");
 
         config.load();
 
-        assertEquals(stringConfigEntry.getValue(), "String");
-        assertEquals(intConfigEntry.getValue(), 42);
-        assertEquals(boolConfigEntry.getValue(), true);
-        assertEquals(floatConfigEntry.getValue(), 6.9D);
+        assertEquals("String", stringConfigEntry.getValue());
+        assertEquals(42, intConfigEntry.getValue());
+        assertEquals(true, boolConfigEntry.getValue());
+        assertEquals(6.9D, floatConfigEntry.getValue());
+        assertEquals("default", nonExistingStringConfigEntry.getValue()); // Doesn't exist in the file therefore the default value should be used
 
         config.close();
     }
@@ -41,7 +43,7 @@ public class HoconConfigTest {
 
         config.load();
 
-        assertEquals(stringConfigEntry.getValue(), Arrays.asList("ListContent1", "ListContent2"));
+        assertEquals(Arrays.asList("ListContent1", "ListContent2"), stringConfigEntry.getValue());
 
         config.close();
     }

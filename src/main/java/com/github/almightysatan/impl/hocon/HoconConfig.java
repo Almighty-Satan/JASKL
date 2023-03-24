@@ -3,13 +3,9 @@ package com.github.almightysatan.impl.hocon;
 import com.github.almightysatan.ConfigEntry;
 import com.github.almightysatan.impl.GenericConfigEntry;
 import com.github.almightysatan.impl.ConfigImpl;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigParseOptions;
-import com.typesafe.config.ConfigSyntax;
+import com.typesafe.config.*;
 
 import java.io.File;
-import java.io.IOException;
 
 public class HoconConfig extends ConfigImpl {
 
@@ -25,7 +21,7 @@ public class HoconConfig extends ConfigImpl {
     }
 
     @Override
-    public void load() throws IOException, IllegalStateException {
+    public void load() throws IllegalStateException {
         if (this.config != null)
             throw new IllegalStateException();
         if (!file.exists()) {
@@ -42,9 +38,10 @@ public class HoconConfig extends ConfigImpl {
             throw new IllegalStateException();
         for (ConfigEntry<?> uncastedConfigEntry : this.getValues()) {
             GenericConfigEntry<?> configEntry = (GenericConfigEntry<?>) uncastedConfigEntry;
-            Object value = this.config.getValue(configEntry.getPath()).unwrapped();
-            if (value != null) // TODO warn
+            try {
+                Object value = this.config.getValue(configEntry.getPath()).unwrapped();
                 configEntry.putValue(value);
+            } catch (ConfigException.Missing ignored) {}
         }
     }
 
@@ -54,7 +51,7 @@ public class HoconConfig extends ConfigImpl {
     }
 
     @Override
-    public void writeMissingEntries() throws IOException {
+    public void writeMissingEntries() {
 
     }
 
