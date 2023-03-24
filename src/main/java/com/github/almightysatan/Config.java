@@ -3,6 +3,7 @@ package com.github.almightysatan;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +15,7 @@ public interface Config {
      *
      * @throws IllegalStateException if called multiple times.
      */
-    void load() throws IllegalStateException;
+    void load() throws IOException, IllegalStateException;
 
     /**
      * Reloads the config.
@@ -23,23 +24,28 @@ public interface Config {
      *
      * @throws IllegalStateException if {@link Config#load()} hasn't been called.
      */
-    void reload() throws IllegalStateException;
-
-    /**
-     * Closes the corresponding data storage location.
-     */
-    void close();
+    void reload() throws IOException, IllegalStateException;
 
     /**
      * Saves the configuration to it's corresponding data storage location.
      */
-    void save();
+    void write() throws IOException;
+
+    /**
+     *
+     */
+    void writeMissingEntries() throws IOException;
 
     /**
      * Cleans up dead entries from the storage location.
      * An entry is dead if no {@link ConfigEntry} references its path.
      */
-    void cleanUp();
+    void cleanUp() throws IOException;
+
+    /**
+     * Closes the corresponding data storage location.
+     */
+    void close();
 
     /**
      * Returns the description of this config.

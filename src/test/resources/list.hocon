@@ -1,8 +1,4 @@
 hocon {
-  exampleString = "String"
-  exampleInt = 42
-  exampleBool = true
-  exampleNumber = 6.9
   subConf {
     exampleList = [
       "ListContent1",

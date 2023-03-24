@@ -11,6 +11,8 @@ repositories {
 }
 
 dependencies {
+    implementation("com.typesafe:config:1.4.2")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     compileOnly("org.jetbrains:annotations:24.0.1")
