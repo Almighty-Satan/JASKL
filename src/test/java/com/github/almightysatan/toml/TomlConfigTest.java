@@ -3,6 +3,10 @@ package com.github.almightysatan.toml;
 import com.github.almightysatan.Config;
 import com.github.almightysatan.ConfigEntry;
 import com.github.almightysatan.GenericConfigEntry;
+import com.github.almightysatan.impl.entry.DoubleConfigEntry;
+import com.github.almightysatan.impl.entry.IntegerConfigEntry;
+import com.github.almightysatan.impl.entry.LongConfigEntry;
+import com.github.almightysatan.impl.entry.StringConfigEntry;
 import com.github.almightysatan.impl.toml.TomlConfig;
 import org.junit.jupiter.api.Test;
 
@@ -16,10 +20,10 @@ public class TomlConfigTest {
     @Test
     public void testLoadSimple() throws IOException {
         Config config = new TomlConfig(new File("src/test/resources/toml/basic.toml"), null);
-        ConfigEntry<String> stringConfigEntry = new GenericConfigEntry<>(config, "exampleString", null, "default");
-        ConfigEntry<Double> doubleConfigEntry = new GenericConfigEntry<>(config, "exampleDouble", null, 0.0D);
-        ConfigEntry<Integer> integerConfigEntry = new GenericConfigEntry<>(config, "exampleInteger", null, 0);
-        ConfigEntry<Long> longConfigEntry = new GenericConfigEntry<>(config, "exampleLong", null, 0L);
+        ConfigEntry<String> stringConfigEntry = new StringConfigEntry(config, "exampleString", null, "default");
+        ConfigEntry<Double> doubleConfigEntry = new DoubleConfigEntry(config, "exampleDouble", null, 0.0D);
+        ConfigEntry<Integer> integerConfigEntry = new IntegerConfigEntry(config, "exampleInteger", null, 0);
+        ConfigEntry<Long> longConfigEntry = new LongConfigEntry(config, "exampleLong", null, 0L);
 
         config.load();
 
@@ -34,8 +38,8 @@ public class TomlConfigTest {
     @Test
     public void testLoadComplex() throws IOException {
         Config config = new TomlConfig(new File("src/test/resources/toml/complex.toml"), null);
-        ConfigEntry<String> subEntry = new GenericConfigEntry<>(config, "subCategory.subEntry", null, "default");
-        ConfigEntry<String> subSubEntry = new GenericConfigEntry<>(config, "subCategory.subSubCategory.subSubEntry", null, "default");
+        ConfigEntry<String> subEntry = new StringConfigEntry(config, "subCategory.subEntry", null, "default");
+        ConfigEntry<String> subSubEntry = new StringConfigEntry(config, "subCategory.subSubCategory.subSubEntry", null, "default");
 
         config.load();
 
@@ -49,7 +53,7 @@ public class TomlConfigTest {
     public void testLoadNonExisting() throws IOException {
         Config config = new TomlConfig(new File("src/test/resources/toml/simple.toml"), null);
 
-        ConfigEntry<String> nonExistingStringConfigEntry = new GenericConfigEntry<>(config, "doesnotexist", null, "default");
+        ConfigEntry<String> nonExistingStringConfigEntry = new StringConfigEntry(config, "doesnotexist", null, "default");
 
         config.load();
 
@@ -74,31 +78,27 @@ public class TomlConfigTest {
      */
 
     @Test
-    public void testWriteFile() {
+    public void testWriteFile() throws IOException {
         File file = new File("build/temp/toml/write.toml");
         file.delete();
 
-        Config config = new TomlConfig(file, null);
-        ConfigEntry<String> stringConfigEntry = new GenericConfigEntry<>(config, "exampleString", null, "default");
+        Config config0 = new TomlConfig(file, null);
+        ConfigEntry<String> stringConfigEntry0 = new GenericConfigEntry<>(config0, "exampleString", null, "default");
 
-        stringConfigEntry.setValue("Example");
+        config0.load();
 
-        try {
-            config.write();
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Failed to write configuration.");
-        }
+        stringConfigEntry0.setValue("Example");
+
+        config0.write();
+        config0.close();
 
         assertTrue(file.exists());
 
-        try {
-            config.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Failed to load configuration.");
-        }
+        Config config1 = new TomlConfig(file, null);
+        ConfigEntry<String> stringConfigEntry1 = new GenericConfigEntry<>(config1, "exampleString", null, "default");
 
-        assertEquals("Example", stringConfigEntry.getValue());
+        config1.load();
+
+        assertEquals("Example", stringConfigEntry1.getValue());
     }
 }
