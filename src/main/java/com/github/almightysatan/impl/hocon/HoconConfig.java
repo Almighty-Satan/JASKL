@@ -1,12 +1,17 @@
 package com.github.almightysatan.impl.hocon;
 
 import com.github.almightysatan.ConfigEntry;
-import com.github.almightysatan.impl.GenericConfigEntry;
 import com.github.almightysatan.impl.ConfigImpl;
+import com.github.almightysatan.impl.WritableConfigEntry;
 import com.typesafe.config.*;
 
 import java.io.File;
 
+/**
+ * A read-only hocon config implementation.
+ * Since the underlying configuration api doesn't support writing without weird hacks,
+ * writing is currently unsupported.
+ */
 public class HoconConfig extends ConfigImpl {
 
     private static final ConfigParseOptions PARSE_OPTIONS = ConfigParseOptions.defaults().setSyntax(ConfigSyntax.CONF)
@@ -37,7 +42,7 @@ public class HoconConfig extends ConfigImpl {
         if (this.config == null)
             throw new IllegalStateException();
         for (ConfigEntry<?> uncastedConfigEntry : this.getValues()) {
-            GenericConfigEntry<?> configEntry = (GenericConfigEntry<?>) uncastedConfigEntry;
+            WritableConfigEntry<?> configEntry = (WritableConfigEntry<?>) uncastedConfigEntry;
             try {
                 Object value = this.config.getValue(configEntry.getPath()).unwrapped();
                 configEntry.putValue(value);
@@ -47,17 +52,17 @@ public class HoconConfig extends ConfigImpl {
 
     @Override
     public void write() {
-
+        throw new UnsupportedOperationException("Hocon configs do not support writing yet.");
     }
 
     @Override
-    public void writeMissingEntries() {
-
+    public void populate() {
+        throw new UnsupportedOperationException("Hocon configs do not support writing yet.");
     }
 
     @Override
-    public void cleanUp() {
-
+    public void strip() {
+        throw new UnsupportedOperationException("Hocon configs do not support writing yet.");
     }
 
     @Override

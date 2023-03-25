@@ -18,7 +18,7 @@ public class HoconConfigTest {
 
     @Test
     public void testFile() throws IOException {
-        Config config = new HoconConfig(new File("src/test/resources/basic.hocon"), null);
+        Config config = new HoconConfig(new File("src/test/resources/hocon/basic.hocon"), null);
         ConfigEntry<String> stringConfigEntry = new GenericConfigEntry<>(config, "hocon.exampleString", null, "default");
         ConfigEntry<Integer> intConfigEntry = new GenericConfigEntry<>(config, "hocon.exampleInt", null, 0);
         ConfigEntry<Boolean> boolConfigEntry = new GenericConfigEntry<>(config, "hocon.exampleBool", null, false);
@@ -36,7 +36,7 @@ public class HoconConfigTest {
 
     @Test
     public void testNonExisting() throws IOException {
-        Config config = new HoconConfig(new File("src/test/resources/basic.hocon"), null);
+        Config config = new HoconConfig(new File("src/test/resources/hocon/basic.hocon"), null);
 
         ConfigEntry<String> nonExistingStringConfigEntry = new GenericConfigEntry<>(config, "hocon.doesnotexist", null, "default");
 
@@ -49,7 +49,7 @@ public class HoconConfigTest {
 
     @Test
     public void testList() throws IOException {
-        Config config = new HoconConfig(new File("src/test/resources/list.hocon"), null);
+        Config config = new HoconConfig(new File("src/test/resources/hocon/list.hocon"), null);
         ConfigEntry<List<String>> stringConfigEntry = new GenericConfigEntry<>(config, "hocon.subConf.exampleList", null, Collections.emptyList());
 
         config.load();
