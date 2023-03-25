@@ -1,5 +1,4 @@
 exampleString = "String"
 exampleDouble = 4.2
-
-[subCategory]
 exampleLong = 123
+exampleInteger = 123

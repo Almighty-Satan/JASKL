@@ -35,7 +35,7 @@ public class HoconConfigTest {
     }
 
     @Test
-    public void testNonExisting() throws IOException {
+    public void testLoadNonExisting() throws IOException {
         Config config = new HoconConfig(new File("src/test/resources/hocon/basic.hocon"), null);
 
         ConfigEntry<String> nonExistingStringConfigEntry = new GenericConfigEntry<>(config, "hocon.doesnotexist", null, "default");
