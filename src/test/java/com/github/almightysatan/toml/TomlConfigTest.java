@@ -7,7 +7,7 @@ import com.github.almightysatan.impl.entry.DoubleConfigEntry;
 import com.github.almightysatan.impl.entry.IntegerConfigEntry;
 import com.github.almightysatan.impl.entry.LongConfigEntry;
 import com.github.almightysatan.impl.entry.StringConfigEntry;
-import com.github.almightysatan.impl.toml.TomlConfig;
+import com.github.almightysatan.impl.jackson.toml.TomlConfig;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -83,11 +83,13 @@ public class TomlConfigTest {
         file.delete();
 
         Config config0 = new TomlConfig(file, null);
-        ConfigEntry<String> stringConfigEntry0 = new GenericConfigEntry<>(config0, "exampleString", null, "default");
+        ConfigEntry<String> stringConfigEntry0 = new StringConfigEntry(config0, "abc.exampleString", null, "default");
+        ConfigEntry<Integer> intConfigEntry0 = new IntegerConfigEntry(config0, "abc.exampleInt", null, 69);
 
         config0.load();
 
         stringConfigEntry0.setValue("Example");
+        intConfigEntry0.setValue(420);
 
         config0.write();
         config0.close();
@@ -95,10 +97,12 @@ public class TomlConfigTest {
         assertTrue(file.exists());
 
         Config config1 = new TomlConfig(file, null);
-        ConfigEntry<String> stringConfigEntry1 = new GenericConfigEntry<>(config1, "exampleString", null, "default");
+        ConfigEntry<String> stringConfigEntry1 = new GenericConfigEntry<>(config1, "abc.exampleString", null, "default");
+        ConfigEntry<Integer> intConfigEntry1 = new IntegerConfigEntry(config1, "abc.exampleInt", null, 69);
 
         config1.load();
 
         assertEquals("Example", stringConfigEntry1.getValue());
+        assertEquals(420, intConfigEntry1.getValue());
     }
 }

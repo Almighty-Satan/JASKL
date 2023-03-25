@@ -5,6 +5,7 @@ import com.github.almightysatan.ConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -35,5 +36,10 @@ public abstract class ConfigImpl implements Config {
     @Override
     public Map<String, ConfigEntry<?>> getEntries() {
         return entries;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected Collection<WritableConfigEntry<?>> getCastedValues() {
+        return (Collection<WritableConfigEntry<?>>) (Collection) getEntries().values();
     }
 }

@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     implementation("com.typesafe:config:1.4.2")
-    implementation("com.moandjiezana.toml:toml4j:0.7.2")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:2.14.2")
     implementation("com.google.code.gson:gson:2.10.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
