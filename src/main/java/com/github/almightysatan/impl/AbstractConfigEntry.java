@@ -15,6 +15,8 @@ public abstract class AbstractConfigEntry<T> implements ConfigEntry<T> {
 
     public AbstractConfigEntry(@NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         this.path = Objects.requireNonNull(path);
+        if (path.isEmpty())
+            throw new IllegalArgumentException("path cannot be empty!");
         this.description = description;
         this.defaultValue = Objects.requireNonNull(defaultValue);
     }
