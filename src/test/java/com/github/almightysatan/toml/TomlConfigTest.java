@@ -2,11 +2,11 @@ package com.github.almightysatan.toml;
 
 import com.github.almightysatan.Config;
 import com.github.almightysatan.ConfigEntry;
-import com.github.almightysatan.GenericConfigEntry;
-import com.github.almightysatan.impl.entry.DoubleConfigEntry;
-import com.github.almightysatan.impl.entry.IntegerConfigEntry;
-import com.github.almightysatan.impl.entry.LongConfigEntry;
-import com.github.almightysatan.impl.entry.StringConfigEntry;
+import com.github.almightysatan.impl.WritableConfigEntryImpl;
+import com.github.almightysatan.entries.DoubleConfigEntry;
+import com.github.almightysatan.entries.IntegerConfigEntry;
+import com.github.almightysatan.entries.LongConfigEntry;
+import com.github.almightysatan.entries.StringConfigEntry;
 import com.github.almightysatan.impl.jackson.toml.TomlConfig;
 import org.junit.jupiter.api.Test;
 
@@ -97,7 +97,7 @@ public class TomlConfigTest {
         assertTrue(file.exists());
 
         Config config1 = new TomlConfig(file, null);
-        ConfigEntry<String> stringConfigEntry1 = new GenericConfigEntry<>(config1, "abc.exampleString", null, "default");
+        ConfigEntry<String> stringConfigEntry1 = new WritableConfigEntryImpl<>(config1, "abc.exampleString", null, "default");
         ConfigEntry<Integer> intConfigEntry1 = new IntegerConfigEntry(config1, "abc.exampleInt", null, 69);
 
         config1.load();

@@ -1,6 +1,9 @@
-package com.github.almightysatan;
+package com.github.almightysatan.entries;
 
-import com.github.almightysatan.impl.AbstractConfigEntry;
+import com.github.almightysatan.Config;
+import com.github.almightysatan.ConfigProperty;
+import com.github.almightysatan.impl.ConfigEntryImpl;
+import com.github.almightysatan.impl.WritableConfigEntryImpl;
 import com.github.almightysatan.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class CustomConfigEntry<T> extends AbstractConfigEntry<T> {
+public class CustomConfigEntry<T> extends ConfigEntryImpl<T> {
 
     private final Class<T> type;
     private final Property<?>[] properties;
@@ -28,7 +31,7 @@ public class CustomConfigEntry<T> extends AbstractConfigEntry<T> {
                 if (annotation != null) {
                     field.setAccessible(true);
                     String propertyPath = path + "." + (annotation.value().isEmpty() ? field.getName() : annotation.value());
-                    properties.add(new Property<>(field, new GenericConfigEntry<>(config, propertyPath, null, field.get(defaultValue))));
+                    properties.add(new Property<>(field, new WritableConfigEntryImpl<>(config, propertyPath, null, field.get(defaultValue))));
                 }
             }
         } catch (IllegalAccessException e) {

@@ -1,14 +1,14 @@
-package com.github.almightysatan.impl.entry;
+package com.github.almightysatan.entries;
 
 import com.github.almightysatan.Config;
-import com.github.almightysatan.GenericConfigEntry;
+import com.github.almightysatan.impl.WritableConfigEntryImpl;
 import com.github.almightysatan.InvalidTypeException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 
-public class FloatConfigEntry extends GenericConfigEntry<Float> {
+public class FloatConfigEntry extends WritableConfigEntryImpl<Float> {
 
     public FloatConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Float defaultValue) {
         super(config, path, description, defaultValue);

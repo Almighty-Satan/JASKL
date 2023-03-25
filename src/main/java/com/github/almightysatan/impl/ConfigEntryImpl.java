@@ -7,13 +7,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public abstract class AbstractConfigEntry<T> implements ConfigEntry<T> {
+public abstract class ConfigEntryImpl<T> implements ConfigEntry<T> {
 
     private final String path;
     private final String description;
     private final T defaultValue;
 
-    public AbstractConfigEntry(@NotNull String path, @Nullable String description, @NotNull T defaultValue) {
+    public ConfigEntryImpl(@NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         this.path = Objects.requireNonNull(path);
         if (path.isEmpty())
             throw new IllegalArgumentException("path cannot be empty!");

@@ -1,19 +1,17 @@
-package com.github.almightysatan;
+package com.github.almightysatan.impl;
 
-import com.github.almightysatan.impl.AbstractConfigEntry;
-import com.github.almightysatan.impl.ConfigImpl;
-import com.github.almightysatan.impl.WritableConfigEntry;
+import com.github.almightysatan.Config;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class GenericConfigEntry<T> extends AbstractConfigEntry<T> implements WritableConfigEntry<T> {
+public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements WritableConfigEntry<T> {
 
     private T value;
     private boolean modified;
 
-    public GenericConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
+    public WritableConfigEntryImpl(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         super(path, description, defaultValue);
         Objects.requireNonNull(config);
         this.value = defaultValue;

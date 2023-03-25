@@ -1,15 +1,14 @@
-package com.github.almightysatan.impl.entry;
+package com.github.almightysatan.entries;
 
 import com.github.almightysatan.Config;
-import com.github.almightysatan.GenericConfigEntry;
+import com.github.almightysatan.impl.WritableConfigEntryImpl;
 import com.github.almightysatan.InvalidTypeException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
-public class DoubleConfigEntry extends GenericConfigEntry<Double> {
+public class DoubleConfigEntry extends WritableConfigEntryImpl<Double> {
 
     public DoubleConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Double defaultValue) {
         super(config, path, description, defaultValue);
