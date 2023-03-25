@@ -24,9 +24,9 @@ public class TomlConfigTest {
         config.load();
 
         assertEquals("String", stringConfigEntry.getValue());
-        assertEquals(123L, longConfigEntry.getValue());
-        assertEquals(123, integerConfigEntry.getValue());
         assertEquals(4.2, doubleConfigEntry.getValue());
+        assertEquals(123, integerConfigEntry.getValue());
+        assertEquals(123L, longConfigEntry.getValue());
 
         config.close();
     }
