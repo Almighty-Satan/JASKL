@@ -57,9 +57,7 @@ public class TomlConfig extends ConfigImpl {
                 Object value = GET_VALUE_METHOD.invoke(this.config, configEntry.getPath());
                 if (value != null)
                     configEntry.putValue(value);
-            } catch (InvocationTargetException | IllegalAccessException ignored) {
-                System.out.println(ignored.getMessage());
-            }
+            } catch (InvocationTargetException | IllegalAccessException ignored) {}
         }
 
     }
