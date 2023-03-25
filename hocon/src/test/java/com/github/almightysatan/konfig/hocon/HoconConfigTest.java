@@ -2,8 +2,8 @@ package com.github.almightysatan.konfig.hocon;
 
 import com.github.almightysatan.konfig.Config;
 import com.github.almightysatan.konfig.ConfigEntry;
+import com.github.almightysatan.konfig.entries.ListConfigEntry;
 import com.github.almightysatan.konfig.impl.WritableConfigEntryImpl;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HoconConfigTest {
 
@@ -48,10 +48,9 @@ public class HoconConfigTest {
     }
 
     @Test
-    @Disabled
     public void testList() throws IOException {
         Config config = new HoconConfig(new File("src/test/resources/list.hocon"), null);
-        ConfigEntry<List<String>> stringConfigEntry = new WritableConfigEntryImpl<>(config, "hocon.subConf.exampleList", null, Collections.emptyList());
+        ConfigEntry<List<String>> stringConfigEntry = new ListConfigEntry<>(config, "hocon.subConf.exampleList", null, Collections.emptyList());
 
         config.load();
 
