@@ -19,6 +19,9 @@ public class LongConfigEntry extends GenericConfigEntry<Long> {
         if (type instanceof Long)
             return (Long) type;
 
+        if (type instanceof Integer)
+            return ((Integer) type).longValue();
+
         if (type instanceof BigInteger) {
             BigInteger bigInt = (BigInteger) type;
             if (bigInt.compareTo(BigInteger.valueOf(Long.MIN_VALUE)) > 0 && bigInt.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) < 0)
