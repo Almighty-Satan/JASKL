@@ -36,9 +36,9 @@ public abstract class AbstractConfigEntry<T> implements ConfigEntry<T> {
         return this.defaultValue;
     }
 
-    protected @NotNull T checkType(@NotNull T type) {
+    protected @NotNull T checkType(@NotNull Object type) {
         if (this.getDefaultValue().getClass() != type.getClass())
             throw new InvalidTypeException(this.getPath(), this.getDefaultValue().getClass(), type.getClass());
-        return type;
+        return (T) type;
     }
 }
