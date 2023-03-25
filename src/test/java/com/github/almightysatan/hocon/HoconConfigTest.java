@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.github.almightysatan.Config;
 import com.github.almightysatan.ConfigEntry;
-import com.github.almightysatan.impl.GenericConfigEntry;
+import com.github.almightysatan.GenericConfigEntry;
 import com.github.almightysatan.impl.hocon.HoconConfig;
 import org.junit.jupiter.api.Test;
 
