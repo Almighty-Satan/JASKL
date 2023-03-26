@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public abstract class ConfigImpl implements Config {
 
-    private final String description;
+    private String description;
     private final Map<String, ConfigEntry<?>> entries = new HashMap<>();
 
     public ConfigImpl(String description) {
@@ -30,6 +30,10 @@ public abstract class ConfigImpl implements Config {
     @Override
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(@Nullable String description) {
+        this.description = description;
     }
 
     @NotNull
