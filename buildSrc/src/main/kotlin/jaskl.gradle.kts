@@ -1,5 +1,11 @@
 plugins {
     id("java")
+    id("checkstyle")
+}
+
+checkstyle {
+    configDirectory.set(File("../"))
+    toolVersion = "9.3"
 }
 
 group = "com.github.almightysatan"
