@@ -15,7 +15,7 @@ public abstract class ConfigImpl implements Config {
     private final String description;
     private final Map<String, ConfigEntry<?>> entries = new HashMap<>();
 
-    public ConfigImpl(String description) {
+    public ConfigImpl(@Nullable String description) {
         this.description = description;
     }
 
