@@ -4,7 +4,10 @@ ___
 JASKL is a simple config library supporting multiple different formats.
 
 ### How to use it?
-JASKL is based on `Config`s and `ConfigEntry`s. Create a new Config by instantiating one of the following classes: `TomlConfig`, `PropertiesConfig` or `HoconConfig`. After that, new `ConfigEntry`s can be created and added to the config.
+JASKL is based on `Config`s and `ConfigEntry`s. 
+Create a new Config by instantiating one of the following classes: 
+`TomlConfig`, `PropertiesConfig`,  `HoconConfig` or `MongodbConfig`. 
+After that, new `ConfigEntry`s can be created and added to the config.
 
 ### Example
 
@@ -32,25 +35,26 @@ config.write(); // Save the config
 
 ### Implementations
 
-| Type       | Description                                                                         | Base                                                    |
-|------------|-------------------------------------------------------------------------------------|---------------------------------------------------------|
-| TOML       | A very easy to read config supporting sub categories and many different data types. | [Jackson](https://github.com/FasterXML/jackson)         |
-| Hocon      | A more user friendly version of JSON supporting many different data types.          | [Lightbend Config](https://github.com/lightbend/config) |
-| Properties | A very simple implementation for minimalistic config systems.                       | -                                                       |
+| Type       | Description                                                                         | Base                                                                                 |
+|------------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| TOML       | A very easy to read config supporting sub categories and many different data types. | [Jackson](https://github.com/FasterXML/jackson)                                      |
+| Hocon      | A more user friendly version of JSON supporting many different data types.          | [Lightbend Config](https://github.com/lightbend/config)                              |
+| Properties | A very simple implementation for minimalistic config systems.                       | -                                                                                    |
+| MongoDB    | A NoSQL database based implementation for complex configs with remote saves.        | [mongodb-driver](https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync) |
 
 ### Config Entry Types
-| Type    | TOML | Hocon*¹ | Properties |
-|---------|------|---------|------------|
-| String  | ✅    | ✅       | ✅          |
-| Boolean | ✅    | ✅       | ✅          |
-| Integer | ✅    | ✅       | ✅          |
-| Long    | ✅    | ✅       | ✅          |
-| Float   | ✅    | ✅       | ✅          |
-| Double  | ✅    | ✅       | ✅          |
-| Enum    | ✅    | ✅       | ✅          |
-| List    | ✅    | ✅       | ❌          |
-| Map     | ❓    | ❓       | ❌          |
-| Custom  | ✅    | ✅       | ✅*²        |
+| Type    | TOML | Hocon*¹ | Properties | MongoDB |
+|---------|------|---------|------------|---------|
+| String  | ✅    | ✅       | ✅          | ✅       |
+| Boolean | ✅    | ✅       | ✅          | ✅       |
+| Integer | ✅    | ✅       | ✅          | ✅       |
+| Long    | ✅    | ✅       | ✅          | ✅       |
+| Float   | ✅    | ✅       | ✅          | ✅       |
+| Double  | ✅    | ✅       | ✅          | ✅       |
+| Enum    | ✅    | ✅       | ✅          | ✅       |
+| List    | ✅    | ✅       | ❌          | ✅       |
+| Map     | ❓    | ❓       | ❌          | ❓       |
+| Custom  | ✅    | ✅       | ✅*²        | ✅       |
 
 *¹ Read Only<br>
 *² Only for supported types
