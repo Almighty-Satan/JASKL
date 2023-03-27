@@ -38,7 +38,7 @@ public class PropertiesConfig extends ConfigImpl {
             return;
 
         readFromFile();
-
+        populateEntries();
 
     }
 
@@ -53,7 +53,6 @@ public class PropertiesConfig extends ConfigImpl {
         }
 
         writeToFile();
-        populateEntries();
     }
 
     @Override
