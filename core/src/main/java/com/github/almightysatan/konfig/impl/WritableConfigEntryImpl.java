@@ -26,7 +26,10 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     @Override
     public void setValue(@NotNull T value) {
         Objects.requireNonNull(value);
-        this.value = this.checkType(value);
+        T parsedValue = this.checkType(value);
+        if (parsedValue.equals(this.getValue()))
+            return;
+        this.value = parsedValue;
         this.modified = true;
     }
 
