@@ -5,6 +5,7 @@ import com.github.almightysatan.konfig.ConfigEntry;
 import com.github.almightysatan.konfig.entries.*;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -20,6 +21,7 @@ public class PropertiesConfigTest {
         ConfigEntry<Integer> intConfigEntry = IntegerConfigEntry.of(config, "exampleInt", null, 0);
         ConfigEntry<Boolean> boolConfigEntry = BooleanConfigEntry.of(config, "exampleBool", null, false);
         ConfigEntry<Double> doubleConfigEntry = DoubleConfigEntry.of(config, "exampleDouble", null, 0.0d);
+        ConfigEntry<Example> enumConfigEntry = EnumConfigEntry.of(config, "exampleEnum", null, Example.EXAMPLE);
 
         config.load();
 
@@ -27,6 +29,7 @@ public class PropertiesConfigTest {
         assertEquals(42, intConfigEntry.getValue());
         assertEquals(true, boolConfigEntry.getValue());
         assertEquals(6.9d, doubleConfigEntry.getValue());
+        assertEquals(Example.EXAMPLE2, enumConfigEntry.getValue());
 
         config.close();
     }
