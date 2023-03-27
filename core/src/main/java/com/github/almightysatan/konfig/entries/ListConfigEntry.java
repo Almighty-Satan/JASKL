@@ -14,7 +14,8 @@ public class ListConfigEntry<T> extends WritableConfigEntryImpl<List<T>> {
     private ListConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue) {
         super(config, path, description, defaultValue);
     }
-    
+
+    @SuppressWarnings("unchecked")
     @Override
     protected @NotNull List<T> checkType(@NotNull Object type) {
         if (type instanceof List)
