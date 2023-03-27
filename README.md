@@ -61,3 +61,15 @@ config.write(); // Save the config
 
 ### Building
 To build the project, open the terminal and type `./gradlew build`. All jars will be located at `/<implementation>/build/libs/<implementation>-<version>.jar`.
+
+### Gradle
+```gradle
+dependencies {
+    implementation("com.github.almighty-satan:jaskl-<implementation>:<version>")
+}
+
+repositories {
+    mavenCentral()
+    maven("https://repo.varoplugin.de/repository/maven-public/")
+}
+```
