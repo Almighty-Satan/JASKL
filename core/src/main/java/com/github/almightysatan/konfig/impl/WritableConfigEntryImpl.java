@@ -9,7 +9,7 @@ import java.util.Objects;
 public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements WritableConfigEntry<T> {
 
     private T value;
-    private boolean modified;
+    private boolean modified = true; // true by default because Config#write should write the entry to the config if it does not exist
 
     public WritableConfigEntryImpl(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         super(path, description, defaultValue);
