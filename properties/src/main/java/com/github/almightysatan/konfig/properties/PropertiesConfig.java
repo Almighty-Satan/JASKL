@@ -2,6 +2,7 @@ package com.github.almightysatan.konfig.properties;
 
 import com.github.almightysatan.konfig.entries.ListConfigEntry;
 import com.github.almightysatan.konfig.impl.ConfigImpl;
+import com.github.almightysatan.konfig.impl.Util;
 import com.github.almightysatan.konfig.impl.WritableConfigEntry;
 
 import java.io.*;
@@ -34,6 +35,7 @@ public class PropertiesConfig extends ConfigImpl {
 
         FileReader reader = new FileReader(file);
         config.load(reader);
+        reader.close();
 
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             if (configEntry instanceof ListConfigEntry)
@@ -47,25 +49,36 @@ public class PropertiesConfig extends ConfigImpl {
     public void write() throws IOException {
         if (this.config == null)
             throw new IllegalStateException();
-        if (!this.file.exists()) {
-            if (!this.file.getParentFile().exists())
-                this.file.getParentFile().mkdirs();
-            this.file.createNewFile();
-        }
+        Util.createFileAndPath(file);
+
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             this.config.setProperty(configEntry.getPath(), configEntry.getValue().toString());
         }
-        this.config.store(new FileWriter(file), this.getDescription() == null ? "" : this.getDescription());
+
+        FileWriter writer = new FileWriter(file);
+        this.config.store(writer, this.getDescription() == null ? "" : this.getDescription());
+        writer.close();
     }
 
     @Override
-    public void populate() {
-        throw new UnsupportedOperationException("Hocon configs do not support writing yet.");
+    public void populate() throws IllegalStateException {
+
     }
 
     @Override
-    public void strip() {
-        throw new UnsupportedOperationException("Hocon configs do not support writing yet.");
+    public void strip() throws IOException {
+        if (this.config == null)
+            throw new IllegalStateException();
+
+        Properties write = new Properties();
+
+        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
+            write.setProperty(configEntry.getPath(), configEntry.getValue().toString());
+        }
+
+        this.config = write;
+
+        this.write();
     }
 
     @Override
