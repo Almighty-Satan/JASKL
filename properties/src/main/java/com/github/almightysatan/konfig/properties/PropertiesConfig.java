@@ -37,16 +37,9 @@ public class PropertiesConfig extends ConfigImpl {
         if (!this.file.exists())
             return;
 
-        try (FileReader reader = new FileReader(file)) {
-            config.load(reader);
-        }
+        readFromFile();
 
-        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
-            if (configEntry instanceof ListConfigEntry)
-                throw new UnsupportedOperationException("Lists are not supported in Property Configs.");
-            Object value = this.config.get(configEntry.getPath());
-            configEntry.putValue(value == null ? configEntry.getDefaultValue() : value);
-        }
+
     }
 
     @Override
@@ -59,9 +52,8 @@ public class PropertiesConfig extends ConfigImpl {
             this.config.setProperty(configEntry.getPath(), configEntry.getValue().toString());
         }
 
-        try (FileWriter writer = new FileWriter(file)){
-            this.config.store(writer, this.getDescription() == null ? "" : this.getDescription());
-        }
+        writeToFile();
+        populateEntries();
     }
 
     @Override
@@ -69,15 +61,18 @@ public class PropertiesConfig extends ConfigImpl {
         if (this.config == null)
             throw new IllegalStateException();
 
-        Properties write = new Properties();
+        Properties stripped = new Properties();
 
-        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
-            write.setProperty(configEntry.getPath(), configEntry.getValue().toString());
+        for (Object key : this.config.keySet()) {
+            if (!this.getEntries().containsKey(key))
+                continue;
+            stripped.setProperty((String) key, this.config.getProperty((String) key));
         }
 
-        this.config = write;
+        this.config = stripped;
 
-        this.write();
+        writeToFile();
+
     }
 
     @Override
@@ -88,5 +83,37 @@ public class PropertiesConfig extends ConfigImpl {
 
     public static Config of(File file, String description) {
         return new PropertiesConfig(file, description);
+    }
+
+    /**
+     * Takes the current property instance and saves it to the file
+     * @throws IOException
+     */
+    private void writeToFile() throws IOException {
+        try (FileWriter writer = new FileWriter(file)){
+            this.config.store(writer, this.getDescription() == null ? "" : this.getDescription());
+        }
+    }
+
+    /**
+     * Populates the property instance with the values from the file
+     * @throws IOException
+     */
+    private void readFromFile() throws IOException {
+        try (FileReader reader = new FileReader(file)) {
+            config.load(reader);
+        }
+    }
+
+    /**
+     * Initializes all config entries by setting the value based on the property instance
+     */
+    private void populateEntries() {
+        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
+            if (configEntry instanceof ListConfigEntry)
+                throw new UnsupportedOperationException("Lists are not supported in Property Configs.");
+            Object value = this.config.get(configEntry.getPath());
+            configEntry.putValue(value == null ? configEntry.getDefaultValue() : value);
+        }
     }
 }
