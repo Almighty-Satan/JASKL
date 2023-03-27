@@ -17,10 +17,6 @@ public class EnumConfigEntry<E extends Enum<E>> extends ConfigEntryImpl<E> {
         this.internal = StringConfigEntry.of(config, path, description, defaultValue.toString());
     }
 
-    public static <T extends Enum<T>> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue) {
-        return new EnumConfigEntry(config, path, description, defaultValue);
-    }
-
     @Override
     public @NotNull E getValue() {
         return Enum.valueOf(this.enumClass, this.internal.getValue());
@@ -29,5 +25,9 @@ public class EnumConfigEntry<E extends Enum<E>> extends ConfigEntryImpl<E> {
     @Override
     public void setValue(@NotNull Enum value) {
         this.internal.setValue(value.toString());
+    }
+
+    public static <T extends Enum<T>> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue) {
+        return new EnumConfigEntry(config, path, description, defaultValue);
     }
 }
