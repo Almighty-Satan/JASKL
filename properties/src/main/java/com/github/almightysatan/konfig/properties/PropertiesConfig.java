@@ -1,11 +1,15 @@
 package com.github.almightysatan.konfig.properties;
 
+import com.github.almightysatan.konfig.Config;
 import com.github.almightysatan.konfig.entries.ListConfigEntry;
 import com.github.almightysatan.konfig.impl.ConfigImpl;
 import com.github.almightysatan.konfig.impl.Util;
 import com.github.almightysatan.konfig.impl.WritableConfigEntry;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Properties;
 
 public class PropertiesConfig extends ConfigImpl {
@@ -13,7 +17,7 @@ public class PropertiesConfig extends ConfigImpl {
     private final File file;
     private Properties config;
 
-    public PropertiesConfig(File file, String description) {
+    private PropertiesConfig(File file, String description) {
         super(description);
         this.file = file;
     }
@@ -85,5 +89,9 @@ public class PropertiesConfig extends ConfigImpl {
     public void close() {
         if (this.config != null)
             this.config = null;
+    }
+
+    public static Config of(File file, String description) {
+        return new PropertiesConfig(file, description);
     }
 }

@@ -17,7 +17,7 @@ public class PropertiesConfigTest {
 
     @Test
     public void testFile() throws IOException {
-        Config config = new PropertiesConfig(new File("src/test/resources/basic.properties"), null);
+        Config config = PropertiesConfig.of(new File("src/test/resources/basic.properties"), null);
         ConfigEntry<String> stringConfigEntry = StringConfigEntry.of(config, "exampleString", null, "default");
         ConfigEntry<Integer> intConfigEntry = IntegerConfigEntry.of(config, "exampleInt", null, 0);
         ConfigEntry<Boolean> boolConfigEntry = BooleanConfigEntry.of(config, "exampleBool", null, false);
@@ -35,7 +35,7 @@ public class PropertiesConfigTest {
 
     @Test
     public void testLoadNonExisting() throws IOException {
-        Config config = new PropertiesConfig(new File("src/test/resources/basic.properties"), null);
+        Config config = PropertiesConfig.of(new File("src/test/resources/basic.properties"), null);
 
         ConfigEntry<String> nonExistingStringConfigEntry = StringConfigEntry.of(config, "doesnotexist", null, "default");
 
@@ -51,7 +51,7 @@ public class PropertiesConfigTest {
         File file = new File("build/temp/properties/write.properties");
         file.delete();
 
-        Config config0 = new PropertiesConfig(file, null);
+        Config config0 = PropertiesConfig.of(file, null);
         ConfigEntry<String> stringConfigEntry0 = StringConfigEntry.of(config0, "exampleString", null, "default");
         ConfigEntry<Integer> intConfigEntry0 = IntegerConfigEntry.of(config0, "exampleInt", null, 69);
 
@@ -65,7 +65,7 @@ public class PropertiesConfigTest {
 
         assertTrue(file.exists());
 
-        Config config1 = new PropertiesConfig(file, null);
+        Config config1 = PropertiesConfig.of(file, null);
         ConfigEntry<String> stringConfigEntry1 = StringConfigEntry.of(config1, "exampleString", null, "default");
         ConfigEntry<Integer> intConfigEntry1 = IntegerConfigEntry.of(config1, "exampleInt", null, 69);
 
@@ -81,7 +81,7 @@ public class PropertiesConfigTest {
         File file = new File("build/temp/properties/strip.properties");
         file.delete();
 
-        Config config0 = new PropertiesConfig(file, null);
+        Config config0 = PropertiesConfig.of(file, null);
         ConfigEntry<String> stringConfigEntry0 = StringConfigEntry.of(config0, "exampleString", null, "default");
         ConfigEntry<Integer> intConfigEntry0 = IntegerConfigEntry.of(config0, "exampleInt", null, 69);
 
@@ -92,14 +92,14 @@ public class PropertiesConfigTest {
         config0.write();
         config0.close();
 
-        Config config1 = new PropertiesConfig(file, null);
+        Config config1 = PropertiesConfig.of(file, null);
         ConfigEntry<String> stringConfigEntry1 = new WritableConfigEntryImpl<>(config1, "exampleString", null, "default");
 
         config1.load();
         config1.strip();
         config1.close();
 
-        Config config2 = new PropertiesConfig(file, null);
+        Config config2 = PropertiesConfig.of(file, null);
         ConfigEntry<String> stringConfigEntry2 = StringConfigEntry.of(config2, "exampleString", null, "default");
         ConfigEntry<Integer> intConfigEntry2 = IntegerConfigEntry.of(config2, "exampleInt", null, 69);
 
