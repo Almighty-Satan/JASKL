@@ -33,9 +33,9 @@ public class PropertiesConfig extends ConfigImpl {
         if (!this.file.exists())
             return;
 
-        FileReader reader = new FileReader(file);
-        config.load(reader);
-        reader.close();
+        try (FileReader reader = new FileReader(file)) {
+            config.load(reader);
+        }
 
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             if (configEntry instanceof ListConfigEntry)
@@ -55,9 +55,9 @@ public class PropertiesConfig extends ConfigImpl {
             this.config.setProperty(configEntry.getPath(), configEntry.getValue().toString());
         }
 
-        FileWriter writer = new FileWriter(file);
-        this.config.store(writer, this.getDescription() == null ? "" : this.getDescription());
-        writer.close();
+        try (FileWriter writer = new FileWriter(file)){
+            this.config.store(writer, this.getDescription() == null ? "" : this.getDescription());
+        }
     }
 
     @Override
