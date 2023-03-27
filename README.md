@@ -32,23 +32,25 @@ config.write(); // Save the config
 
 ### Implementations
 
-| Type       | Description                                                                         |
-|------------|-------------------------------------------------------------------------------------|
-| TOML       | A very easy to read config supporting sub categories and many different data types. |
-| Hocon      | A more user friendly version of JSON supporting many different data types.          |
-| Properties | A very simple implementation for minimalistic config systems.                       |
+| Type       | Description                                                                         | Base                                                    |
+|------------|-------------------------------------------------------------------------------------|---------------------------------------------------------|
+| TOML       | A very easy to read config supporting sub categories and many different data types. | [Jackson](https://github.com/FasterXML/jackson)         |
+| Hocon      | A more user friendly version of JSON supporting many different data types.          | [Lightbend Config](https://github.com/lightbend/config) |
+| Properties | A very simple implementation for minimalistic config systems.                       | -                                                       |
 
 ### Config Entry Types
-| Type    | TOML | Hocon | Properties |
-|---------|------|-------|------------|
-| String  | ✅    | ✅*¹   | ✅          |
-| Boolean | ✅    | ✅*¹   | ✅          |
-| Integer | ✅    | ✅*¹   | ✅          |
-| Long    | ✅    | ✅*¹   | ✅          |
-| Float   | ✅    | ✅*¹   | ✅          |
-| Double  | ✅    | ✅*¹   | ✅          |
-| Enum    | ✅    | ✅*¹   | ✅          |
-| List    | ✅    | ✅*¹   | ❌          |
-| Map     | ✅    | ✅*¹   | ❌          |
-| Custom  | ❓    | ❓*¹   | ❌          |
-*¹ Read Only
+| Type    | TOML | Hocon*¹ | Properties |
+|---------|------|---------|------------|
+| String  | ✅    | ✅       | ✅          |
+| Boolean | ✅    | ✅       | ✅          |
+| Integer | ✅    | ✅       | ✅          |
+| Long    | ✅    | ✅       | ✅          |
+| Float   | ✅    | ✅       | ✅          |
+| Double  | ✅    | ✅       | ✅          |
+| Enum    | ✅    | ✅       | ✅          |
+| List    | ✅    | ✅       | ❌          |
+| Map     | ❓    | ❓       | ❌          |
+| Custom  | ✅    | ✅       | ✅*²        |
+
+*¹ Read Only<br>
+*² Only for supported types
