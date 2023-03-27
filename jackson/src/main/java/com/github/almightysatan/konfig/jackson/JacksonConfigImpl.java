@@ -13,13 +13,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-public abstract class JacksonConfig extends ConfigImpl {
+public abstract class JacksonConfigImpl extends ConfigImpl {
 
     private final ObjectMapper mapper;
     private final File file;
     private JsonNode root;
 
-    public JacksonConfig(@NotNull ObjectMapper mapper, @NotNull File file, @Nullable String description) {
+    public JacksonConfigImpl(@NotNull ObjectMapper mapper, @NotNull File file, @Nullable String description) {
         super(description);
         this.mapper = Objects.requireNonNull(mapper);
         this.file = Objects.requireNonNull(file);

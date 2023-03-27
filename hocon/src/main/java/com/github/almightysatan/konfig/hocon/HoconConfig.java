@@ -4,6 +4,8 @@ import com.github.almightysatan.konfig.ConfigEntry;
 import com.github.almightysatan.konfig.impl.ConfigImpl;
 import com.github.almightysatan.konfig.impl.WritableConfigEntry;
 import com.typesafe.config.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -20,7 +22,7 @@ public class HoconConfig extends ConfigImpl {
     private final File file;
     private Config config;
 
-    public HoconConfig(File file, String description) {
+    private HoconConfig(File file, String description) {
         super(description);
         this.file = file;
     }
@@ -69,5 +71,9 @@ public class HoconConfig extends ConfigImpl {
     public void close() {
         if (this.config != null)
             this.config = null;
+    }
+
+    public static com.github.almightysatan.konfig.Config of(@NotNull File file, @Nullable String description) {
+        return new HoconConfig(file, description);
     }
 }

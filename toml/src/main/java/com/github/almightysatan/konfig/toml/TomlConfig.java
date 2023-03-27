@@ -2,15 +2,20 @@ package com.github.almightysatan.konfig.toml;
 
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 import com.fasterxml.jackson.dataformat.toml.TomlWriteFeature;
-import com.github.almightysatan.konfig.jackson.JacksonConfig;
+import com.github.almightysatan.konfig.Config;
+import com.github.almightysatan.konfig.jackson.JacksonConfigImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
-public class TomlConfig extends JacksonConfig {
+public class TomlConfig extends JacksonConfigImpl {
 
-    public TomlConfig(@NotNull File file, @Nullable String description) {
+    private TomlConfig(@NotNull File file, @Nullable String description) {
         super(TomlMapper.builder().enable(TomlWriteFeature.FAIL_ON_NULL_WRITE).build(), file, description);
+    }
+
+    public static Config of(@NotNull File file, @Nullable String description) {
+        return new TomlConfig(file, description);
     }
 }

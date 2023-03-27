@@ -18,7 +18,7 @@ public class TomlConfigTest {
 
     @Test
     public void testLoadSimple() throws IOException {
-        Config config = new TomlConfig(new File("src/test/resources/basic.toml"), null);
+        Config config = TomlConfig.of(new File("src/test/resources/basic.toml"), null);
         ConfigEntry<String> stringConfigEntry = StringConfigEntry.of(config, "exampleString", null, "default");
         ConfigEntry<Double> doubleConfigEntry = DoubleConfigEntry.of(config, "exampleDouble", null, 0.0D);
         ConfigEntry<Integer> integerConfigEntry = IntegerConfigEntry.of(config, "exampleInteger", null, 0);
@@ -36,7 +36,7 @@ public class TomlConfigTest {
 
     @Test
     public void testLoadComplex() throws IOException {
-        Config config = new TomlConfig(new File("src/test/resources/complex.toml"), null);
+        Config config = TomlConfig.of(new File("src/test/resources/complex.toml"), null);
         ConfigEntry<String> subEntry = StringConfigEntry.of(config, "subCategory.subEntry", null, "default");
         ConfigEntry<String> subSubEntry = StringConfigEntry.of(config, "subCategory.subSubCategory.subSubEntry", null, "default");
 
@@ -50,7 +50,7 @@ public class TomlConfigTest {
 
     @Test
     public void testLoadNonExisting() throws IOException {
-        Config config = new TomlConfig(new File("src/test/resources/simple.toml"), null);
+        Config config = TomlConfig.of(new File("src/test/resources/simple.toml"), null);
 
         ConfigEntry<String> nonExistingStringConfigEntry = StringConfigEntry.of(config, "doesnotexist", null, "default");
 
@@ -81,7 +81,7 @@ public class TomlConfigTest {
         File file = new File("build/temp/toml/write.toml");
         file.delete();
 
-        Config config0 = new TomlConfig(file, null);
+        Config config0 = TomlConfig.of(file, null);
         ConfigEntry<String> stringConfigEntry0 = StringConfigEntry.of(config0, "abc.exampleString", null, "default");
         ConfigEntry<Integer> intConfigEntry0 = IntegerConfigEntry.of(config0, "abc.exampleInt", null, 69);
 
@@ -95,7 +95,7 @@ public class TomlConfigTest {
 
         assertTrue(file.exists());
 
-        Config config1 = new TomlConfig(file, null);
+        Config config1 = TomlConfig.of(file, null);
         ConfigEntry<String> stringConfigEntry1 = StringConfigEntry.of(config1, "abc.exampleString", null, "default");
         ConfigEntry<Integer> intConfigEntry1 = IntegerConfigEntry.of(config1, "abc.exampleInt", null, 69);
 
