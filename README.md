@@ -58,3 +58,6 @@ config.write(); // Save the config
 
 *¹ Read Only<br>
 *² Only for supported types
+
+### Building
+To build the project, open the terminal and type `./gradlew build`. All jars will be located at `/<implementation>/build/libs/<implementation>-<version>.jar`.
