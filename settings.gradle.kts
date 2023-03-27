@@ -1,4 +1,4 @@
-rootProject.name = "Konfig"
+rootProject.name = "JASKL"
 include("core")
 include("jackson")
 include("toml")
