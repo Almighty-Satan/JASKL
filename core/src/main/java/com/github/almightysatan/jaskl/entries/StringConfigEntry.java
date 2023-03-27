@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class StringConfigEntry extends WritableConfigEntryImpl<String> {
 
-    private StringConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull String defaultValue) {
+    StringConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull String defaultValue) {
         super(config, path, description, defaultValue);
     }
 

@@ -22,32 +22,62 @@ package com.github.almightysatan.jaskl.entries;
 
 import com.github.almightysatan.jaskl.Config;
 import com.github.almightysatan.jaskl.ConfigEntry;
+import com.github.almightysatan.jaskl.InvalidTypeException;
 import com.github.almightysatan.jaskl.impl.ConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EnumConfigEntry<E extends Enum<E>> extends ConfigEntryImpl<E> {
+public class EnumConfigEntry<T extends Enum<T>> extends ConfigEntryImpl<T> {
 
-    private final Class<E> enumClass;
     private final ConfigEntry<String> internal;
+    private T value;
 
-    public EnumConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull E defaultValue) {
+    private EnumConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         super(path, description, defaultValue);
-        this.enumClass = (Class<E>) defaultValue.getClass();
-        this.internal = StringConfigEntry.of(config, path, description, defaultValue.toString());
+        this.internal = new InternalConfigEntry(config, path, description, defaultValue.name());
+        this.value = defaultValue;
     }
 
     @Override
-    public @NotNull E getValue() {
-        return Enum.valueOf(this.enumClass, this.internal.getValue());
+    public @NotNull T getValue() {
+        return value;
     }
 
     @Override
-    public void setValue(@NotNull Enum value) {
+    public void setValue(@NotNull T value) {
         this.internal.setValue(value.toString());
+        this.value = value;
     }
 
     public static <T extends Enum<T>> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue) {
-        return new EnumConfigEntry(config, path, description, defaultValue);
+        return new EnumConfigEntry<>(config, path, description, defaultValue);
+    }
+
+    public class InternalConfigEntry extends StringConfigEntry {
+
+        private InternalConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull String defaultValue) {
+            super(config, path, description, defaultValue);
+        }
+
+        @Override
+        public void setValue(@NotNull String value) {
+            super.setValue(value);
+            EnumConfigEntry.this.value = this.getEnum(value);
+        }
+
+        @Override
+        public void putValue(@NotNull Object value) {
+            super.putValue(value);
+            EnumConfigEntry.this.value = this.getEnum((String) value);
+        }
+
+        @SuppressWarnings("unchecked")
+        private T getEnum(String value) {
+            try {
+                return (T) Enum.valueOf(EnumConfigEntry.this.getDefaultValue().getClass(), value);
+            } catch (IllegalArgumentException e) {
+                throw new InvalidTypeException(this.getPath(), EnumConfigEntry.this.getDefaultValue().getClass(), value);
+            }
+        }
     }
 }
