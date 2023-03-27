@@ -31,10 +31,9 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void putValue(@NotNull Object value) {
         Objects.requireNonNull(value);
-        this.value = this.checkType((T) value);
+        this.value = this.checkType(value);
         this.modified = false;
     }
 
