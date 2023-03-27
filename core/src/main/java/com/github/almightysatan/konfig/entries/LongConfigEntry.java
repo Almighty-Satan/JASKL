@@ -1,6 +1,7 @@
 package com.github.almightysatan.konfig.entries;
 
 import com.github.almightysatan.konfig.Config;
+import com.github.almightysatan.konfig.ConfigEntry;
 import com.github.almightysatan.konfig.InvalidTypeException;
 import com.github.almightysatan.konfig.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +11,7 @@ import java.math.BigInteger;
 
 public class LongConfigEntry extends WritableConfigEntryImpl<Long> {
 
-    public LongConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Long defaultValue) {
+    private LongConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Long defaultValue) {
         super(config, path, description, defaultValue);
     }
 
@@ -36,5 +37,9 @@ public class LongConfigEntry extends WritableConfigEntryImpl<Long> {
 
         throw new InvalidTypeException(getPath(), Long.class, type.getClass());
 
+    }
+
+    public static ConfigEntry<Long> of(@NotNull Config config, @NotNull String path, @Nullable String description, long defaultValue) {
+        return new LongConfigEntry(config, path, description, defaultValue);
     }
 }

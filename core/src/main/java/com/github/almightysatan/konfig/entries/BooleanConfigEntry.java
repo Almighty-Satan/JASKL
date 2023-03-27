@@ -1,6 +1,7 @@
 package com.github.almightysatan.konfig.entries;
 
 import com.github.almightysatan.konfig.Config;
+import com.github.almightysatan.konfig.ConfigEntry;
 import com.github.almightysatan.konfig.InvalidTypeException;
 import com.github.almightysatan.konfig.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class BooleanConfigEntry extends WritableConfigEntryImpl<Boolean> {
 
-    public BooleanConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Boolean defaultValue) {
+    private BooleanConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Boolean defaultValue) {
         super(config, path, description, defaultValue);
     }
 
@@ -28,6 +29,9 @@ public class BooleanConfigEntry extends WritableConfigEntryImpl<Boolean> {
         }
 
         throw new InvalidTypeException(getPath(), Boolean.class, type.getClass());
+    }
 
+    public static ConfigEntry<Boolean> of(@NotNull Config config, @NotNull String path, @Nullable String description, boolean defaultValue) {
+        return new BooleanConfigEntry(config, path, description, defaultValue);
     }
 }

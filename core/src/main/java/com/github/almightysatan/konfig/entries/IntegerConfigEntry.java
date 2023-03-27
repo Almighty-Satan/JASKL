@@ -1,6 +1,7 @@
 package com.github.almightysatan.konfig.entries;
 
 import com.github.almightysatan.konfig.Config;
+import com.github.almightysatan.konfig.ConfigEntry;
 import com.github.almightysatan.konfig.InvalidTypeException;
 import com.github.almightysatan.konfig.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +11,7 @@ import java.math.BigInteger;
 
 public class IntegerConfigEntry extends WritableConfigEntryImpl<Integer> {
 
-    public IntegerConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Integer defaultValue) {
+    private IntegerConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Integer defaultValue) {
         super(config, path, description, defaultValue);
     }
 
@@ -38,6 +39,9 @@ public class IntegerConfigEntry extends WritableConfigEntryImpl<Integer> {
         }
 
         throw new InvalidTypeException(getPath(), Integer.class, type.getClass());
+    }
 
+    public static ConfigEntry<Integer> of(@NotNull Config config, @NotNull String path, @Nullable String description, int defaultValue) {
+        return new IntegerConfigEntry(config, path, description, defaultValue);
     }
 }

@@ -2,8 +2,7 @@ package com.github.almightysatan.konfig.hocon;
 
 import com.github.almightysatan.konfig.Config;
 import com.github.almightysatan.konfig.ConfigEntry;
-import com.github.almightysatan.konfig.entries.ListConfigEntry;
-import com.github.almightysatan.konfig.impl.WritableConfigEntryImpl;
+import com.github.almightysatan.konfig.entries.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -19,10 +18,10 @@ public class HoconConfigTest {
     @Test
     public void testFile() throws IOException {
         Config config = new HoconConfig(new File("src/test/resources/basic.hocon"), null);
-        ConfigEntry<String> stringConfigEntry = new WritableConfigEntryImpl<>(config, "hocon.exampleString", null, "default");
-        ConfigEntry<Integer> intConfigEntry = new WritableConfigEntryImpl<>(config, "hocon.exampleInt", null, 0);
-        ConfigEntry<Boolean> boolConfigEntry = new WritableConfigEntryImpl<>(config, "hocon.exampleBool", null, false);
-        ConfigEntry<Double> floatConfigEntry = new WritableConfigEntryImpl<>(config, "hocon.exampleDouble", null, 0.0D);
+        ConfigEntry<String> stringConfigEntry = StringConfigEntry.of(config, "hocon.exampleString", null, "default");
+        ConfigEntry<Integer> intConfigEntry = IntegerConfigEntry.of(config, "hocon.exampleInt", null, 0);
+        ConfigEntry<Boolean> boolConfigEntry = BooleanConfigEntry.of(config, "hocon.exampleBool", null, false);
+        ConfigEntry<Double> floatConfigEntry = DoubleConfigEntry.of(config, "hocon.exampleDouble", null, 0.0D);
 
         config.load();
 
@@ -38,7 +37,7 @@ public class HoconConfigTest {
     public void testLoadNonExisting() throws IOException {
         Config config = new HoconConfig(new File("src/test/resources/basic.hocon"), null);
 
-        ConfigEntry<String> nonExistingStringConfigEntry = new WritableConfigEntryImpl<>(config, "hocon.doesnotexist", null, "default");
+        ConfigEntry<String> nonExistingStringConfigEntry = StringConfigEntry.of(config, "hocon.doesnotexist", null, "default");
 
         config.load();
 
@@ -50,7 +49,7 @@ public class HoconConfigTest {
     @Test
     public void testList() throws IOException {
         Config config = new HoconConfig(new File("src/test/resources/list.hocon"), null);
-        ConfigEntry<List<String>> stringConfigEntry = new ListConfigEntry<>(config, "hocon.subConf.exampleList", null, Collections.emptyList());
+        ConfigEntry<List<String>> stringConfigEntry = ListConfigEntry.of(config, "hocon.subConf.exampleList", null, Collections.emptyList());
 
         config.load();
 

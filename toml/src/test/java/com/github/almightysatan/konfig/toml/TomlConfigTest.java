@@ -6,23 +6,23 @@ import com.github.almightysatan.konfig.entries.DoubleConfigEntry;
 import com.github.almightysatan.konfig.entries.IntegerConfigEntry;
 import com.github.almightysatan.konfig.entries.LongConfigEntry;
 import com.github.almightysatan.konfig.entries.StringConfigEntry;
-import com.github.almightysatan.konfig.impl.WritableConfigEntryImpl;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TomlConfigTest {
 
     @Test
     public void testLoadSimple() throws IOException {
         Config config = new TomlConfig(new File("src/test/resources/basic.toml"), null);
-        ConfigEntry<String> stringConfigEntry = new StringConfigEntry(config, "exampleString", null, "default");
-        ConfigEntry<Double> doubleConfigEntry = new DoubleConfigEntry(config, "exampleDouble", null, 0.0D);
-        ConfigEntry<Integer> integerConfigEntry = new IntegerConfigEntry(config, "exampleInteger", null, 0);
-        ConfigEntry<Long> longConfigEntry = new LongConfigEntry(config, "exampleLong", null, 0L);
+        ConfigEntry<String> stringConfigEntry = StringConfigEntry.of(config, "exampleString", null, "default");
+        ConfigEntry<Double> doubleConfigEntry = DoubleConfigEntry.of(config, "exampleDouble", null, 0.0D);
+        ConfigEntry<Integer> integerConfigEntry = IntegerConfigEntry.of(config, "exampleInteger", null, 0);
+        ConfigEntry<Long> longConfigEntry = LongConfigEntry.of(config, "exampleLong", null, 0L);
 
         config.load();
 
@@ -37,8 +37,8 @@ public class TomlConfigTest {
     @Test
     public void testLoadComplex() throws IOException {
         Config config = new TomlConfig(new File("src/test/resources/complex.toml"), null);
-        ConfigEntry<String> subEntry = new StringConfigEntry(config, "subCategory.subEntry", null, "default");
-        ConfigEntry<String> subSubEntry = new StringConfigEntry(config, "subCategory.subSubCategory.subSubEntry", null, "default");
+        ConfigEntry<String> subEntry = StringConfigEntry.of(config, "subCategory.subEntry", null, "default");
+        ConfigEntry<String> subSubEntry = StringConfigEntry.of(config, "subCategory.subSubCategory.subSubEntry", null, "default");
 
         config.load();
 
@@ -52,7 +52,7 @@ public class TomlConfigTest {
     public void testLoadNonExisting() throws IOException {
         Config config = new TomlConfig(new File("src/test/resources/simple.toml"), null);
 
-        ConfigEntry<String> nonExistingStringConfigEntry = new StringConfigEntry(config, "doesnotexist", null, "default");
+        ConfigEntry<String> nonExistingStringConfigEntry = StringConfigEntry.of(config, "doesnotexist", null, "default");
 
         config.load();
 
@@ -82,8 +82,8 @@ public class TomlConfigTest {
         file.delete();
 
         Config config0 = new TomlConfig(file, null);
-        ConfigEntry<String> stringConfigEntry0 = new StringConfigEntry(config0, "abc.exampleString", null, "default");
-        ConfigEntry<Integer> intConfigEntry0 = new IntegerConfigEntry(config0, "abc.exampleInt", null, 69);
+        ConfigEntry<String> stringConfigEntry0 = StringConfigEntry.of(config0, "abc.exampleString", null, "default");
+        ConfigEntry<Integer> intConfigEntry0 = IntegerConfigEntry.of(config0, "abc.exampleInt", null, 69);
 
         config0.load();
 
@@ -96,8 +96,8 @@ public class TomlConfigTest {
         assertTrue(file.exists());
 
         Config config1 = new TomlConfig(file, null);
-        ConfigEntry<String> stringConfigEntry1 = new WritableConfigEntryImpl<>(config1, "abc.exampleString", null, "default");
-        ConfigEntry<Integer> intConfigEntry1 = new IntegerConfigEntry(config1, "abc.exampleInt", null, 69);
+        ConfigEntry<String> stringConfigEntry1 = StringConfigEntry.of(config1, "abc.exampleString", null, "default");
+        ConfigEntry<Integer> intConfigEntry1 = IntegerConfigEntry.of(config1, "abc.exampleInt", null, 69);
 
         config1.load();
 
