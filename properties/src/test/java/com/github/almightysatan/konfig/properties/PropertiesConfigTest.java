@@ -3,8 +3,6 @@ package com.github.almightysatan.konfig.properties;
 import com.github.almightysatan.konfig.Config;
 import com.github.almightysatan.konfig.ConfigEntry;
 import com.github.almightysatan.konfig.entries.*;
-import com.github.almightysatan.konfig.impl.WritableConfigEntryImpl;
-import com.github.almightysatan.konfig.properties.PropertiesConfig;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -93,7 +91,7 @@ public class PropertiesConfigTest {
         config0.close();
 
         Config config1 = PropertiesConfig.of(file, null);
-        ConfigEntry<String> stringConfigEntry1 = new WritableConfigEntryImpl<>(config1, "exampleString", null, "default");
+        ConfigEntry<String> stringConfigEntry1 = StringConfigEntry.of(config1, "exampleString", null, "default");
 
         config1.load();
         config1.strip();

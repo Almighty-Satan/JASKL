@@ -69,11 +69,6 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
     }
 
     @Override
-    public void populate() throws IOException {
-        throw new UnsupportedOperationException("TODO");
-    }
-
-    @Override
     public void strip() throws IOException {
         throw new UnsupportedOperationException("TODO");
     }

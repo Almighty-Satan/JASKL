@@ -58,11 +58,6 @@ public class HoconConfig extends ConfigImpl {
     }
 
     @Override
-    public void populate() {
-        throw new UnsupportedOperationException("Hocon configs do not support writing yet.");
-    }
-
-    @Override
     public void strip() {
         throw new UnsupportedOperationException("Hocon configs do not support writing yet.");
     }

@@ -65,11 +65,6 @@ public class PropertiesConfig extends ConfigImpl {
     }
 
     @Override
-    public void populate() throws IllegalStateException {
-
-    }
-
-    @Override
     public void strip() throws IOException {
         if (this.config == null)
             throw new IllegalStateException();

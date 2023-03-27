@@ -32,11 +32,6 @@ public interface Config {
     void write() throws IOException;
 
     /**
-     *
-     */
-    void populate() throws IOException;
-
-    /**
      * Cleans up dead entries from the storage location.
      * An entry is dead if no {@link ConfigEntry} references its path.
      */
