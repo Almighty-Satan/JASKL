@@ -4,6 +4,11 @@ plugins {
     id("maven-publish")
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 checkstyle {
     configDirectory.set(File("../"))
     toolVersion = "9.3"
