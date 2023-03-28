@@ -71,6 +71,13 @@ public class EnumConfigEntry<T extends Enum<T>> extends ConfigEntryImpl<T> {
             EnumConfigEntry.this.value = this.getEnum((String) value);
         }
 
+        @Override
+        protected @NotNull String checkType(@NotNull Object type) {
+            String value = super.checkType(type);
+            this.getEnum(value);
+            return value;
+        }
+
         @SuppressWarnings("unchecked")
         private T getEnum(String value) {
             try {
