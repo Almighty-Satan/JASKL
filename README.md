@@ -37,24 +37,25 @@ config.write(); // Save the config
 
 | Type       | Description                                                                         | Base                                                                                 |
 |------------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| JSON       | JavaScript Object Notation                                                          | [Jackson](https://github.com/FasterXML/jackson)                                      |
 | TOML       | A very easy to read config supporting sub categories and many different data types. | [Jackson](https://github.com/FasterXML/jackson)                                      |
-| Hocon      | A more user friendly version of JSON supporting many different data types.          | [Lightbend Config](https://github.com/lightbend/config)                              |
+| Hocon      | A more user friendly superset of JSON supporting many different data types.         | [Lightbend Config](https://github.com/lightbend/config)                              |
 | Properties | A very simple implementation for minimalistic config systems.                       | -                                                                                    |
 | MongoDB    | A NoSQL database based implementation for complex configs with remote saves.        | [mongodb-driver](https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync) |
 
 ### Config Entry Types
-| Type    | TOML | Hocon*¹ | Properties | MongoDB |
-|---------|------|---------|------------|---------|
-| String  | ✅    | ✅       | ✅          | ✅       |
-| Boolean | ✅    | ✅       | ✅          | ✅       |
-| Integer | ✅    | ✅       | ✅          | ✅       |
-| Long    | ✅    | ✅       | ✅          | ✅       |
-| Float   | ✅    | ✅       | ✅          | ✅       |
-| Double  | ✅    | ✅       | ✅          | ✅       |
-| Enum    | ✅    | ✅       | ✅          | ✅       |
-| List    | ✅    | ✅       | ❌          | ✅       |
-| Map     | ❓    | ❓       | ❌          | ❓       |
-| Custom  | ✅    | ✅       | ✅*²        | ✅       |
+| Type    | JSON | TOML | Hocon*¹ | Properties | MongoDB |
+|---------|------|------|---------|------------|---------|
+| String  | ✅    | ✅    | ✅       | ✅          | ✅       |
+| Boolean | ✅    | ✅    | ✅       | ✅          | ✅       |
+| Integer | ✅    | ✅    | ✅       | ✅          | ✅       |
+| Long    | ✅    | ✅    | ✅       | ✅          | ✅       |
+| Float   | ✅    | ✅    | ✅       | ✅          | ✅       |
+| Double  | ✅    | ✅    | ✅       | ✅          | ✅       |
+| Enum    | ✅    | ✅    | ✅       | ✅          | ✅       |
+| List    | ✅    | ✅    | ✅       | ❌          | ✅       |
+| Map     | ❓    | ❓    | ❓       | ❌          | ❓       |
+| Custom  | ✅    | ✅    | ✅       | ✅*²        | ✅       |
 
 *¹ Read Only<br>
 *² Only for supported types

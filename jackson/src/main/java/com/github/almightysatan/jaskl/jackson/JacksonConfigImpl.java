@@ -39,7 +39,7 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
     private final File file;
     private JsonNode root;
 
-    public JacksonConfigImpl(@NotNull ObjectMapper mapper, @NotNull File file, @Nullable String description) {
+    protected JacksonConfigImpl(@NotNull ObjectMapper mapper, @NotNull File file, @Nullable String description) {
         super(description);
         this.mapper = Objects.requireNonNull(mapper);
         this.file = Objects.requireNonNull(file);
