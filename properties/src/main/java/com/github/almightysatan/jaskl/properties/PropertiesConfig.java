@@ -70,11 +70,16 @@ public class PropertiesConfig extends ConfigImpl {
             throw new IllegalStateException();
         Util.createFileAndPath(this.file);
 
+        boolean shouldWrite = false;
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
-            this.config.setProperty(configEntry.getPath(), configEntry.getValue().toString());
+            if (configEntry.isModified()) {
+                this.config.setProperty(configEntry.getPath(), configEntry.getValue().toString());
+                shouldWrite = true;
+            }
         }
 
-        writeToFile();
+        if (shouldWrite)
+            writeToFile();
     }
 
     @Override
@@ -83,19 +88,22 @@ public class PropertiesConfig extends ConfigImpl {
             throw new IllegalStateException();
         Util.createFileAndPath(this.file);
 
+        boolean shouldWrite = false;
         Properties stripped = new Properties();
-
         Set<String> paths = this.getPaths();
         for (Entry<Object, Object> entry : this.config.entrySet()) {
             String key = (String) entry.getKey();
-            if (!paths.contains(key))
+            if (!paths.contains(key)) {
+                shouldWrite = true;
                 continue;
+            }
             stripped.setProperty(key, (String) entry.getValue());
         }
 
-        this.config = stripped;
-
-        writeToFile();
+        if (shouldWrite) {
+            this.config = stripped;
+            writeToFile();
+        }
     }
 
     @Override
