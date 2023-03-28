@@ -10,7 +10,7 @@ java {
 }
 
 checkstyle {
-    configDirectory.set(File("../"))
+    configDirectory.set(File("../checkstyle"))
     toolVersion = "9.3"
 }
 
