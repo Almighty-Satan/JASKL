@@ -136,7 +136,8 @@ public class PropertiesConfig extends ConfigImpl {
             if (configEntry instanceof ListConfigEntry)
                 throw new UnsupportedOperationException("Lists are not supported in Property Configs.");
             Object value = this.config.get(configEntry.getPath());
-            configEntry.putValue(value == null ? configEntry.getDefaultValue() : value);
+            if (value != null)
+                configEntry.putValue(value);
         }
     }
 }
