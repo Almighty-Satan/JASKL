@@ -55,6 +55,17 @@ public class TomlConfigTest {
     }
 
     @Test
+    public void testLoadSingleValue() throws IOException {
+        Config config2 = TomlConfig.of(new File("src/test/resources/singleValue.toml"), null);
+        ConfigEntry<String> stringConfigEntry2 = StringConfigEntry.of(config2, "exampleString", null, "default");
+        ConfigEntry<Integer> intConfigEntry2 = IntegerConfigEntry.of(config2, "exampleInt", null, 69);
+
+        config2.load();
+
+        assertEquals("String", stringConfigEntry2.getValue());
+    }
+
+    @Test
     public void testLoadComplex() throws IOException {
         Config config = TomlConfig.of(new File("src/test/resources/complex.toml"), null);
         ConfigEntry<String> subEntry = StringConfigEntry.of(config, "subCategory.subEntry", null, "default");
@@ -123,5 +134,38 @@ public class TomlConfigTest {
 
         assertEquals("Example", stringConfigEntry1.getValue());
         assertEquals(420, intConfigEntry1.getValue());
+    }
+
+    @Test
+    public void testStripFile() throws IOException {
+        File file = new File("build/temp/toml/strip.toml");
+        file.delete();
+
+        Config config0 = TomlConfig.of(file, null);
+        ConfigEntry<String> stringConfigEntry0 = StringConfigEntry.of(config0, "abc.exampleString", null, "default");
+        ConfigEntry<Integer> intConfigEntry0 = IntegerConfigEntry.of(config0, "abc.exampleInt", null, 69);
+
+        stringConfigEntry0.setValue("String");
+        intConfigEntry0.setValue(42);
+
+        config0.load();
+        config0.write();
+        config0.close();
+
+        Config config1 = TomlConfig.of(file, null);
+        ConfigEntry<String> stringConfigEntry1 = StringConfigEntry.of(config1, "abc.exampleString", null, "default");
+
+        config1.load();
+        config1.strip();
+        config1.close();
+
+        Config config2 = TomlConfig.of(file, null);
+        ConfigEntry<String> stringConfigEntry2 = StringConfigEntry.of(config2, "abc.exampleString", null, "default");
+        ConfigEntry<Integer> intConfigEntry2 = IntegerConfigEntry.of(config2, "abc.exampleInt", null, 69);
+
+        config2.load();
+
+        assertEquals("String", stringConfigEntry2.getValue());
+        assertEquals(69, intConfigEntry2.getValue());
     }
 }

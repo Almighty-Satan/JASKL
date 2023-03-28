@@ -22,22 +22,26 @@ package com.github.almightysatan.jaskl.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ValueNode;
 import com.github.almightysatan.jaskl.impl.ConfigImpl;
+import com.github.almightysatan.jaskl.impl.Util;
 import com.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.*;
+import java.util.Map.Entry;
 
 public abstract class JacksonConfigImpl extends ConfigImpl {
 
     private final ObjectMapper mapper;
     private final File file;
-    private JsonNode root;
+    private ObjectNode root;
 
     protected JacksonConfigImpl(@NotNull ObjectMapper mapper, @NotNull File file, @Nullable String description) {
         super(description);
@@ -61,11 +65,16 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
         if (!this.file.exists())
             return;
 
-        this.root = this.mapper.readTree(this.file);
+        try {
+            this.root = (ObjectNode) this.mapper.readTree(this.file);
+        } catch (ClassCastException e) {
+            throw new IOException(e);
+        }
+
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             JsonNode node = this.resolveNode(configEntry.getPath());
             if (node == null)
-                return;
+                continue;
 
             Object value = this.mapper.treeToValue(node, Object.class);
             configEntry.putValue(value);
@@ -76,21 +85,28 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
     public void write() throws IOException {
         if (this.root == null)
             throw new IllegalStateException();
-        if (!this.file.exists()) {
-            if (!this.file.getParentFile().exists())
-                this.file.getParentFile().mkdirs();
-            this.file.createNewFile();
+        Util.createFileAndPath(this.file);
+
+        boolean shouldWrite = false;
+        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
+            if (configEntry.isModified()) {
+                this.putNode(configEntry.getPath(), this.mapper.valueToTree(configEntry.getValue()));
+                shouldWrite = true;
+            }
         }
 
-        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
-            this.putNode(configEntry.getPath(), this.mapper.valueToTree(configEntry.getValue()));
-        }
-        this.mapper.writeValue(this.file, this.root);
+        if (shouldWrite)
+            this.mapper.writeValue(this.file, this.root);
     }
 
     @Override
     public void strip() throws IOException {
-        throw new UnsupportedOperationException("TODO");
+        if (this.root == null)
+            throw new IllegalStateException();
+        Util.createFileAndPath(this.file);
+
+        if (stripNodes("", this.root, this.getPaths()))
+            this.mapper.writeValue(this.file, this.root);
     }
 
     @Override
@@ -109,13 +125,39 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
         return node;
     }
 
-    protected void putNode(@NotNull String path, JsonNode value) {
+    protected void putNode(@NotNull String path, @NotNull JsonNode value) {
         String[] pathSplit = path.split("\\.");
-        ObjectNode node = (ObjectNode) this.root;
+        ObjectNode node = this.root;
         for (int i = 0; i < pathSplit.length - 1; i++) {
             ObjectNode child = (ObjectNode) node.get(pathSplit[i]);
             node = child == null ? node.putObject(pathSplit[i]) : child;
         }
         node.set(pathSplit[pathSplit.length - 1], value);
+    }
+
+    protected boolean stripNodes(@NotNull String path, @NotNull ObjectNode node, Set<String> paths) {
+        boolean changed = false;
+        List<String> toRemove = new ArrayList<>();
+        Iterator<Entry<String, JsonNode>> it = node.fields();
+        while (it.hasNext()) {
+            Entry<String, JsonNode> field = it.next();
+            String fieldPath = path.isEmpty() ? field.getKey() : path + "." + field.getKey();
+            if (field.getValue() instanceof ObjectNode) {
+                ObjectNode child = (ObjectNode) field.getValue();
+                changed |= stripNodes(fieldPath, child, paths);
+                if (child.isEmpty())
+                    toRemove.add(field.getKey());
+            } else if (field.getValue() instanceof ArrayNode || field.getValue() instanceof ValueNode) {
+                if (!paths.contains(fieldPath))
+                    toRemove.add(field.getKey());
+            }
+        }
+        if (!toRemove.isEmpty()) {
+            changed = true;
+            for (String fieldName : toRemove) {
+                node.remove(fieldName);
+            }
+        }
+        return changed;
     }
 }
