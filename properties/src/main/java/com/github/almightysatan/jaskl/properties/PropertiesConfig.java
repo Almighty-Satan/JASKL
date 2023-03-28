@@ -30,7 +30,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 public class PropertiesConfig extends ConfigImpl {
 
@@ -66,7 +68,7 @@ public class PropertiesConfig extends ConfigImpl {
     public void write() throws IOException {
         if (this.config == null)
             throw new IllegalStateException();
-        Util.createFileAndPath(file);
+        Util.createFileAndPath(this.file);
 
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             this.config.setProperty(configEntry.getPath(), configEntry.getValue().toString());
@@ -79,19 +81,21 @@ public class PropertiesConfig extends ConfigImpl {
     public void strip() throws IOException {
         if (this.config == null)
             throw new IllegalStateException();
+        Util.createFileAndPath(this.file);
 
         Properties stripped = new Properties();
 
-        for (Object key : this.config.keySet()) {
-            if (!this.getEntries().containsKey(key))
+        Set<String> paths = this.getPaths();
+        for (Entry<Object, Object> entry : this.config.entrySet()) {
+            String key = (String) entry.getKey();
+            if (!paths.contains(key))
                 continue;
-            stripped.setProperty((String) key, this.config.getProperty((String) key));
+            stripped.setProperty(key, (String) entry.getValue());
         }
 
         this.config = stripped;
 
         writeToFile();
-
     }
 
     @Override
