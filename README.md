@@ -35,13 +35,13 @@ config.write(); // Save the config
 
 ### Implementations
 
-| Type       | Description                                                                         | Base                                                                                 |
-|------------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
-| JSON       | JavaScript Object Notation                                                          | [Jackson](https://github.com/FasterXML/jackson)                                      |
-| TOML       | A very easy to read config supporting sub categories and many different data types. | [Jackson](https://github.com/FasterXML/jackson)                                      |
-| Hocon      | A more user friendly superset of JSON supporting many different data types.         | [Lightbend Config](https://github.com/lightbend/config)                              |
-| Properties | A very simple implementation for minimalistic config systems.                       | -                                                                                    |
-| MongoDB    | A NoSQL database based implementation for complex configs with remote saves.        | [mongodb-driver](https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync) |
+| Type       | Description                                                                         | Base                                                                                        |
+|------------|-------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| JSON       | JavaScript Object Notation                                                          | [Jackson](https://github.com/FasterXML/jackson)                                             |
+| TOML       | A very easy to read config supporting sub categories and many different data types. | [Jackson](https://github.com/FasterXML/jackson)                                             |
+| Hocon      | A more user friendly superset of JSON supporting many different data types.         | [Lightbend Config](https://github.com/lightbend/config)                                     |
+| Properties | A very simple implementation for minimalistic config systems.                       | [java.util.Properties](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html) |
+| MongoDB    | A NoSQL database based implementation for complex configs with remote saves.        | [mongodb-driver](https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync)        |
 
 ### Config Entry Types
 | Type    | JSON | TOML | Hocon*¹ | Properties | MongoDB |
