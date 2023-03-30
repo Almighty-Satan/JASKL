@@ -47,7 +47,7 @@ public class DoubleConfigEntry extends WritableConfigEntryImpl<Double> {
         }
 
         if (type instanceof Integer) {
-            return (double) type;
+            return (double) (int) type;
         }
 
         if (type instanceof String) {
