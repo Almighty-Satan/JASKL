@@ -205,11 +205,11 @@ public class ConfigTest {
 
         Config config0 = configSupplier.get();
 
-        List<Double> list0 = Arrays.asList(1.0D, 2.0D);
-        ConfigEntry<List<Double>> listConfigEntry0 = ListConfigEntry.of(config0, "example.list", "Example Integer List", list0);
+        List<String> list0 = Arrays.asList("a", "b");
+        ConfigEntry<List<String>> listConfigEntry0 = ListConfigEntry.of(config0, "example.list", "Example Integer List", list0);
         config0.load();
 
-        List<Double> list1 = Arrays.asList(3.0D, 4.0D);
+        List<String> list1 = Arrays.asList("c", "d");
         listConfigEntry0.setValue(list1);
 
         config0.write();
@@ -218,17 +218,11 @@ public class ConfigTest {
         Assertions.assertTrue(file.exists());
 
         Config config1 = configSupplier.get();
-        ConfigEntry<List<Double>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example Integer List", list0);
+        ConfigEntry<List<String>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example Integer List", list0);
 
         config1.load();
 
-        for (int i = 0; i < list1.size(); i++) {
-            double val = listConfigEntry1.getValue().get(i);
-            Assertions.assertEquals(list1.get(i),val );
-        }
-
-
-        //Assertions.assertArrayEquals(list1.toArray(new Float[2]), listConfigEntry1.getValue().toArray(new Float[2]));
+        Assertions.assertArrayEquals(list1.toArray(new String[0]), listConfigEntry1.getValue().toArray(new String[0]));
 
         config1.close();
     }
