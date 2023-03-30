@@ -29,4 +29,8 @@ public class InvalidTypeException extends RuntimeException {
     public <T extends Enum<T>> InvalidTypeException(String path, Class<T> enumClass, String enumName) {
         super(String.format("Invalid type path=%s, enumClass=%s enumName=%s", path, enumClass.getName(), enumName));
     }
+
+    public InvalidTypeException(String path, Class<?> type) {
+        super(String.format("Unknown type path=%s, type=%s", path, type.getName()));
+    }
 }

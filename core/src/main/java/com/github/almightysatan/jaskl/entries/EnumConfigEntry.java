@@ -24,12 +24,13 @@ import com.github.almightysatan.jaskl.Config;
 import com.github.almightysatan.jaskl.ConfigEntry;
 import com.github.almightysatan.jaskl.InvalidTypeException;
 import com.github.almightysatan.jaskl.impl.ConfigEntryImpl;
+import com.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EnumConfigEntry<T extends Enum<T>> extends ConfigEntryImpl<T> {
+public class EnumConfigEntry<T extends Enum<T>> extends ConfigEntryImpl<T> implements WritableConfigEntry<T> {
 
-    private final ConfigEntry<String> internal;
+    private final WritableConfigEntry<String> internal;
     private T value;
 
     private EnumConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
@@ -46,7 +47,16 @@ public class EnumConfigEntry<T extends Enum<T>> extends ConfigEntryImpl<T> {
     @Override
     public void setValue(@NotNull T value) {
         this.internal.setValue(value.toString());
-        this.value = value;
+    }
+
+    @Override
+    public void putValue(@NotNull Object value) {
+        this.internal.putValue(value.toString());
+    }
+
+    @Override
+    public boolean isModified() {
+        return this.internal.isModified();
     }
 
     public static <T extends Enum<T>> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue) {

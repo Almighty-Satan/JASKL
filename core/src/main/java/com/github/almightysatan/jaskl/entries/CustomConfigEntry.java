@@ -22,9 +22,9 @@ package com.github.almightysatan.jaskl.entries;
 
 import com.github.almightysatan.jaskl.Config;
 import com.github.almightysatan.jaskl.ConfigProperty;
+import com.github.almightysatan.jaskl.InvalidTypeException;
 import com.github.almightysatan.jaskl.impl.ConfigEntryImpl;
 import com.github.almightysatan.jaskl.impl.WritableConfigEntry;
-import com.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,7 +51,8 @@ public class CustomConfigEntry<T> extends ConfigEntryImpl<T> {
                 if (annotation != null) {
                     field.setAccessible(true);
                     String propertyPath = path + "." + (annotation.value().isEmpty() ? field.getName() : annotation.value());
-                    properties.add(new Property<>(field, new WritableConfigEntryImpl<>(config, propertyPath, null, field.get(defaultValue))));
+                    Object fieldDefaultValue = field.get(defaultValue);
+                    properties.add(new Property<>(field, newEntry(config, propertyPath, null, fieldDefaultValue)));
                 }
             }
         } catch (IllegalAccessException e) {
@@ -88,6 +89,27 @@ public class CustomConfigEntry<T> extends ConfigEntryImpl<T> {
             throw new RuntimeException(e); // TODO custom exception
         }
         this.value = value;
+    }
+
+    private static WritableConfigEntry<?> newEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Object defaultValue) {
+        Objects.requireNonNull(defaultValue, String.format("Default value for path %s is null", path));
+
+        if (defaultValue instanceof String)
+            return (WritableConfigEntry<?>) StringConfigEntry.of(config, path, description, (String) defaultValue);
+        if (defaultValue instanceof Boolean)
+            return (WritableConfigEntry<?>) BooleanConfigEntry.of(config, path, description, (Boolean) defaultValue);
+        if (defaultValue instanceof Integer)
+            return (WritableConfigEntry<?>) IntegerConfigEntry.of(config, path, description, (Integer) defaultValue);
+        if (defaultValue instanceof Long)
+            return (WritableConfigEntry<?>) LongConfigEntry.of(config, path, description, (Long) defaultValue);
+        if (defaultValue instanceof Float)
+            return (WritableConfigEntry<?>) FloatConfigEntry.of(config, path, description, (Float) defaultValue);
+        if (defaultValue instanceof DoubleConfigEntry)
+            return (WritableConfigEntry<?>) DoubleConfigEntry.of(config, path, description, (Double) defaultValue);
+        if (defaultValue instanceof Enum<?>)
+            return (WritableConfigEntry<?>) EnumConfigEntry.of(config, path, description, (Enum) defaultValue);
+
+        throw new InvalidTypeException(path, defaultValue.getClass());
     }
 
     private class Property<U> implements WritableConfigEntry<U> {
