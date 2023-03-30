@@ -20,61 +20,78 @@
 
 package com.github.almightysatan.jaskl.hocon;
 
-import com.github.almightysatan.jaskl.Config;
-import com.github.almightysatan.jaskl.ConfigEntry;
-import com.github.almightysatan.jaskl.entries.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.github.almightysatan.test.ConfigTest.*;
 
 public class HoconConfigTest {
 
+    File file0 = new File("src/test/resources/example.hocon");
+    File file1 = new File("build/tmp/test/write.hocon");
+
     @Test
-    public void testFile() throws IOException {
-        Config config = HoconConfig.of(new File("src/test/resources/basic.hocon"), null);
-        ConfigEntry<String> stringConfigEntry = StringConfigEntry.of(config, "hocon.exampleString", null, "default");
-        ConfigEntry<Integer> intConfigEntry = IntegerConfigEntry.of(config, "hocon.exampleInt", null, 0);
-        ConfigEntry<Boolean> boolConfigEntry = BooleanConfigEntry.of(config, "hocon.exampleBool", null, false);
-        ConfigEntry<Double> floatConfigEntry = DoubleConfigEntry.of(config, "hocon.exampleDouble", null, 0.0D);
-
-        config.load();
-
-        assertEquals("String", stringConfigEntry.getValue());
-        assertEquals(42, intConfigEntry.getValue());
-        assertEquals(true, boolConfigEntry.getValue());
-        assertEquals(6.9D, floatConfigEntry.getValue());
-
-        config.close();
+    public void testLoadHocon() throws IOException {
+        testLoad(() -> HoconConfig.of(file0, "Example HOCON Config"));
     }
 
     @Test
-    public void testLoadNonExisting() throws IOException {
-        Config config = HoconConfig.of(new File("src/test/resources/basic.hocon"), null);
-
-        ConfigEntry<String> nonExistingStringConfigEntry = StringConfigEntry.of(config, "hocon.doesnotexist", null, "default");
-
-        config.load();
-
-        assertEquals("default", nonExistingStringConfigEntry.getValue()); // Doesn't exist in the file therefore the default value should be used
-
-        config.close();
+    public void testLoadAfterClosedHocon() throws IOException {
+        testLoadAfterClosed(() -> HoconConfig.of(file0, "Example HOCON Config"));
     }
 
     @Test
-    public void testList() throws IOException {
-        Config config = HoconConfig.of(new File("src/test/resources/list.hocon"), null);
-        ConfigEntry<List<String>> stringConfigEntry = ListConfigEntry.of(config, "hocon.subConf.exampleList", null, Collections.emptyList());
-
-        config.load();
-
-        assertEquals(Arrays.asList("ListContent1", "ListContent2"), stringConfigEntry.getValue());
-
-        config.close();
+    public void testAlreadyLoadedHocon() throws IOException {
+        testAlreadyLoaded(() -> HoconConfig.of(file0, "Example HOCON Config"));
     }
+
+    @Test
+    public void testLoadValuesHocon() throws IOException {
+        testLoadValues(() -> HoconConfig.of(file0, "Example HOCON Config"));
+    }
+
+    @Test
+    public void testEnumValuesHocon() throws IOException {
+        testEnumValues(() -> HoconConfig.of(file0, "Example HOCON Config"));
+    }
+
+    @Test
+    public void testListValuesHocon() throws IOException {
+        testListValues(() -> HoconConfig.of(file0, "Example HOCON Config"));
+    }
+
+    @Test
+    public void testCustomValuesHocon() throws IOException {
+        testCustomValues(() -> HoconConfig.of(file0, "Example HOCON Config"));
+    }
+
+    @Test
+    public void testMapValuesHocon() throws IOException {
+        testMapValues(() -> HoconConfig.of(file0, "Example HOCON Config"));
+    }
+
+    @Test
+    public void testInvalidPathsHocon() throws IOException {
+        testInvalidPaths(() -> HoconConfig.of(file0, "Example HOCON Config"));
+    }
+
+    @Test
+    public void testWriteAndLoadHocon() throws IOException {
+        Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> testWriteAndLoad(() -> HoconConfig.of(file1, "Example HOCON Config"), file1)
+        );
+    }
+
+    @Test
+    public void testStripHocon() throws IOException {
+        Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> testStrip(() -> HoconConfig.of(file1, "Example HOCON Config"), file1)
+        );
+    }
+
 }

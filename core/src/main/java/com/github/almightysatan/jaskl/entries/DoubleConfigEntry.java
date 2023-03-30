@@ -46,6 +46,10 @@ public class DoubleConfigEntry extends WritableConfigEntryImpl<Double> {
                 return bigDecimal.doubleValue();
         }
 
+        if (type instanceof Integer) {
+            return (double) type;
+        }
+
         if (type instanceof String) {
             try {
                 return Double.valueOf((String) type);

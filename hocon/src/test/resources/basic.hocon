@@ -1,6 +1,0 @@
-hocon {
-  exampleString = "String"
-  exampleInt = 42
-  exampleBool = true
-  exampleDouble = 6.9
-}

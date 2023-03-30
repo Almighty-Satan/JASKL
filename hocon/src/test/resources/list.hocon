@@ -1,8 +1,0 @@
-hocon {
-  subConf {
-    exampleList = [
-      "ListContent1",
-      "ListContent2"
-    ]
-  }
-}

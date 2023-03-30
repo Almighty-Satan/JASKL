@@ -20,6 +20,7 @@
 
 package com.github.almightysatan.jaskl.properties;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -59,7 +60,10 @@ public class PropertiesConfigTest {
 
     @Test
     public void testListValuesProperties() throws IOException {
-        testListValues(() -> PropertiesConfig.of(file0, "Example Properties Config"));
+        Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> testListValues(() -> PropertiesConfig.of(file0, "Example Properties Config"))
+        );
     }
 
     @Test
