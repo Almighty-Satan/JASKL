@@ -25,10 +25,7 @@ import com.github.almightysatan.jaskl.ConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public abstract class ConfigImpl implements Config {
 
@@ -52,10 +49,33 @@ public abstract class ConfigImpl implements Config {
         return description;
     }
 
-    @NotNull
-    @Override
-    public Map<String, ConfigEntry<?>> getEntries() {
+    /**
+     * Returns a map of all paths with their config entries.
+     *
+     * @return a map of all paths with their config entries
+     */
+    public @NotNull Map<String, ConfigEntry<?>> getEntries() {
         return entries;
+    }
+
+    /**
+     * Returns a set of all the paths of the config entries.
+     *
+     * @return a set of all the paths of the config entries
+     */
+    @NotNull
+    public Set<String> getPaths() {
+        return this.getEntries().keySet();
+    }
+
+    /**
+     * Returns a collection of all config entries.
+     *
+     * @return a collection of all config entries
+     */
+    @NotNull
+    public Collection<ConfigEntry<?>> getValues() {
+        return this.getEntries().values();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
