@@ -243,7 +243,7 @@ public class ConfigTest {
         Config config1 = configSupplier.get();
         ConfigEntry<ExampleCustomObject> entry1 = CustomConfigEntry.of(config1, "example", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE));
 
-        config0.load();
+        config1.load();
 
         Assertions.assertEquals(value, entry1.getValue());
     }
