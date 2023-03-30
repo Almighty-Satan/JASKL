@@ -47,9 +47,7 @@ public class FloatConfigEntry extends WritableConfigEntryImpl<Float> {
         }
 
         if (type instanceof Integer) {
-            int intVal = (int) type;
-            if (intVal > Float.MIN_VALUE && intVal < Float.MAX_VALUE)
-                return (float) intVal;
+            return (float) (int) type;
         }
 
         if (type instanceof Double) {
