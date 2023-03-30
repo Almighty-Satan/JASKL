@@ -29,8 +29,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class BooleanConfigEntry extends WritableConfigEntryImpl<Boolean> {
 
-    private BooleanConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Boolean defaultValue) {
-        super(config, path, description, defaultValue);
+    BooleanConfigEntry(@NotNull String path, @Nullable String description, @NotNull Boolean defaultValue) {
+        super(path, description, defaultValue);
     }
 
     @Override
@@ -52,6 +52,6 @@ public class BooleanConfigEntry extends WritableConfigEntryImpl<Boolean> {
     }
 
     public static ConfigEntry<Boolean> of(@NotNull Config config, @NotNull String path, @Nullable String description, boolean defaultValue) {
-        return new BooleanConfigEntry(config, path, description, defaultValue);
+        return new BooleanConfigEntry(path, description, defaultValue).register(config);
     }
 }

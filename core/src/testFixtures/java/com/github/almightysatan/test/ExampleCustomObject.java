@@ -33,6 +33,8 @@ public class ExampleCustomObject {
     @ConfigProperty("exampleEnum")
     private ExampleEnum exampleEnum;
 
+    public ExampleCustomObject() {}
+
     public ExampleCustomObject(String exampleString, int exampleInt, ExampleEnum exampleEnum) {
         this.exampleString = exampleString;
         this.exampleInt = exampleInt;
@@ -50,5 +52,14 @@ public class ExampleCustomObject {
     @Override
     public int hashCode() {
         return Objects.hash(exampleString, exampleInt, exampleEnum);
+    }
+
+    @Override
+    public String toString() {
+        return "ExampleCustomObject{" +
+                "exampleString='" + exampleString + '\'' +
+                ", exampleInt=" + exampleInt +
+                ", exampleEnum=" + exampleEnum +
+                '}';
     }
 }

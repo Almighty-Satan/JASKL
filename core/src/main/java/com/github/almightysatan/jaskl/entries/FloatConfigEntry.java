@@ -31,8 +31,8 @@ import java.math.BigDecimal;
 
 public class FloatConfigEntry extends WritableConfigEntryImpl<Float> {
 
-    private FloatConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Float defaultValue) {
-        super(config, path, description, defaultValue);
+    FloatConfigEntry(@NotNull String path, @Nullable String description, @NotNull Float defaultValue) {
+        super(path, description, defaultValue);
     }
 
     @Override
@@ -66,6 +66,6 @@ public class FloatConfigEntry extends WritableConfigEntryImpl<Float> {
     }
 
     public static ConfigEntry<Float> of(@NotNull Config config, @NotNull String path, @Nullable String description, float defaultValue) {
-        return new FloatConfigEntry(config, path, description, defaultValue);
+        return new FloatConfigEntry(path, description, defaultValue).register(config);
     }
 }

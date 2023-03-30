@@ -31,8 +31,8 @@ import java.math.BigInteger;
 
 public class IntegerConfigEntry extends WritableConfigEntryImpl<Integer> {
 
-    private IntegerConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Integer defaultValue) {
-        super(config, path, description, defaultValue);
+    IntegerConfigEntry(@NotNull String path, @Nullable String description, @NotNull Integer defaultValue) {
+        super(path, description, defaultValue);
     }
 
     @Override
@@ -62,6 +62,6 @@ public class IntegerConfigEntry extends WritableConfigEntryImpl<Integer> {
     }
 
     public static ConfigEntry<Integer> of(@NotNull Config config, @NotNull String path, @Nullable String description, int defaultValue) {
-        return new IntegerConfigEntry(config, path, description, defaultValue);
+        return new IntegerConfigEntry(path, description, defaultValue).register(config);
     }
 }

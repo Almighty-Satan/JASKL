@@ -28,11 +28,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class StringConfigEntry extends WritableConfigEntryImpl<String> {
 
-    StringConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull String defaultValue) {
-        super(config, path, description, defaultValue);
+    StringConfigEntry(@NotNull String path, @Nullable String description, @NotNull String defaultValue) {
+        super(path, description, defaultValue);
     }
 
     public static ConfigEntry<String> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull String defaultValue) {
-        return new StringConfigEntry(config, path, description, defaultValue);
+        return new StringConfigEntry(path, description, defaultValue).register(config);
     }
 }

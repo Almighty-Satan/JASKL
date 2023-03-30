@@ -33,10 +33,16 @@ public class EnumConfigEntry<T extends Enum<T>> extends ConfigEntryImpl<T> imple
     private final WritableConfigEntry<String> internal;
     private T value;
 
-    private EnumConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
+    EnumConfigEntry(@NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         super(path, description, defaultValue);
-        this.internal = new InternalConfigEntry(config, path, description, defaultValue.name());
+        this.internal = new InternalConfigEntry(path, description, defaultValue.name());
         this.value = defaultValue;
+    }
+
+    @Override
+    public WritableConfigEntry<T> register(@NotNull Config config) {
+        this.internal.register(config);
+        return this;
     }
 
     @Override
@@ -60,13 +66,13 @@ public class EnumConfigEntry<T extends Enum<T>> extends ConfigEntryImpl<T> imple
     }
 
     public static <T extends Enum<T>> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue) {
-        return new EnumConfigEntry<>(config, path, description, defaultValue);
+        return new EnumConfigEntry<>(path, description, defaultValue).register(config);
     }
 
     public class InternalConfigEntry extends StringConfigEntry {
 
-        private InternalConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull String defaultValue) {
-            super(config, path, description, defaultValue);
+        private InternalConfigEntry(@NotNull String path, @Nullable String description, @NotNull String defaultValue) {
+            super(path, description, defaultValue);
         }
 
         @Override

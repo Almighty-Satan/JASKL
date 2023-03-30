@@ -31,8 +31,8 @@ import java.math.BigDecimal;
 
 public class DoubleConfigEntry extends WritableConfigEntryImpl<Double> {
 
-    private DoubleConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Double defaultValue) {
-        super(config, path, description, defaultValue);
+    DoubleConfigEntry(@NotNull String path, @Nullable String description, @NotNull Double defaultValue) {
+        super(path, description, defaultValue);
     }
 
     @Override
@@ -60,6 +60,6 @@ public class DoubleConfigEntry extends WritableConfigEntryImpl<Double> {
     }
 
     public static ConfigEntry<Double> of(@NotNull Config config, @NotNull String path, @Nullable String description, double defaultValue) {
-        return new DoubleConfigEntry(config, path, description, defaultValue);
+        return new DoubleConfigEntry(path, description, defaultValue).register(config);
     }
 }

@@ -20,7 +20,6 @@
 
 package com.github.almightysatan.jaskl.impl;
 
-import com.github.almightysatan.jaskl.Config;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,11 +30,9 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     private T value;
     private boolean modified = true; // true by default because Config#write should write the entry to the config if it does not exist
 
-    protected WritableConfigEntryImpl(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
+    protected WritableConfigEntryImpl(@NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         super(path, description, defaultValue);
-        Objects.requireNonNull(config);
         this.value = defaultValue;
-        ((ConfigImpl) config).registerEntry(this);
     }
 
     @Override

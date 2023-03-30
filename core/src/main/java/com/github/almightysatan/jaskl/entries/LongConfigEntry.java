@@ -31,8 +31,8 @@ import java.math.BigInteger;
 
 public class LongConfigEntry extends WritableConfigEntryImpl<Long> {
 
-    private LongConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Long defaultValue) {
-        super(config, path, description, defaultValue);
+    LongConfigEntry(@NotNull String path, @Nullable String description, @NotNull Long defaultValue) {
+        super(path, description, defaultValue);
     }
 
     @Override
@@ -62,6 +62,6 @@ public class LongConfigEntry extends WritableConfigEntryImpl<Long> {
     }
 
     public static ConfigEntry<Long> of(@NotNull Config config, @NotNull String path, @Nullable String description, long defaultValue) {
-        return new LongConfigEntry(config, path, description, defaultValue);
+        return new LongConfigEntry(path, description, defaultValue).register(config);
     }
 }

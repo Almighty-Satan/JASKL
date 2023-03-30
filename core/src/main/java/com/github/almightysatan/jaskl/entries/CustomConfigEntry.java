@@ -40,6 +40,7 @@ public class CustomConfigEntry<T> extends ConfigEntryImpl<T> {
     private final Property<?>[] properties;
     private T value;
 
+    @SuppressWarnings("unchecked")
     private CustomConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         super(path, description, defaultValue);
         Objects.requireNonNull(config);
@@ -53,7 +54,9 @@ public class CustomConfigEntry<T> extends ConfigEntryImpl<T> {
                     field.setAccessible(true);
                     String propertyPath = path + "." + (annotation.value().isEmpty() ? field.getName() : annotation.value());
                     Object fieldDefaultValue = field.get(defaultValue);
-                    properties.add(new Property<>(field, newEntry(config, propertyPath, null, fieldDefaultValue)));
+                    Property<?> property = new Property<>(field, newEntry(propertyPath, null, fieldDefaultValue));
+                    property.register(config);
+                    properties.add(property);
                 }
             }
         } catch (IllegalAccessException e) {
@@ -92,23 +95,24 @@ public class CustomConfigEntry<T> extends ConfigEntryImpl<T> {
         this.value = value;
     }
 
-    private static WritableConfigEntry<?> newEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Object defaultValue) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static WritableConfigEntry<?> newEntry(@NotNull String path, @Nullable String description, @NotNull Object defaultValue) {
         Objects.requireNonNull(defaultValue, String.format("Default value for path %s is null", path));
 
         if (defaultValue instanceof String)
-            return (WritableConfigEntry<?>) StringConfigEntry.of(config, path, description, (String) defaultValue);
+            return new StringConfigEntry(path, description, (String) defaultValue);
         if (defaultValue instanceof Boolean)
-            return (WritableConfigEntry<?>) BooleanConfigEntry.of(config, path, description, (Boolean) defaultValue);
+            return new BooleanConfigEntry(path, description, (Boolean) defaultValue);
         if (defaultValue instanceof Integer)
-            return (WritableConfigEntry<?>) IntegerConfigEntry.of(config, path, description, (Integer) defaultValue);
+            return new IntegerConfigEntry(path, description, (Integer) defaultValue);
         if (defaultValue instanceof Long)
-            return (WritableConfigEntry<?>) LongConfigEntry.of(config, path, description, (Long) defaultValue);
+            return new LongConfigEntry(path, description, (Long) defaultValue);
         if (defaultValue instanceof Float)
-            return (WritableConfigEntry<?>) FloatConfigEntry.of(config, path, description, (Float) defaultValue);
-        if (defaultValue instanceof DoubleConfigEntry)
-            return (WritableConfigEntry<?>) DoubleConfigEntry.of(config, path, description, (Double) defaultValue);
+            return new FloatConfigEntry(path, description, (Float) defaultValue);
+        if (defaultValue instanceof Double)
+            return new DoubleConfigEntry(path, description, (Double) defaultValue);
         if (defaultValue instanceof Enum<?>)
-            return (WritableConfigEntry<?>) EnumConfigEntry.of(config, path, description, (Enum) defaultValue);
+            return new EnumConfigEntry(path, description, (Enum) defaultValue);
 
         throw new InvalidTypeException(path, defaultValue.getClass());
     }

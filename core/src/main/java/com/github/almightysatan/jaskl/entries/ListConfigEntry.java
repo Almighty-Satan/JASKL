@@ -31,8 +31,8 @@ import java.util.List;
 
 public class ListConfigEntry<T> extends WritableConfigEntryImpl<List<T>> {
 
-    private ListConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue) {
-        super(config, path, description, defaultValue);
+    ListConfigEntry(@NotNull String path, @Nullable String description, @NotNull List<T> defaultValue) {
+        super(path, description, defaultValue);
     }
 
     @SuppressWarnings("unchecked")
@@ -46,6 +46,6 @@ public class ListConfigEntry<T> extends WritableConfigEntryImpl<List<T>> {
     }
 
     public static <T> ConfigEntry<List<T>> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue) {
-        return new ListConfigEntry<>(config, path, description, defaultValue);
+        return new ListConfigEntry<>(path, description, defaultValue).register(config);
     }
 }
