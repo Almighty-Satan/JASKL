@@ -135,7 +135,7 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
         node.set(pathSplit[pathSplit.length - 1], value);
     }
 
-    protected boolean stripNodes(@NotNull String path, @NotNull ObjectNode node, Set<String> paths) {
+    protected boolean stripNodes(@NotNull String path, @NotNull ObjectNode node, @NotNull Set<String> paths) {
         boolean changed = false;
         List<String> toRemove = new ArrayList<>();
         Iterator<Entry<String, JsonNode>> it = node.fields();
