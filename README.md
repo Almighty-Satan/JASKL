@@ -6,16 +6,16 @@ JASKL is a simple config library supporting multiple different formats.
 ### How to use it?
 JASKL is based on `Config`s and `ConfigEntry`s. 
 Create a new Config by instantiating one of the following classes: 
-`TomlConfig`, `PropertiesConfig`,  `HoconConfig` or `MongodbConfig`. 
+`YamlConfig`, `JsonConfig`, `TomlConfig`, `PropertiesConfig`,  `HoconConfig` or `MongodbConfig`. 
 After that, new `ConfigEntry`s can be created and added to the config.
 
 ### Example
 
 ```java
-File file = new File("path/to/config.toml");
+File file = new File("path/to/config.yaml");
 
 // Create a config based on a file
-Config config = TomlConfig.of(file, "Config for example values");
+Config config = YamlConfig.of(file, "Config for example values");
 
 // Create entries and add them to the config
 ConfigEntry<String> stringValue = StringConfigEntry.of(config, "example.path.string", "An example String!", "This is the default value!");
