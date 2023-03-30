@@ -199,6 +199,45 @@ public class ConfigTest {
      * Test if a config can be created, saved and loaded again.
      * This test requires a valid file path.
      */
+    public static void testWriteAndLoadList(Supplier<Config> configSupplier, File file) throws IOException {
+        if (file.exists() && !file.delete())
+            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
+
+        Config config0 = configSupplier.get();
+
+        List<Double> list0 = Arrays.asList(1.0D, 2.0D);
+        ConfigEntry<List<Double>> listConfigEntry0 = ListConfigEntry.of(config0, "example.list", "Example Integer List", list0);
+        config0.load();
+
+        List<Double> list1 = Arrays.asList(3.0D, 4.0D);
+        listConfigEntry0.setValue(list1);
+
+        config0.write();
+        config0.close();
+
+        Assertions.assertTrue(file.exists());
+
+        Config config1 = configSupplier.get();
+        ConfigEntry<List<Double>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example Integer List", list0);
+
+        config1.load();
+
+        for (int i = 0; i < list1.size(); i++) {
+            double val = listConfigEntry1.getValue().get(i);
+            Assertions.assertEquals(list1.get(i),val );
+        }
+
+
+        //Assertions.assertArrayEquals(list1.toArray(new Float[2]), listConfigEntry1.getValue().toArray(new Float[2]));
+
+        config1.close();
+    }
+
+
+    /**
+     * Test if a config can be created, saved and loaded again.
+     * This test requires a valid file path.
+     */
     public static void testStrip(Supplier<Config> configSupplier, File file) throws IOException {
         if (file.exists() && !file.delete())
             Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));

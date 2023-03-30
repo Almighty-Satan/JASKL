@@ -88,6 +88,14 @@ public class PropertiesConfigTest {
     }
 
     @Test
+    public void testWriteAndLoadListProperties() throws IOException {
+        Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> testWriteAndLoadList(() -> PropertiesConfig.of(file1, "Example Properties Config"), file1)
+        );
+    }
+
+    @Test
     public void testStripProperties() throws IOException {
         testStrip(() -> PropertiesConfig.of(file1, "Example Properties Config"), file1);
     }

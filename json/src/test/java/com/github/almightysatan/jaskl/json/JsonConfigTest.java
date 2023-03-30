@@ -84,6 +84,11 @@ public class JsonConfigTest {
     }
 
     @Test
+    public void testWriteAndLoadListJson() throws IOException {
+        testWriteAndLoadList(() -> JsonConfig.of(file1, "Example JSON Config"), file1);
+    }
+
+    @Test
     public void testStripJson() throws IOException {
         testStrip(() -> JsonConfig.of(file1, "Example JSON Config"), file1);
     }

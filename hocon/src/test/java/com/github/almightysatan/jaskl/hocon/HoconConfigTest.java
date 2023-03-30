@@ -88,6 +88,14 @@ public class HoconConfigTest {
     }
 
     @Test
+    public void testWriteAndLoadListHocon() throws IOException {
+        Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> testWriteAndLoadList(() -> HoconConfig.of(file1, "Example HOCON Config"), file1)
+        );
+    }
+
+    @Test
     public void testStripHocon() throws IOException {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
@@ -97,6 +105,9 @@ public class HoconConfigTest {
 
     @Test
     public void testCustomHocon() throws IOException {
-        testCustom(() -> HoconConfig.of(file2, "Example HOCON Config"));
+        Assertions.assertThrows(
+                UnsupportedOperationException.class,
+                () -> testCustom(() -> HoconConfig.of(file2, "Example HOCON Config"))
+        );
     }
 }
