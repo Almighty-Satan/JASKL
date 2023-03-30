@@ -1,5 +1,0 @@
-[subCategory]
-    subEntry = "Sub"
-
-    [subCategory.subSubCategory]
-        subSubEntry = "SubSub"

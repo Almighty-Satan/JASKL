@@ -18,10 +18,11 @@
  * USA
  */
 
-package com.github.almightysatan.jaskl.properties;
+package com.github.almightysatan.test;
 
-public enum Example {
+public enum ExampleEnum {
 
     EXAMPLE,
-    EXAMPLE2
+    ANOTHER_EXAMPLE
+
 }

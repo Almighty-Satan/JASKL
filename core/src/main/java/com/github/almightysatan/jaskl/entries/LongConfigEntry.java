@@ -52,7 +52,9 @@ public class LongConfigEntry extends WritableConfigEntryImpl<Long> {
         if (type instanceof String) {
             try {
                 return Long.valueOf((String) type);
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+                System.out.println("Found String but couldnt transform");
+            }
         }
 
         throw new InvalidTypeException(getPath(), Long.class, type.getClass());

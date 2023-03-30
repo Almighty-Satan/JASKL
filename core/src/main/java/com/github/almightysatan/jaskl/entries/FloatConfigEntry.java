@@ -46,6 +46,12 @@ public class FloatConfigEntry extends WritableConfigEntryImpl<Float> {
                 return bigDecimal.floatValue();
         }
 
+        if (type instanceof Double) {
+            double doubleVal = (double) type;
+            if (doubleVal > Float.MIN_VALUE && doubleVal < Float.MAX_VALUE)
+                return (float) doubleVal;
+        }
+
         if (type instanceof String) {
             try {
                 return Float.valueOf((String) type);
