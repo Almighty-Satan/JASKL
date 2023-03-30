@@ -50,6 +50,10 @@ public class DoubleConfigEntry extends WritableConfigEntryImpl<Double> {
             return (double) (int) type;
         }
 
+        if (type instanceof Long) {
+            return (double) (long) type;
+        }
+
         if (type instanceof String) {
             try {
                 return Double.valueOf((String) type);
