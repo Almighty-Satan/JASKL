@@ -96,7 +96,7 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
         }
 
         if (shouldWrite)
-            this.mapper.writeValue(this.file, this.root);
+            this.mapper.writerWithDefaultPrettyPrinter().writeValue(this.file, this.root);
     }
 
     @Override
@@ -106,7 +106,7 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
         Util.createFileAndPath(this.file);
 
         if (stripNodes("", this.root, this.getPaths()))
-            this.mapper.writeValue(this.file, this.root);
+            this.mapper.writerWithDefaultPrettyPrinter().writeValue(this.file, this.root);
     }
 
     @Override
