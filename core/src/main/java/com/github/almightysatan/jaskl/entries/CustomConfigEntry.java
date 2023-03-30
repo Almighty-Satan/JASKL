@@ -168,6 +168,11 @@ public class CustomConfigEntry<T> extends ConfigEntryImpl<T> {
         }
 
         @Override
+        public @NotNull Object getValueToWrite() {
+            return this.entry.getValueToWrite();
+        }
+
+        @Override
         public boolean isModified() {
             return this.entry.isModified();
         }

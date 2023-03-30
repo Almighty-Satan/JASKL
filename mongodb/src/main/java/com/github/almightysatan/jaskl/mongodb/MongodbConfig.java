@@ -97,7 +97,7 @@ public class MongodbConfig extends ConfigImpl {
         for (WritableConfigEntry<?> configEntry : this.getCastedValues())
             if (configEntry.isModified()) {
                 Document document = new Document();
-                document.put("value", configEntry.getValue());
+                document.put("value", configEntry.getValueToWrite());
 
                 Document updateDocument = new Document();
                 updateDocument.put("$set", document);

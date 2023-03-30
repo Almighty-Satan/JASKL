@@ -20,7 +20,6 @@
 
 package com.github.almightysatan.jaskl.yaml;
 
-import com.github.almightysatan.jaskl.ConfigEntry;
 import com.github.almightysatan.jaskl.impl.ConfigImpl;
 import com.github.almightysatan.jaskl.impl.Util;
 import com.github.almightysatan.jaskl.impl.WritableConfigEntry;
@@ -138,7 +137,7 @@ public class YamlConfig extends ConfigImpl {
         }
     }
 
-    private void putNode(@NotNull ConfigEntry<?> entry) {
+    private void putNode(@NotNull WritableConfigEntry<?> entry) {
         String[] pathSplit = entry.getPath().split("\\.");
         MappingNode node = this.root;
         pathLoop: for (int i = 0; i < pathSplit.length; i++) {
@@ -152,7 +151,7 @@ public class YamlConfig extends ConfigImpl {
                         node.getValue().replaceAll(nodeTuple -> {
                             if (nodeTuple != tuple)
                                 return nodeTuple;
-                            return this.newNodeTuple(pathSplit[pathSplit.length - 1], entry.getDescription(), entry.getValue());
+                            return this.newNodeTuple(pathSplit[pathSplit.length - 1], entry.getDescription(), entry.getValueToWrite());
                         });
                         return;
                     }
@@ -165,7 +164,7 @@ public class YamlConfig extends ConfigImpl {
                 node.getValue().add(new NodeTuple(this.yaml.represent(pathSplit[i]), newNode));
                 node = newNode;
             } else {
-                node.getValue().add(this.newNodeTuple(pathSplit[pathSplit.length - 1], entry.getDescription(), entry.getValue()));
+                node.getValue().add(this.newNodeTuple(pathSplit[pathSplit.length - 1], entry.getDescription(), entry.getValueToWrite()));
                 return;
             }
         }

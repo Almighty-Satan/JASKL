@@ -73,7 +73,7 @@ public class PropertiesConfig extends ConfigImpl {
         boolean shouldWrite = false;
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             if (configEntry.isModified()) {
-                this.config.setProperty(configEntry.getPath(), configEntry.getValue().toString());
+                this.config.setProperty(configEntry.getPath(), configEntry.getValueToWrite().toString());
                 shouldWrite = true;
             }
         }

@@ -23,84 +23,37 @@ package com.github.almightysatan.jaskl.entries;
 import com.github.almightysatan.jaskl.Config;
 import com.github.almightysatan.jaskl.ConfigEntry;
 import com.github.almightysatan.jaskl.InvalidTypeException;
-import com.github.almightysatan.jaskl.impl.ConfigEntryImpl;
-import com.github.almightysatan.jaskl.impl.WritableConfigEntry;
+import com.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EnumConfigEntry<T extends Enum<T>> extends ConfigEntryImpl<T> implements WritableConfigEntry<T> {
+import java.util.Objects;
 
-    private final WritableConfigEntry<String> internal;
-    private T value;
+public class EnumConfigEntry<T extends Enum<T>> extends WritableConfigEntryImpl<T> {
 
     EnumConfigEntry(@NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         super(path, description, defaultValue);
-        this.internal = new InternalConfigEntry(path, description, defaultValue.name());
-        this.value = defaultValue;
     }
 
     @Override
-    public WritableConfigEntry<T> register(@NotNull Config config) {
-        this.internal.register(config);
-        return this;
-    }
-
-    @Override
-    public @NotNull T getValue() {
-        return value;
-    }
-
-    @Override
-    public void setValue(@NotNull T value) {
-        this.internal.setValue(value.toString());
-    }
-
-    @Override
+    @SuppressWarnings("unchecked")
     public void putValue(@NotNull Object value) {
-        this.internal.putValue(value.toString());
+        Objects.requireNonNull(value);
+        if (!(value instanceof String))
+            throw new InvalidTypeException(this.getPath(), this.getDefaultValue().getClass(), value.getClass());
+        try {
+            super.putValue(Enum.valueOf(this.getDefaultValue().getClass(), (String) value));
+        } catch (IllegalArgumentException e) {
+            throw new InvalidTypeException(this.getPath(), this.getDefaultValue().getClass(), (String) value);
+        }
     }
 
     @Override
-    public boolean isModified() {
-        return this.internal.isModified();
+    public @NotNull Object getValueToWrite() {
+        return this.getValue().name();
     }
 
     public static <T extends Enum<T>> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue) {
         return new EnumConfigEntry<>(path, description, defaultValue).register(config);
-    }
-
-    public class InternalConfigEntry extends StringConfigEntry {
-
-        private InternalConfigEntry(@NotNull String path, @Nullable String description, @NotNull String defaultValue) {
-            super(path, description, defaultValue);
-        }
-
-        @Override
-        public void setValue(@NotNull String value) {
-            super.setValue(value);
-            EnumConfigEntry.this.value = this.getEnum(value);
-        }
-
-        @Override
-        public void putValue(@NotNull Object value) {
-            super.putValue(value);
-            EnumConfigEntry.this.value = this.getEnum((String) value);
-        }
-
-        @Override
-        protected @NotNull String checkType(@NotNull Object type) {
-            String value = super.checkType(type);
-            this.getEnum(value);
-            return value;
-        }
-
-        @SuppressWarnings("unchecked")
-        private T getEnum(String value) {
-            try {
-                return (T) Enum.valueOf(EnumConfigEntry.this.getDefaultValue().getClass(), value);
-            } catch (IllegalArgumentException e) {
-                throw new InvalidTypeException(this.getPath(), EnumConfigEntry.this.getDefaultValue().getClass(), value);
-            }
-        }
     }
 }

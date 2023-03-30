@@ -90,7 +90,7 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
         boolean shouldWrite = false;
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             if (configEntry.isModified()) {
-                this.putNode(configEntry.getPath(), this.mapper.valueToTree(configEntry.getValue()));
+                this.putNode(configEntry.getPath(), this.mapper.valueToTree(configEntry.getValueToWrite()));
                 shouldWrite = true;
             }
         }

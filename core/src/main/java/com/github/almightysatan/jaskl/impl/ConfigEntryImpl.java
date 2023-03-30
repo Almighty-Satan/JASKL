@@ -56,6 +56,7 @@ public abstract class ConfigEntryImpl<T> implements ConfigEntry<T> {
         return this.defaultValue;
     }
 
+    @SuppressWarnings("unchecked")
     protected @NotNull T checkType(@NotNull Object type) {
         if (this.getDefaultValue().getClass() != type.getClass())
             throw new InvalidTypeException(this.getPath(), this.getDefaultValue().getClass(), type.getClass());

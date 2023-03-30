@@ -58,6 +58,11 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     }
 
     @Override
+    public @NotNull Object getValueToWrite() {
+        return this.getValue();
+    }
+
+    @Override
     public boolean isModified() {
         return this.modified;
     }

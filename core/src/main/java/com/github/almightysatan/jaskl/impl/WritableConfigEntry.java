@@ -30,6 +30,8 @@ public interface WritableConfigEntry<T> extends ConfigEntry<T> {
 
     void putValue(@NotNull Object value);
 
+    @NotNull Object getValueToWrite();
+
     boolean isModified();
 
     default WritableConfigEntry<T> register(@NotNull Config config) {
