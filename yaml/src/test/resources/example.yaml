@@ -7,5 +7,5 @@ example:
   string: "modified"
   enum: "ANOTHER_EXAMPLE"
   list:
-  - "Example3"
-  - "Example4"
+    - "Example3"
+    - "Example4"
