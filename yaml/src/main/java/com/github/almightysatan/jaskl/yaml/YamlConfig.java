@@ -87,6 +87,8 @@ public class YamlConfig extends ConfigImpl {
             throw new IllegalStateException();
         Util.createFileAndPath(this.file);
 
+        this.setComment(this.root, this.getDescription());
+
         boolean shouldWrite = false;
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             if (configEntry.isModified()) {
@@ -170,10 +172,16 @@ public class YamlConfig extends ConfigImpl {
 
     protected @NotNull NodeTuple newNodeTuple(@NotNull String path, @Nullable String comment, @NotNull Object value) {
         Node keyNode = this.yaml.represent(path);
-        if (comment != null)
-            keyNode.setBlockComments(Collections.singletonList(new CommentLine(null, null, " " + comment, CommentType.BLOCK)));
+        this.setComment(keyNode, comment);
         Node valueNode = this.yaml.represent(value);
         return new NodeTuple(keyNode, valueNode);
+    }
+
+    protected void setComment(@NotNull Node node, @Nullable String comment) {
+        if (comment != null)
+            node.setBlockComments(Collections.singletonList(new CommentLine(null, null, " " + comment, CommentType.BLOCK)));
+        else
+            node.setBlockComments(new ArrayList<>(0)); // Remove comment
     }
 
     protected boolean stripNodes(@NotNull String path, @NotNull MappingNode node, @NotNull Set<String> paths) {

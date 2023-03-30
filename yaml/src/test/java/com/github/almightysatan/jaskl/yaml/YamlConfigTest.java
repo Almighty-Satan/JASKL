@@ -96,7 +96,7 @@ public class YamlConfigTest {
         File file = new File("build/temp/yaml/write.yaml");
         file.delete();
 
-        Config config0 = YamlConfig.of(file, null);
+        Config config0 = YamlConfig.of(file, "Hello World");
         ConfigEntry<String> stringConfigEntry0 = StringConfigEntry.of(config0, "abc.exampleString", "This is a test", "default");
         ConfigEntry<Integer> intConfigEntry0 = IntegerConfigEntry.of(config0, "abc.exampleInt", "This is another test", 69);
 
