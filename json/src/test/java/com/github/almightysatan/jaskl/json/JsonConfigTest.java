@@ -31,6 +31,7 @@ public class JsonConfigTest {
 
     File file0 = new File("src/test/resources/example.json");
     File file1 = new File("build/tmp/test/write.json");
+    File file2 = new File("build/tmp/test/writeCustom.json");
 
     @Test
     public void testLoadJson() throws IOException {
@@ -87,4 +88,8 @@ public class JsonConfigTest {
         testStrip(() -> JsonConfig.of(file1, "Example JSON Config"), file1);
     }
 
+    @Test
+    public void testCustomYaml() throws IOException {
+        testCustom(() -> JsonConfig.of(file2, "Example JSON Config"));
+    }
 }

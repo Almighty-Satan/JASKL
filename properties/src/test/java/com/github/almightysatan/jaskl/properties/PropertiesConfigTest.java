@@ -32,6 +32,7 @@ public class PropertiesConfigTest {
 
     File file0 = new File("src/test/resources/example.properties");
     File file1 = new File("build/tmp/test/write.properties");
+    File file2 = new File("build/tmp/test/writeCustom.properties");
 
     @Test
     public void testLoadProperties() throws IOException {
@@ -91,4 +92,8 @@ public class PropertiesConfigTest {
         testStrip(() -> PropertiesConfig.of(file1, "Example Properties Config"), file1);
     }
 
+    @Test
+    public void testCustomProperties() throws IOException {
+        testCustom(() -> PropertiesConfig.of(file2, "Example Properties Config"));
+    }
 }

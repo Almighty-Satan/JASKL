@@ -31,6 +31,7 @@ public class TomlConfigTest {
 
     File file0 = new File("src/test/resources/example.toml");
     File file1 = new File("build/tmp/test/write.toml");
+    File file2 = new File("build/tmp/test/writeCustom.toml");
 
     @Test
     public void testLoadToml() throws IOException {
@@ -87,4 +88,8 @@ public class TomlConfigTest {
         testStrip(() -> TomlConfig.of(file1, "Example TOML Config"), file1);
     }
 
+    @Test
+    public void testCustomToml() throws IOException {
+        testCustom(() -> TomlConfig.of(file2, "Example TOML Config"));
+    }
 }

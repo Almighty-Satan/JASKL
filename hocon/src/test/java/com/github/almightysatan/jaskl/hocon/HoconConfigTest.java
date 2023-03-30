@@ -32,6 +32,7 @@ public class HoconConfigTest {
 
     File file0 = new File("src/test/resources/example.hocon");
     File file1 = new File("build/tmp/test/write.hocon");
+    File file2 = new File("build/tmp/test/writeCustom.hocon");
 
     @Test
     public void testLoadHocon() throws IOException {
@@ -94,4 +95,8 @@ public class HoconConfigTest {
         );
     }
 
+    @Test
+    public void testCustomHocon() throws IOException {
+        testCustom(() -> HoconConfig.of(file2, "Example HOCON Config"));
+    }
 }

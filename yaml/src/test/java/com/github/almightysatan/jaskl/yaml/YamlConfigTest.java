@@ -31,6 +31,7 @@ public class YamlConfigTest {
 
     File file0 = new File("src/test/resources/example.yaml");
     File file1 = new File("build/tmp/test/write.yaml");
+    File file2 = new File("build/tmp/test/writeCustom.yaml");
 
     @Test
     public void testLoadYaml() throws IOException {
@@ -87,4 +88,8 @@ public class YamlConfigTest {
         testStrip(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
     }
 
+    @Test
+    public void testCustomYaml() throws IOException {
+        testCustom(() -> YamlConfig.of(file2, "Example YAML Config"));
+    }
 }

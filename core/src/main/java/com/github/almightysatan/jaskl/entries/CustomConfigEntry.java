@@ -21,6 +21,7 @@
 package com.github.almightysatan.jaskl.entries;
 
 import com.github.almightysatan.jaskl.Config;
+import com.github.almightysatan.jaskl.ConfigEntry;
 import com.github.almightysatan.jaskl.ConfigProperty;
 import com.github.almightysatan.jaskl.InvalidTypeException;
 import com.github.almightysatan.jaskl.impl.ConfigEntryImpl;
@@ -39,10 +40,10 @@ public class CustomConfigEntry<T> extends ConfigEntryImpl<T> {
     private final Property<?>[] properties;
     private T value;
 
-    public CustomConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue, @NotNull Class<T> type) {
+    private CustomConfigEntry(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         super(path, description, defaultValue);
         Objects.requireNonNull(config);
-        this.type = Objects.requireNonNull(type);
+        this.type = (Class<T>) defaultValue.getClass();
 
         List<Property<?>> properties = new ArrayList<>();
         try {
@@ -110,6 +111,10 @@ public class CustomConfigEntry<T> extends ConfigEntryImpl<T> {
             return (WritableConfigEntry<?>) EnumConfigEntry.of(config, path, description, (Enum) defaultValue);
 
         throw new InvalidTypeException(path, defaultValue.getClass());
+    }
+
+    public static <T> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
+        return new CustomConfigEntry<>(config, path, description, defaultValue);
     }
 
     private class Property<U> implements WritableConfigEntry<U> {
