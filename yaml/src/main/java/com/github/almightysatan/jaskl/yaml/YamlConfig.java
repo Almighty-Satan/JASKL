@@ -123,11 +123,12 @@ public class YamlConfig extends ConfigImpl {
 
     protected void loadValues(@NotNull String path, @NotNull MappingNode node) {
         for (NodeTuple tuple : node.getValue()) {
+            Node valueNode = tuple.getValueNode();
             String fieldPath = (path.isEmpty() ? "" : path + ".") + ((ScalarNode) tuple.getKeyNode()).getValue();
-            if (tuple.getValueNode() instanceof MappingNode) {
-                loadValues(fieldPath, (MappingNode) tuple.getValueNode());
-            } else if (tuple.getValueNode() instanceof ScalarNode) {
-                Object value = CONSTRUCTOR.constructObject(tuple.getValueNode());
+            if (valueNode instanceof MappingNode) {
+                loadValues(fieldPath, (MappingNode) valueNode);
+            } else if (valueNode instanceof ScalarNode || valueNode instanceof SequenceNode) {
+                Object value = CONSTRUCTOR.constructObject(valueNode);
                 if (value == null)
                     continue;
                 WritableConfigEntry<?> entry = (WritableConfigEntry<?>) this.getEntries().get(fieldPath);
@@ -188,13 +189,14 @@ public class YamlConfig extends ConfigImpl {
         boolean changed = false;
         List<NodeTuple> toRemove = new ArrayList<>();
         for (NodeTuple tuple : node.getValue()) {
+            Node valueNode = tuple.getValueNode();
             String fieldPath = (path.isEmpty() ? "" : path + ".") + ((ScalarNode) tuple.getKeyNode()).getValue();
-            if (tuple.getValueNode() instanceof MappingNode) {
-                MappingNode child = (MappingNode) tuple.getValueNode();
+            if (valueNode instanceof MappingNode) {
+                MappingNode child = (MappingNode) valueNode;
                 changed |= this.stripNodes(fieldPath, child, paths);
                 if (child.getValue().isEmpty())
                     toRemove.add(tuple);
-            } else if (tuple.getValueNode() instanceof ScalarNode) {
+            } else if (valueNode instanceof ScalarNode || valueNode instanceof SequenceNode) {
                 if (!paths.contains(fieldPath))
                     toRemove.add(tuple);
             }
