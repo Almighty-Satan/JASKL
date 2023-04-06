@@ -22,6 +22,7 @@ package com.github.almightysatan.test;
 
 import com.github.almightysatan.jaskl.Config;
 import com.github.almightysatan.jaskl.ConfigEntry;
+import com.github.almightysatan.jaskl.Type;
 import com.github.almightysatan.jaskl.entries.*;
 import org.junit.jupiter.api.Assertions;
 
@@ -121,7 +122,7 @@ public class ConfigTest {
         Config config = configSupplier.get();
 
         List<String> example0 = Arrays.asList("Example1", "Example2");
-        ConfigEntry<List<String>> listConfigEntry = ListConfigEntry.of(config, "example.list", "Example List", example0);
+        ConfigEntry<List<String>> listConfigEntry = ListConfigEntry.of(config, "example.list", "Example List", example0, Type.STRING);
 
         config.load();
 
@@ -205,11 +206,11 @@ public class ConfigTest {
 
         Config config0 = configSupplier.get();
 
-        List<String> list0 = Arrays.asList("a", "b");
-        ConfigEntry<List<String>> listConfigEntry0 = ListConfigEntry.of(config0, "example.list", "Example Integer List", list0);
+        List<Double> list0 = Arrays.asList(1.0, 2.0);
+        ConfigEntry<List<Double>> listConfigEntry0 = ListConfigEntry.of(config0, "example.list", "Example Double List", list0, Type.DOUBLE);
         config0.load();
 
-        List<String> list1 = Arrays.asList("c", "d");
+        List<Double> list1 = Arrays.asList(3.0, 4.0);
         listConfigEntry0.setValue(list1);
 
         config0.write();
@@ -218,11 +219,11 @@ public class ConfigTest {
         Assertions.assertTrue(file.exists());
 
         Config config1 = configSupplier.get();
-        ConfigEntry<List<String>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example Integer List", list0);
+        ConfigEntry<List<Double>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example Double List", list0, Type.DOUBLE);
 
         config1.load();
 
-        Assertions.assertArrayEquals(list1.toArray(new String[0]), listConfigEntry1.getValue().toArray(new String[0]));
+        Assertions.assertArrayEquals(list1.toArray(new Double[0]), listConfigEntry1.getValue().toArray(new Double[0]));
 
         config1.close();
     }

@@ -22,15 +22,15 @@ package com.github.almightysatan.jaskl;
 
 public class InvalidTypeException extends RuntimeException {
 
-    public InvalidTypeException(String path, Class<?> expected, Class<?> actual) {
-        super(String.format("Invalid type path=%s, expected=%s, actual=%s", path, expected.getName(), actual.getName()));
+    public InvalidTypeException(Class<?> expected, Class<?> actual) {
+        super(String.format("Invalid type: expected=%s, actual=%s", expected.getName(), actual.getName()));
     }
 
     public InvalidTypeException(String path, Class<?> enumClass, String enumName) {
-        super(String.format("Invalid type path=%s, enumClass=%s enumName=%s", path, enumClass.getName(), enumName));
+        super(String.format("Invalid type: path=%s, enumClass=%s enumName=%s", path, enumClass.getName(), enumName));
     }
 
     public InvalidTypeException(String path, Class<?> type) {
-        super(String.format("Unknown type path=%s, type=%s", path, type.getName()));
+        super(String.format("Unknown type: path=%s, type=%s", path, type.getName()));
     }
 }

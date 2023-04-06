@@ -22,30 +22,29 @@ package com.github.almightysatan.jaskl.entries;
 
 import com.github.almightysatan.jaskl.Config;
 import com.github.almightysatan.jaskl.ConfigEntry;
-import com.github.almightysatan.jaskl.InvalidTypeException;
+import com.github.almightysatan.jaskl.Type;
 import com.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ListConfigEntry<T> extends WritableConfigEntryImpl<List<T>> {
 
-    ListConfigEntry(@NotNull String path, @Nullable String description, @NotNull List<T> defaultValue) {
+    private final Type<List<T>> type;
+
+    ListConfigEntry(@NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<List<T>> type) {
         super(path, description, defaultValue);
+        this.type = Objects.requireNonNull(type);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected @NotNull List<T> checkType(@NotNull Object type) {
-        if (type instanceof List)
-            return (List<T>) type;
-
-        throw new InvalidTypeException(getPath(), List.class, type.getClass());
-
+        return this.type.cast(type);
     }
 
-    public static <T> ConfigEntry<List<T>> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue) {
-        return new ListConfigEntry<>(path, description, defaultValue).register(config);
+    public static <T> ConfigEntry<List<T>> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<T> type) {
+        return new ListConfigEntry<>(path, description, defaultValue, Type.list(type)).register(config);
     }
 }

@@ -23,6 +23,7 @@ package com.github.almightysatan.jaskl.entries;
 import com.github.almightysatan.jaskl.Config;
 import com.github.almightysatan.jaskl.ConfigEntry;
 import com.github.almightysatan.jaskl.InvalidTypeException;
+import com.github.almightysatan.jaskl.Type;
 import com.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,12 +40,11 @@ public class EnumConfigEntry<T extends Enum<T>> extends WritableConfigEntryImpl<
     @SuppressWarnings("unchecked")
     public void putValue(@NotNull Object value) {
         Objects.requireNonNull(value);
-        if (!(value instanceof String))
-            throw new InvalidTypeException(this.getPath(), this.getDefaultValue().getClass(), value.getClass());
+        String stringValue = Type.STRING.cast(value);
         try {
-            super.putValue(Enum.valueOf(this.getDefaultValue().getClass(), (String) value));
+            super.putValue(Enum.valueOf(this.getDefaultValue().getClass(), stringValue));
         } catch (IllegalArgumentException e) {
-            throw new InvalidTypeException(this.getPath(), this.getDefaultValue().getClass(), (String) value);
+            throw new InvalidTypeException(this.getPath(), this.getDefaultValue().getClass(), stringValue);
         }
     }
 
