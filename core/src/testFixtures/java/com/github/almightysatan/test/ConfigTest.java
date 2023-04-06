@@ -28,8 +28,7 @@ import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class ConfigTest {
@@ -271,6 +270,42 @@ public class ConfigTest {
         config1.load();
 
         Assertions.assertArrayEquals(list1.toArray(new ExampleEnum[0]), listConfigEntry1.getValue().toArray(new ExampleEnum[0]));
+
+        config1.close();
+    }
+
+    /**
+     * Test if a map can be written and loaded again.
+     * This test requires a valid file path.
+     */
+    public static void testWriteAndLoadMap(Supplier<Config> configSupplier, File file) throws IOException {
+        if (file.exists() && !file.delete())
+            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
+
+        Config config0 = configSupplier.get();
+
+        Map<Float, String> map0 = new HashMap<>();
+        map0.put(10F, "Hello");
+        map0.put(20F, "World");
+        ConfigEntry<Map<Float, String>> mapConfigEntry0 = MapConfigEntry.of(config0, "example.map", "Example Map", map0, Type.FLOAT, Type.STRING);
+        config0.load();
+
+        Map<Float, String> map1 = new HashMap<>();
+        map1.put(5.5F, "Test0");
+        map1.put(6.9F, "Test1");
+        mapConfigEntry0.setValue(map1);
+
+        config0.write();
+        config0.close();
+
+        Assertions.assertTrue(file.exists());
+
+        Config config1 = configSupplier.get();
+        ConfigEntry<Map<Float, String>> mapConfigEntry1 = MapConfigEntry.of(config1, "example.map", "Example Map", map0, Type.FLOAT, Type.STRING);
+
+        config1.load();
+
+        Assertions.assertEquals(map1, mapConfigEntry1.getValue());
 
         config1.close();
     }

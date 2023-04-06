@@ -25,10 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public interface Type<T> {
 
@@ -215,6 +212,36 @@ public interface Type<T> {
                     newList.add(type.castToWritable(element));
 
                 return Collections.unmodifiableList(newList);
+            }
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    static <K, V> @NotNull Type<Map<K, V>> map(@NotNull Type<K> keyType, @NotNull Type<V> valueType) {
+        Objects.requireNonNull(keyType);
+        Objects.requireNonNull(valueType);
+        return new Type<Map<K, V>>() {
+            @Override
+            public @NotNull Map<K, V> castToType(@NotNull Object value) throws InvalidTypeException {
+                if (value instanceof Map) {
+                    Map<K, V> mapValue = (Map<K, V>) value;
+                    Map<K, V> newMap = new HashMap<>();
+                    for (Map.Entry<K, V> entry : mapValue.entrySet())
+                        newMap.put(keyType.castToType(entry.getKey()), valueType.castToType(entry.getValue()));
+
+                    return Collections.unmodifiableMap(newMap);
+                }
+
+                throw new InvalidTypeException(Map.class, value.getClass());
+            }
+
+            @Override
+            public @NotNull Object castToWritable(@NotNull Map<K, V> value) throws InvalidTypeException {
+                Map<Object, Object> newMap = new HashMap<>();
+                for (Map.Entry<K, V> entry : value.entrySet())
+                    newMap.put(keyType.castToWritable(entry.getKey()), valueType.castToWritable(entry.getValue()));
+
+                return Collections.unmodifiableMap(newMap);
             }
         };
     }

@@ -125,19 +125,31 @@ public class YamlConfig extends ConfigImpl {
             Node valueNode = tuple.getValueNode();
             String fieldPath = (path.isEmpty() ? "" : path + ".") + ((ScalarNode) tuple.getKeyNode()).getValue();
             if (valueNode instanceof MappingNode) {
-                loadValues(fieldPath, (MappingNode) valueNode);
-            } else if (valueNode instanceof ScalarNode || valueNode instanceof SequenceNode) {
-                Object value = CONSTRUCTOR.constructObject(valueNode);
-                if (value == null)
-                    continue;
-                WritableConfigEntry<?> entry = (WritableConfigEntry<?>) this.getEntries().get(fieldPath);
-                if (entry != null)
-                    entry.putValue(value);
-            }
+                if (!this.loadValueIfEntryExists(fieldPath, valueNode))
+                    this.loadValues(fieldPath, (MappingNode) valueNode);
+            } else if (valueNode instanceof ScalarNode || valueNode instanceof SequenceNode)
+                this.loadValueIfEntryExists(fieldPath, valueNode);
         }
     }
 
-    private void putNode(@NotNull WritableConfigEntry<?> entry) {
+    /**
+     * Sets the value of a config entry if it exists
+     *
+     * @param path The path of the entry
+     * @param node The value
+     * @return true if the entry exists
+     */
+    protected boolean loadValueIfEntryExists(String path, Node node) {
+        WritableConfigEntry<?> entry = (WritableConfigEntry<?>) this.getEntries().get(path);
+        if (entry == null)
+            return false;
+        Object value = CONSTRUCTOR.constructObject(node);
+        if (value != null)
+            entry.putValue(value);
+        return true;
+    }
+
+    protected void putNode(@NotNull WritableConfigEntry<?> entry) {
         String[] pathSplit = entry.getPath().split("\\.");
         MappingNode node = this.root;
         pathLoop: for (int i = 0; i < pathSplit.length; i++) {
