@@ -55,12 +55,13 @@ config.write(); // Save the config
 | Double   | ✅    | ✅    | ✅    | ✅       | ✅          | ✅       |
 | Enum     | ✅    | ✅    | ✅    | ✅       | ✅          | ✅       |
 | List     | ✅    | ✅    | ✅    | ✅       | ❌          | ✅       |
-| Map      | ❓    | ❓    | ❓    | ❓       | ❌          | ❓       |
+| Map      | ✅    | ❓*³  | ❓*³  | ❓*³     | ❌          | ❓*³     |
 | Custom   | ✅    | ✅    | ✅    | ✅       | ✅*²        | ✅       |
 | Comments | ✅    | ❌    | ❌    | ❌       | ❌          | ❌       |
 
-*¹ Read Only<br>
-*² Only for supported types
+*¹ Read Only  
+*² Only for supported types  
+*³ TBD
 
 ### Building
 To build the project, open the terminal and type `./gradlew build`. All jars will be located at `/<implementation>/build/libs/<implementation>-<version>.jar`.
