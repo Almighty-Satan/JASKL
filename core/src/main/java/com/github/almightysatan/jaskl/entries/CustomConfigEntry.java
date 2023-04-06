@@ -20,10 +20,7 @@
 
 package com.github.almightysatan.jaskl.entries;
 
-import com.github.almightysatan.jaskl.Config;
-import com.github.almightysatan.jaskl.ConfigEntry;
-import com.github.almightysatan.jaskl.ConfigProperty;
-import com.github.almightysatan.jaskl.InvalidTypeException;
+import com.github.almightysatan.jaskl.*;
 import com.github.almightysatan.jaskl.impl.ConfigEntryImpl;
 import com.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
@@ -85,7 +82,8 @@ public class CustomConfigEntry<T> extends ConfigEntryImpl<T> {
     @Override
     public void setValue(@NotNull T value) {
         Objects.requireNonNull(value);
-        this.checkType(value);
+        if (this.getDefaultValue().getClass() != value)
+            throw new InvalidTypeException(this.getDefaultValue().getClass(), value.getClass());
         try {
             for (Property<?> property : this.properties)
                 property.setValueAsObject(property.field.get(value));
@@ -159,6 +157,11 @@ public class CustomConfigEntry<T> extends ConfigEntryImpl<T> {
         @SuppressWarnings("unchecked")
         private void setValueAsObject(@NotNull Object value) {
             this.entry.setValue((U) value);
+        }
+
+        @Override
+        public Type<U> getType() {
+            return this.entry.getType();
         }
 
         @Override

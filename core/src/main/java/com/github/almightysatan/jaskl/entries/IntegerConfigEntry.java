@@ -30,12 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public class IntegerConfigEntry extends WritableConfigEntryImpl<Integer> {
 
     IntegerConfigEntry(@NotNull String path, @Nullable String description, @NotNull Integer defaultValue) {
-        super(path, description, defaultValue);
-    }
-
-    @Override
-    protected @NotNull Integer checkType(@NotNull Object type) {
-        return Type.INTEGER.cast(type);
+        super(Type.INTEGER, path, description, defaultValue);
     }
 
     public static ConfigEntry<Integer> of(@NotNull Config config, @NotNull String path, @Nullable String description, int defaultValue) {

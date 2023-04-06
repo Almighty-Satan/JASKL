@@ -22,35 +22,16 @@ package com.github.almightysatan.jaskl.entries;
 
 import com.github.almightysatan.jaskl.Config;
 import com.github.almightysatan.jaskl.ConfigEntry;
-import com.github.almightysatan.jaskl.InvalidTypeException;
 import com.github.almightysatan.jaskl.Type;
 import com.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 public class EnumConfigEntry<T extends Enum<T>> extends WritableConfigEntryImpl<T> {
 
-    EnumConfigEntry(@NotNull String path, @Nullable String description, @NotNull T defaultValue) {
-        super(path, description, defaultValue);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
-    public void putValue(@NotNull Object value) {
-        Objects.requireNonNull(value);
-        String stringValue = Type.STRING.cast(value);
-        try {
-            super.putValue(Enum.valueOf(this.getDefaultValue().getClass(), stringValue));
-        } catch (IllegalArgumentException e) {
-            throw new InvalidTypeException(this.getPath(), this.getDefaultValue().getClass(), stringValue);
-        }
-    }
-
-    @Override
-    public @NotNull Object getValueToWrite() {
-        return this.getValue().name();
+    EnumConfigEntry(@NotNull String path, @Nullable String description, @NotNull T defaultValue) {
+        super(Type.enumType((Class<T>) defaultValue.getClass()), path, description, defaultValue);
     }
 
     public static <T extends Enum<T>> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue) {

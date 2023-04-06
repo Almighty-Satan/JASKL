@@ -20,26 +20,15 @@
 
 package com.github.almightysatan.jaskl.impl;
 
-import com.github.almightysatan.jaskl.Config;
-import com.github.almightysatan.jaskl.ConfigEntry;
+import com.github.almightysatan.jaskl.InvalidTypeException;
 import com.github.almightysatan.jaskl.Type;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+@FunctionalInterface
+public interface SimpleType<T> extends Type<T> {
 
-public interface WritableConfigEntry<T> extends ConfigEntry<T> {
-
-    Type<T> getType();
-
-    void putValue(@NotNull Object value);
-
-    @NotNull Object getValueToWrite();
-
-    boolean isModified();
-
-    default WritableConfigEntry<T> register(@NotNull Config config) {
-        Objects.requireNonNull(config);
-        ((ConfigImpl) config).registerEntry(this);
-        return this;
+    @Override
+    default @NotNull Object castToWritable(@NotNull T value) throws InvalidTypeException {
+        return value;
     }
 }

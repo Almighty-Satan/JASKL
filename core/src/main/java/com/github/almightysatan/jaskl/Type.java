@@ -20,6 +20,7 @@
 
 package com.github.almightysatan.jaskl;
 
+import com.github.almightysatan.jaskl.impl.SimpleType;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -29,12 +30,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-@FunctionalInterface
 public interface Type<T> {
 
-    @NotNull T cast(@NotNull Object value) throws InvalidTypeException;
+    @NotNull T castToType(@NotNull Object value) throws InvalidTypeException;
 
-    Type<Boolean> BOOLEAN = value -> {
+    @NotNull Object castToWritable(@NotNull T value) throws InvalidTypeException;
+
+    Type<Boolean> BOOLEAN = (SimpleType<Boolean>) value -> {
         if (value instanceof Boolean)
             return (Boolean) value;
 
@@ -51,7 +53,7 @@ public interface Type<T> {
         throw new InvalidTypeException(Boolean.class, value.getClass());
     };
 
-    Type<Double> DOUBLE = value -> {
+    Type<Double> DOUBLE = (SimpleType<Double>) value -> {
         if (value instanceof Double)
             return (Double) value;
 
@@ -78,7 +80,7 @@ public interface Type<T> {
         throw new InvalidTypeException(Double.class, value.getClass());
     };
 
-    Type<Float> FLOAT = value -> {
+    Type<Float> FLOAT = (SimpleType<Float>) value -> {
         if (value instanceof Float)
             return (Float) value;
 
@@ -111,7 +113,7 @@ public interface Type<T> {
         throw new InvalidTypeException(Float.class, value.getClass());
     };
 
-    Type<Integer> INTEGER = value -> {
+    Type<Integer> INTEGER = (SimpleType<Integer>) value -> {
         if (value instanceof Integer)
             return (Integer) value;
 
@@ -136,7 +138,7 @@ public interface Type<T> {
         throw new InvalidTypeException(Integer.class, value.getClass());
     };
 
-    Type<Long> LONG = value -> {
+    Type<Long> LONG = (SimpleType<Long>) value -> {
         if (value instanceof Long)
             return (Long) value;
 
@@ -158,26 +160,62 @@ public interface Type<T> {
         throw new InvalidTypeException(Long.class, value.getClass());
     };
 
-    Type<String> STRING = value -> {
+    Type<String> STRING = (SimpleType<String>) value -> {
         if (value instanceof String)
             return (String) value;
         throw new InvalidTypeException(String.class, value.getClass());
     };
 
     @SuppressWarnings("unchecked")
+    static <T extends Enum<T>> @NotNull Type<T> enumType(Class<T> clazz) {
+        Objects.requireNonNull(clazz);
+        return new Type<T>() {
+            @Override
+            public @NotNull T castToType(@NotNull Object value) throws InvalidTypeException {
+                if (value.getClass() == clazz)
+                    return (T) value;
+
+                String stringValue = Type.STRING.castToType(value);
+                try {
+                    return Enum.valueOf(clazz, stringValue);
+                } catch (IllegalArgumentException e) {
+                    throw new InvalidTypeException(clazz, stringValue);
+                }
+            }
+
+            @Override
+            public @NotNull Object castToWritable(@NotNull T value) throws InvalidTypeException {
+                return value.name();
+            }
+        };
+    }
+
+    @SuppressWarnings("unchecked")
     static <T> @NotNull Type<List<T>> list(@NotNull Type<T> type) {
         Objects.requireNonNull(type);
-        return value -> {
-            if (value instanceof List) {
-                List<T> listValue = (List<T>) value;
-                List<T> newList = new ArrayList<>(listValue.size());
-                for (Object element : listValue)
-                    newList.add(type.cast(element));
+        return new Type<List<T>>() {
+            @Override
+            public @NotNull List<T> castToType(@NotNull Object value) throws InvalidTypeException {
+                if (value instanceof List) {
+                    List<T> listValue = (List<T>) value;
+                    List<T> newList = new ArrayList<>(listValue.size());
+                    for (Object element : listValue)
+                        newList.add(type.castToType(element));
+
+                    return Collections.unmodifiableList(newList);
+                }
+
+                throw new InvalidTypeException(List.class, type.getClass());
+            }
+
+            @Override
+            public @NotNull Object castToWritable(@NotNull List<T> value) throws InvalidTypeException {
+                List<Object> newList = new ArrayList<>(value.size());
+                for (T element : value)
+                    newList.add(type.castToWritable(element));
 
                 return Collections.unmodifiableList(newList);
             }
-
-            throw new InvalidTypeException(List.class, type.getClass());
         };
     }
 }

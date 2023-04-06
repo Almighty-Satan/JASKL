@@ -30,12 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public class FloatConfigEntry extends WritableConfigEntryImpl<Float> {
 
     FloatConfigEntry(@NotNull String path, @Nullable String description, @NotNull Float defaultValue) {
-        super(path, description, defaultValue);
-    }
-
-    @Override
-    protected @NotNull Float checkType(@NotNull Object type) {
-        return Type.FLOAT.cast(type);
+        super(Type.FLOAT, path, description, defaultValue);
     }
 
     public static ConfigEntry<Float> of(@NotNull Config config, @NotNull String path, @Nullable String description, float defaultValue) {

@@ -30,12 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public class DoubleConfigEntry extends WritableConfigEntryImpl<Double> {
 
     DoubleConfigEntry(@NotNull String path, @Nullable String description, @NotNull Double defaultValue) {
-        super(path, description, defaultValue);
-    }
-
-    @Override
-    protected @NotNull Double checkType(@NotNull Object type) {
-        return Type.DOUBLE.cast(type);
+        super(Type.DOUBLE, path, description, defaultValue);
     }
 
     public static ConfigEntry<Double> of(@NotNull Config config, @NotNull String path, @Nullable String description, double defaultValue) {

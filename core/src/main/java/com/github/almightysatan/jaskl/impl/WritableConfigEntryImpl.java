@@ -20,6 +20,7 @@
 
 package com.github.almightysatan.jaskl.impl;
 
+import com.github.almightysatan.jaskl.Type;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,12 +28,19 @@ import java.util.Objects;
 
 public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements WritableConfigEntry<T> {
 
+    private final Type<T> type;
     private T value;
     private boolean modified = true; // true by default because Config#write should write the entry to the config if it does not exist
 
-    protected WritableConfigEntryImpl(@NotNull String path, @Nullable String description, @NotNull T defaultValue) {
+    protected WritableConfigEntryImpl(Type<T> type, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         super(path, description, defaultValue);
+        this.type = type;
         this.value = defaultValue;
+    }
+
+    @Override
+    public Type<T> getType() {
+        return this.type;
     }
 
     @Override
@@ -43,7 +51,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     @Override
     public void setValue(@NotNull T value) {
         Objects.requireNonNull(value);
-        T parsedValue = this.checkType(value);
+        T parsedValue = this.getType().castToType(value);
         if (parsedValue.equals(this.getValue()))
             return;
         this.value = parsedValue;
@@ -53,13 +61,13 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     @Override
     public void putValue(@NotNull Object value) {
         Objects.requireNonNull(value);
-        this.value = this.checkType(value);
+        this.value = this.getType().castToType(value);
         this.modified = false;
     }
 
     @Override
     public @NotNull Object getValueToWrite() {
-        return this.getValue();
+        return this.getType().castToWritable(this.getValue());
     }
 
     @Override

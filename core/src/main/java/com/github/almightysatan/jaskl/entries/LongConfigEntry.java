@@ -30,12 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public class LongConfigEntry extends WritableConfigEntryImpl<Long> {
 
     LongConfigEntry(@NotNull String path, @Nullable String description, @NotNull Long defaultValue) {
-        super(path, description, defaultValue);
-    }
-
-    @Override
-    protected @NotNull Long checkType(@NotNull Object type) {
-        return Type.LONG.cast(type);
+        super(Type.LONG, path, description, defaultValue);
     }
 
     public static ConfigEntry<Long> of(@NotNull Config config, @NotNull String path, @Nullable String description, long defaultValue) {

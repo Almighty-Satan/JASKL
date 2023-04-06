@@ -28,23 +28,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public class ListConfigEntry<T> extends WritableConfigEntryImpl<List<T>> {
 
-    private final Type<List<T>> type;
-
-    ListConfigEntry(@NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<List<T>> type) {
-        super(path, description, defaultValue);
-        this.type = Objects.requireNonNull(type);
-    }
-
-    @Override
-    protected @NotNull List<T> checkType(@NotNull Object type) {
-        return this.type.cast(type);
+    ListConfigEntry(@NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<T> type) {
+        super(Type.list(type), path, description, defaultValue);
     }
 
     public static <T> ConfigEntry<List<T>> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<T> type) {
-        return new ListConfigEntry<>(path, description, defaultValue, Type.list(type)).register(config);
+        return new ListConfigEntry<>(path, description, defaultValue, type).register(config);
     }
 }

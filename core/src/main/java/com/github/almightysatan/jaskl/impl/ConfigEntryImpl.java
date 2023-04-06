@@ -21,7 +21,6 @@
 package com.github.almightysatan.jaskl.impl;
 
 import com.github.almightysatan.jaskl.ConfigEntry;
-import com.github.almightysatan.jaskl.InvalidTypeException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,12 +53,5 @@ public abstract class ConfigEntryImpl<T> implements ConfigEntry<T> {
     @Override
     public @NotNull T getDefaultValue() {
         return this.defaultValue;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected @NotNull T checkType(@NotNull Object type) {
-        if (this.getDefaultValue().getClass() != type.getClass())
-            throw new InvalidTypeException(this.getDefaultValue().getClass(), type.getClass());
-        return (T) type;
     }
 }
