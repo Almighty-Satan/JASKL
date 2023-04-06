@@ -68,11 +68,6 @@ public class IniConfigTest {
     }
 
     @Test
-    public void testCustomValuesIni() throws IOException {
-        testCustomValues(() -> IniConfig.of(file0, "Example Ini Config"));
-    }
-
-    @Test
     public void testMapValuesIni() throws IOException {
         testMapValues(() -> IniConfig.of(file0, "Example Ini Config"));
     }

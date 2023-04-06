@@ -64,11 +64,6 @@ public class YamlConfigTest {
     }
 
     @Test
-    public void testCustomValuesYaml() throws IOException {
-        testCustomValues(() -> YamlConfig.of(file0, "Example YAML Config"));
-    }
-
-    @Test
     public void testMapValuesYaml() throws IOException {
         testMapValues(() -> YamlConfig.of(file0, "Example YAML Config"));
     }

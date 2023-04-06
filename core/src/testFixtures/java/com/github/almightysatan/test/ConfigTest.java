@@ -44,7 +44,6 @@ public class ConfigTest {
         config.close();
     }
 
-
     /**
      * Test if the config can be loaded successfully after closing it.
      */
@@ -57,18 +56,16 @@ public class ConfigTest {
         config.close();
     }
 
-
     /**
      * Test if the config cannot be loaded when it has been loaded before.
      */
     public static void testAlreadyLoaded(Supplier<Config> configSupplier) throws IOException {
         Config config = configSupplier.get();
         config.load();
-        Assertions.assertThrows(IllegalStateException.class, () -> config.load());
+        Assertions.assertThrows(IllegalStateException.class, config::load);
 
         config.close();
     }
-
 
     /**
      * Test if a config's values can be loaded successfully.
@@ -96,7 +93,6 @@ public class ConfigTest {
         config.close();
     }
 
-
     /**
      * Test if enum values can be loaded successfully.
      * This test requires a predefined config file with inserted values.
@@ -112,7 +108,6 @@ public class ConfigTest {
 
         config.close();
     }
-
 
     /**
      * Test if list values can be loaded successfully.
@@ -132,16 +127,6 @@ public class ConfigTest {
         config.close();
     }
 
-
-    /**
-     * Test if custom values can be loaded successfully.
-     * This test requires a predefined config file with inserted values.
-     */
-    public static void testCustomValues(Supplier<Config> configSupplier) throws IOException {
-        // TODO: Implement custom entries correctly
-    }
-
-
     /**
      * Test if map values can be loaded successfully.
      * This test requires a predefined config file with inserted values.
@@ -149,7 +134,6 @@ public class ConfigTest {
     public static void testMapValues(Supplier<Config> configSupplier) throws IOException {
         // TODO: Implement maps correctly
     }
-
 
     /**
      * Test if an entry cannot be registered twice (same path).
@@ -159,7 +143,6 @@ public class ConfigTest {
         BooleanConfigEntry.of(config, "example.boolean", "Example Boolean", false);
         Assertions.assertThrows(IllegalArgumentException.class, () -> BooleanConfigEntry.of(config, "example.boolean", "Example Boolean", false));
     }
-
 
     /**
      * Test if a config can be created, saved and loaded again.
@@ -194,7 +177,6 @@ public class ConfigTest {
 
         config1.close();
     }
-
 
     /**
      * Test if a config can be created, saved and loaded again.
@@ -266,6 +248,9 @@ public class ConfigTest {
         Assertions.assertEquals(0, intConfigEntry2.getValue());
     }
 
+    /**
+     * Test if custom values can be written and loaded successfully.
+     */
     public static void testCustom(Supplier<Config> configSupplier) throws IOException {
         ExampleCustomObject value = new ExampleCustomObject("Default", 5, ExampleEnum.EXAMPLE);
         Config config0 = configSupplier.get();

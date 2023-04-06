@@ -65,11 +65,6 @@ public class HoconConfigTest {
     }
 
     @Test
-    public void testCustomValuesHocon() throws IOException {
-        testCustomValues(() -> HoconConfig.of(file0, "Example HOCON Config"));
-    }
-
-    @Test
     public void testMapValuesHocon() throws IOException {
         testMapValues(() -> HoconConfig.of(file0, "Example HOCON Config"));
     }

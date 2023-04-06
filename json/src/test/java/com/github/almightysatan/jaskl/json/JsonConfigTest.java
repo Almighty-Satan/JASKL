@@ -64,11 +64,6 @@ public class JsonConfigTest {
     }
 
     @Test
-    public void testCustomValuesJson() throws IOException {
-        testCustomValues(() -> JsonConfig.of(file0, "Example JSON Config"));
-    }
-
-    @Test
     public void testMapValuesJson() throws IOException {
         testMapValues(() -> JsonConfig.of(file0, "Example JSON Config"));
     }

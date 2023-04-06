@@ -68,11 +68,6 @@ public class PropertiesConfigTest {
     }
 
     @Test
-    public void testCustomValuesProperties() throws IOException {
-        testCustomValues(() -> PropertiesConfig.of(file0, "Example Properties Config"));
-    }
-
-    @Test
     public void testMapValuesProperties() throws IOException {
         testMapValues(() -> PropertiesConfig.of(file0, "Example Properties Config"));
     }

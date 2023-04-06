@@ -64,11 +64,6 @@ public class TomlConfigTest {
     }
 
     @Test
-    public void testCustomValuesToml() throws IOException {
-        testCustomValues(() -> TomlConfig.of(file0, "Example TOML Config"));
-    }
-
-    @Test
     public void testMapValuesToml() throws IOException {
         testMapValues(() -> TomlConfig.of(file0, "Example TOML Config"));
     }
