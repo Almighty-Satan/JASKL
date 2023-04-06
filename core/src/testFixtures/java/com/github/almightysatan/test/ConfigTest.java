@@ -210,6 +210,70 @@ public class ConfigTest {
         config1.close();
     }
 
+    /**
+     * Test if a list of lists can be written and loaded again.
+     * This test requires a valid file path.
+     */
+    public static void testWriteAndLoadList2(Supplier<Config> configSupplier, File file) throws IOException {
+        if (file.exists() && !file.delete())
+            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
+
+        Config config0 = configSupplier.get();
+
+        List<List<Integer>> list0 = Arrays.asList(Arrays.asList(1, 2), Arrays.asList(3, 4));
+        ConfigEntry<List<List<Integer>>> listConfigEntry0 = ListConfigEntry.of(config0, "example.list", "Example List", list0, Type.list(Type.INTEGER));
+        config0.load();
+
+        List<List<Integer>> list1 = Arrays.asList(Arrays.asList(5, 6), Arrays.asList(7, 8));
+        listConfigEntry0.setValue(list1);
+
+        config0.write();
+        config0.close();
+
+        Assertions.assertTrue(file.exists());
+
+        Config config1 = configSupplier.get();
+        ConfigEntry<List<List<Integer>>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example List", list0, Type.list(Type.INTEGER));
+
+        config1.load();
+
+        Assertions.assertArrayEquals(list1.stream().map(list -> list.toArray(new Integer[0])).toArray(Integer[][]::new),
+                listConfigEntry1.getValue().stream().map(list -> list.toArray(new Integer[0])).toArray(Integer[][]::new));
+
+        config1.close();
+    }
+
+    /**
+     * Test if a list of enums can be written and loaded again.
+     * This test requires a valid file path.
+     */
+    public static void testWriteAndLoadListEnum(Supplier<Config> configSupplier, File file) throws IOException {
+        if (file.exists() && !file.delete())
+            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
+
+        Config config0 = configSupplier.get();
+
+        List<ExampleEnum> list0 = Arrays.asList(ExampleEnum.EXAMPLE, ExampleEnum.EXAMPLE);
+        ConfigEntry<List<ExampleEnum>> listConfigEntry0 = ListConfigEntry.of(config0, "example.list", "Example Enum List", list0, Type.enumType(ExampleEnum.class));
+        config0.load();
+
+        List<ExampleEnum> list1 = Arrays.asList(ExampleEnum.ANOTHER_EXAMPLE, ExampleEnum.ANOTHER_EXAMPLE);
+        listConfigEntry0.setValue(list1);
+
+        config0.write();
+        config0.close();
+
+        Assertions.assertTrue(file.exists());
+
+        Config config1 = configSupplier.get();
+        ConfigEntry<List<ExampleEnum>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example Enum List", list0, Type.enumType(ExampleEnum.class));
+
+        config1.load();
+
+        Assertions.assertArrayEquals(list1.toArray(new ExampleEnum[0]), listConfigEntry1.getValue().toArray(new ExampleEnum[0]));
+
+        config1.close();
+    }
 
     /**
      * Test if a config can be created, saved and loaded again.

@@ -84,6 +84,16 @@ public class YamlConfigTest {
     }
 
     @Test
+    public void testWriteAndLoadList2Yaml() throws IOException {
+        testWriteAndLoadList2(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
+    }
+
+    @Test
+    public void testWriteAndLoadListEnumYaml() throws IOException {
+        testWriteAndLoadListEnum(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
+    }
+
+    @Test
     public void testStripYaml() throws IOException {
         testStrip(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
     }
