@@ -167,7 +167,7 @@ public interface Type<T> {
     };
 
     @SuppressWarnings("unchecked")
-    static <T extends Enum<T>> @NotNull Type<T> enumType(Class<T> clazz) {
+    static <T extends Enum<T>> @NotNull Type<T> enumType(@NotNull Class<T> clazz) {
         Objects.requireNonNull(clazz);
         return new Type<T>() {
             @Override
@@ -205,7 +205,7 @@ public interface Type<T> {
                     return Collections.unmodifiableList(newList);
                 }
 
-                throw new InvalidTypeException(List.class, type.getClass());
+                throw new InvalidTypeException(List.class, value.getClass());
             }
 
             @Override
