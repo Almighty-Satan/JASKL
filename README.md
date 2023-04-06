@@ -69,7 +69,7 @@ To build the project, open the terminal and type `./gradlew build`. All jars wil
 ### Gradle
 ```gradle
 dependencies {
-    implementation("com.github.almighty-satan:jaskl-<implementation>:<version>")
+    implementation("io.github.almighty-satan.jaskl:jaskl-<implementation>:<version>")
 }
 
 repositories {

@@ -15,7 +15,7 @@ checkstyle {
     toolVersion = "9.3"
 }
 
-group = "com.github.almighty-satan"
+group = "io.github.almighty-satan.jaskl"
 version = "1.1.1"
 
 repositories {
