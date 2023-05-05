@@ -55,6 +55,11 @@ public class IniConfigTest {
     }
 
     @Test
+    public void testValidationIni() throws IOException {
+        testValidation(() -> IniConfig.of(file0, "Example Ini Config"));
+    }
+
+    @Test
     public void testEnumValuesIni() throws IOException {
         testEnumValues(() -> IniConfig.of(file0, "Example Ini Config"));
     }

@@ -54,6 +54,11 @@ public class YamlConfigTest {
     }
 
     @Test
+    public void testValidationYaml() throws IOException {
+        testValidation(() -> YamlConfig.of(file0, "Example YAML Config"));
+    }
+
+    @Test
     public void testEnumValuesYaml() throws IOException {
         testEnumValues(() -> YamlConfig.of(file0, "Example YAML Config"));
     }
