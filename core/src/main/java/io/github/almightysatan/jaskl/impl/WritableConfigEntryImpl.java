@@ -36,7 +36,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     public WritableConfigEntryImpl(Type<T> type, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         super(path, description, defaultValue);
         this.type = type;
-        this.value = defaultValue;
+        this.value = type.castToType(defaultValue);;
     }
 
     @Override
