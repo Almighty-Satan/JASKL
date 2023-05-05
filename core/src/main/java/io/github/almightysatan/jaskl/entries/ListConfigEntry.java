@@ -23,6 +23,7 @@ package io.github.almightysatan.jaskl.entries;
 import io.github.almightysatan.jaskl.Config;
 import io.github.almightysatan.jaskl.ConfigEntry;
 import io.github.almightysatan.jaskl.Type;
+import io.github.almightysatan.jaskl.Validator;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,10 +32,10 @@ import java.util.List;
 
 public interface ListConfigEntry<T> extends ConfigEntry<List<T>> {
 
-    static <T> ConfigEntry<List<T>> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<T> type) {
+    static <T> ConfigEntry<List<T>> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<T> type, @NotNull Validator<List<T>>... validators) {
         class ListConfigEntryImpl extends WritableConfigEntryImpl<List<T>> implements ListConfigEntry<T> {
             ListConfigEntryImpl() {
-                super(Type.list(type), path, description, defaultValue);
+                super(Type.validated(Type.list(type), validators), path, description, defaultValue);
                 this.register(config);
             }
         }

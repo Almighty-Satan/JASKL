@@ -84,7 +84,7 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
             }
 
             @Override
-            public void setValue(@NotNull T value) {
+            public void setValue(@NotNull T value) throws InvalidTypeException, ValidationException {
                 Objects.requireNonNull(value);
                 if (this.getDefaultValue().getClass() != value)
                     throw new InvalidTypeException(this.getDefaultValue().getClass(), value.getClass());
@@ -150,12 +150,12 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
                 }
 
                 @Override
-                public void setValue(@NotNull U value) {
+                public void setValue(@NotNull U value) throws InvalidTypeException, ValidationException {
                     this.entry.setValue(value);
                 }
 
                 @SuppressWarnings("unchecked")
-                private void setValueAsObject(@NotNull Object value) {
+                private void setValueAsObject(@NotNull Object value) throws InvalidTypeException, ValidationException {
                     this.entry.setValue((U) value);
                 }
 
@@ -165,13 +165,13 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
                 }
 
                 @Override
-                public void putValue(@NotNull Object value) {
+                public void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException {
                     this.entry.putValue(value);
                     CustomConfigEntryImpl.this.value = null;
                 }
 
                 @Override
-                public @NotNull Object getValueToWrite() {
+                public @NotNull Object getValueToWrite() throws InvalidTypeException {
                     return this.entry.getValueToWrite();
                 }
 

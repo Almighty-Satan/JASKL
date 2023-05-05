@@ -22,6 +22,7 @@ package io.github.almightysatan.jaskl.impl;
 
 import io.github.almightysatan.jaskl.InvalidTypeException;
 import io.github.almightysatan.jaskl.Type;
+import io.github.almightysatan.jaskl.ValidationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +51,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     }
 
     @Override
-    public void setValue(@NotNull T value) {
+    public void setValue(@NotNull T value) throws InvalidTypeException, ValidationException {
         Objects.requireNonNull(value);
         T parsedValue = this.castToType(value);
         if (parsedValue.equals(this.getValue()))
@@ -60,13 +61,13 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     }
 
     @Override
-    public void putValue(@NotNull Object value) {
+    public void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException {
         Objects.requireNonNull(value);
         this.value = this.castToType(value);
         this.modified = false;
     }
 
-    private T castToType(Object value) {
+    private T castToType(Object value) throws InvalidTypeException, ValidationException {
         try {
             return this.getType().castToType(value);
         } catch (InvalidTypeException e) {
@@ -75,7 +76,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     }
 
     @Override
-    public @NotNull Object getValueToWrite() {
+    public @NotNull Object getValueToWrite()  throws InvalidTypeException {
         try {
             return this.getType().castToWritable(this.getValue());
         } catch (InvalidTypeException e) {

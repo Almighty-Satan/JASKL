@@ -29,9 +29,30 @@ import java.util.*;
 
 public interface Type<T> {
 
-    @NotNull T castToType(@NotNull Object value) throws InvalidTypeException;
+    @NotNull T castToType(@NotNull Object value) throws InvalidTypeException, ValidationException;
 
     @NotNull Object castToWritable(@NotNull T value) throws InvalidTypeException;
+
+    static <T> Type<T> validated(Type<T> type, Validator<T> validator) {
+        return new Type<T>() {
+
+            @Override
+            public @NotNull T castToType(@NotNull Object value) throws InvalidTypeException, ValidationException {
+                T casted = type.castToType(value);
+                validator.validate(casted);
+                return casted;
+            }
+
+            @Override
+            public @NotNull Object castToWritable(@NotNull T value) throws InvalidTypeException {
+                return type.castToWritable(value);
+            }
+        };
+    }
+
+    static <T> Type<T> validated(Type<T> type, Validator<T>[] validators) {
+        return validated(type, Validator.of(validators));
+    }
 
     Type<Boolean> BOOLEAN = (SimpleType<Boolean>) value -> {
         if (value instanceof Boolean)
@@ -168,7 +189,7 @@ public interface Type<T> {
         Objects.requireNonNull(clazz);
         return new Type<T>() {
             @Override
-            public @NotNull T castToType(@NotNull Object value) throws InvalidTypeException {
+            public @NotNull T castToType(@NotNull Object value) throws InvalidTypeException, ValidationException {
                 if (value.getClass() == clazz)
                     return (T) value;
 
@@ -192,7 +213,7 @@ public interface Type<T> {
         Objects.requireNonNull(type);
         return new Type<List<T>>() {
             @Override
-            public @NotNull List<T> castToType(@NotNull Object value) throws InvalidTypeException {
+            public @NotNull List<T> castToType(@NotNull Object value) throws InvalidTypeException, ValidationException {
                 if (value instanceof List) {
                     List<T> listValue = (List<T>) value;
                     List<T> newList = new ArrayList<>(listValue.size());
@@ -222,7 +243,7 @@ public interface Type<T> {
         Objects.requireNonNull(valueType);
         return new Type<Map<K, V>>() {
             @Override
-            public @NotNull Map<K, V> castToType(@NotNull Object value) throws InvalidTypeException {
+            public @NotNull Map<K, V> castToType(@NotNull Object value) throws InvalidTypeException, ValidationException {
                 if (value instanceof Map) {
                     Map<K, V> mapValue = (Map<K, V>) value;
                     Map<K, V> newMap = new HashMap<>();
