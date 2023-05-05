@@ -29,13 +29,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ListConfigEntry<T> extends WritableConfigEntryImpl<List<T>> {
+public interface ListConfigEntry<T> extends ConfigEntry<List<T>> {
 
-    ListConfigEntry(@NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<T> type) {
-        super(Type.list(type), path, description, defaultValue);
-    }
+    static <T> ConfigEntry<List<T>> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<T> type) {
+        class ListConfigEntryImpl extends WritableConfigEntryImpl<List<T>> implements ListConfigEntry<T> {
+            ListConfigEntryImpl() {
+                super(Type.list(type), path, description, defaultValue);
+                this.register(config);
+            }
+        }
 
-    public static <T> ConfigEntry<List<T>> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<T> type) {
-        return new ListConfigEntry<>(path, description, defaultValue, type).register(config);
+        return new ListConfigEntryImpl();
     }
 }

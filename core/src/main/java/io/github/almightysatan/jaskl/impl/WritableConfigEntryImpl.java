@@ -33,7 +33,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     private T value;
     private boolean modified = true; // true by default because Config#write should write the entry to the config if it does not exist
 
-    protected WritableConfigEntryImpl(Type<T> type, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
+    public WritableConfigEntryImpl(Type<T> type, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         super(path, description, defaultValue);
         this.type = type;
         this.value = defaultValue;

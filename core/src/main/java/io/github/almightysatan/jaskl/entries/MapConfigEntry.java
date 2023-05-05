@@ -29,13 +29,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-public class MapConfigEntry<K, V> extends WritableConfigEntryImpl<Map<K, V>> {
+public interface MapConfigEntry<K, V> extends ConfigEntry<Map<K, V>> {
 
-    MapConfigEntry(@NotNull String path, @Nullable String description, @NotNull Map<K, V> defaultValue, @NotNull Type<K> keyType, @NotNull Type<V> valueType) {
-        super(Type.map(keyType, valueType), path, description, defaultValue);
-    }
+    static <K, V> ConfigEntry<Map<K, V>> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Map<K, V> defaultValue, @NotNull Type<K> keyType, @NotNull Type<V> valueType) {
+        class MapConfigEntryImpl extends WritableConfigEntryImpl<Map<K, V>> implements MapConfigEntry<K, V> {
+            MapConfigEntryImpl() {
+                super(Type.map(keyType, valueType), path, description, defaultValue);
+                this.register(config);
+            }
+        }
 
-    public static <K, V> ConfigEntry<Map<K, V>> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Map<K, V> defaultValue, @NotNull Type<K> keyType, @NotNull Type<V> valueType) {
-        return new MapConfigEntry<>(path, description, defaultValue, keyType, valueType).register(config);
+        return new MapConfigEntryImpl();
     }
 }

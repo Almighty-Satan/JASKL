@@ -27,13 +27,16 @@ import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class IntegerConfigEntry extends WritableConfigEntryImpl<Integer> {
+public interface IntegerConfigEntry extends ConfigEntry<Integer> {
 
-    IntegerConfigEntry(@NotNull String path, @Nullable String description, @NotNull Integer defaultValue) {
-        super(Type.INTEGER, path, description, defaultValue);
-    }
+    static IntegerConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, int defaultValue) {
+        class IntegerConfigEntryImpl extends WritableConfigEntryImpl<Integer> implements IntegerConfigEntry {
+            IntegerConfigEntryImpl() {
+                super(Type.INTEGER, path, description, defaultValue);
+                this.register(config);
+            }
+        }
 
-    public static ConfigEntry<Integer> of(@NotNull Config config, @NotNull String path, @Nullable String description, int defaultValue) {
-        return new IntegerConfigEntry(path, description, defaultValue).register(config);
+        return new IntegerConfigEntryImpl();
     }
 }

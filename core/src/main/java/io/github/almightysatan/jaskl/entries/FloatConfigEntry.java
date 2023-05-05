@@ -27,13 +27,16 @@ import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class FloatConfigEntry extends WritableConfigEntryImpl<Float> {
+public interface FloatConfigEntry extends ConfigEntry<Float> {
 
-    FloatConfigEntry(@NotNull String path, @Nullable String description, @NotNull Float defaultValue) {
-        super(Type.FLOAT, path, description, defaultValue);
-    }
+    static FloatConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, float defaultValue) {
+        class FloatConfigEntryImpl extends WritableConfigEntryImpl<Float> implements FloatConfigEntry {
+            FloatConfigEntryImpl() {
+                super(Type.FLOAT, path, description, defaultValue);
+                this.register(config);
+            }
+        }
 
-    public static ConfigEntry<Float> of(@NotNull Config config, @NotNull String path, @Nullable String description, float defaultValue) {
-        return new FloatConfigEntry(path, description, defaultValue).register(config);
+        return new FloatConfigEntryImpl();
     }
 }

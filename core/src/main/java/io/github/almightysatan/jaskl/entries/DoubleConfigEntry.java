@@ -27,13 +27,16 @@ import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DoubleConfigEntry extends WritableConfigEntryImpl<Double> {
+public interface DoubleConfigEntry extends ConfigEntry<Double> {
 
-    DoubleConfigEntry(@NotNull String path, @Nullable String description, @NotNull Double defaultValue) {
-        super(Type.DOUBLE, path, description, defaultValue);
-    }
+    static DoubleConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, double defaultValue) {
+        class DoubleConfigEntryImpl extends WritableConfigEntryImpl<Double> implements DoubleConfigEntry {
+            DoubleConfigEntryImpl() {
+                super(Type.DOUBLE, path, description, defaultValue);
+                this.register(config);
+            }
+        }
 
-    public static ConfigEntry<Double> of(@NotNull Config config, @NotNull String path, @Nullable String description, double defaultValue) {
-        return new DoubleConfigEntry(path, description, defaultValue).register(config);
+        return new DoubleConfigEntryImpl();
     }
 }

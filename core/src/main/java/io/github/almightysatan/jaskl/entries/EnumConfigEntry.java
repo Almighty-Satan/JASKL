@@ -27,14 +27,17 @@ import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EnumConfigEntry<T extends Enum<T>> extends WritableConfigEntryImpl<T> {
+public interface EnumConfigEntry<T extends Enum<T>> extends ConfigEntry<T> {
 
-    @SuppressWarnings("unchecked")
-    EnumConfigEntry(@NotNull String path, @Nullable String description, @NotNull T defaultValue) {
-        super(Type.enumType((Class<T>) defaultValue.getClass()), path, description, defaultValue);
-    }
+    static <T extends Enum<T>> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue) {
+        class EnumConfigEntryImpl extends WritableConfigEntryImpl<T> implements EnumConfigEntry<T> {
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            EnumConfigEntryImpl() {
+                super(Type.enumType((Class) defaultValue.getClass()), path, description, defaultValue);
+                this.register(config);
+            }
+        }
 
-    public static <T extends Enum<T>> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue) {
-        return new EnumConfigEntry<>(path, description, defaultValue).register(config);
+        return new EnumConfigEntryImpl();
     }
 }

@@ -27,13 +27,16 @@ import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class LongConfigEntry extends WritableConfigEntryImpl<Long> {
+public interface LongConfigEntry extends ConfigEntry<Long> {
 
-    LongConfigEntry(@NotNull String path, @Nullable String description, @NotNull Long defaultValue) {
-        super(Type.LONG, path, description, defaultValue);
-    }
+    static LongConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, long defaultValue) {
+        class LongConfigEntryImpl extends WritableConfigEntryImpl<Long> implements LongConfigEntry {
+            LongConfigEntryImpl() {
+                super(Type.LONG, path, description, defaultValue);
+                this.register(config);
+            }
+        }
 
-    public static ConfigEntry<Long> of(@NotNull Config config, @NotNull String path, @Nullable String description, long defaultValue) {
-        return new LongConfigEntry(path, description, defaultValue).register(config);
+        return new LongConfigEntryImpl();
     }
 }

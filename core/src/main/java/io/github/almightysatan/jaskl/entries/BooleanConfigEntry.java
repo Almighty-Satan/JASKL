@@ -27,13 +27,16 @@ import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BooleanConfigEntry extends WritableConfigEntryImpl<Boolean> {
+public interface BooleanConfigEntry extends ConfigEntry<Boolean> {
 
-    BooleanConfigEntry(@NotNull String path, @Nullable String description, @NotNull Boolean defaultValue) {
-        super(Type.BOOLEAN, path, description, defaultValue);
-    }
+    static BooleanConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, boolean defaultValue) {
+        class BooleanConfigEntryImpl extends WritableConfigEntryImpl<Boolean> implements BooleanConfigEntry {
+            BooleanConfigEntryImpl() {
+                super(Type.BOOLEAN, path, description, defaultValue);
+                this.register(config);
+            }
+        }
 
-    public static ConfigEntry<Boolean> of(@NotNull Config config, @NotNull String path, @Nullable String description, boolean defaultValue) {
-        return new BooleanConfigEntry(path, description, defaultValue).register(config);
+        return new BooleanConfigEntryImpl();
     }
 }
