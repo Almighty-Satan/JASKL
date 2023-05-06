@@ -117,7 +117,7 @@ public class IniConfig extends ConfigImpl {
 
     /**
      * Takes the current property instance and saves it to the file
-     * @throws IOException
+     * @throws IOException if an IO error occurs
      */
     private void writeToFile() throws IOException {
         try (FileWriter writer = new FileWriter(file)){
@@ -127,7 +127,7 @@ public class IniConfig extends ConfigImpl {
 
     /**
      * Populates the property instance with the values from the file
-     * @throws IOException
+     * @throws IOException if an IO error occurs
      */
     private void readFromFile() throws IOException {
         try (FileInputStream inputStream = new FileInputStream(file)) {
