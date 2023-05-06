@@ -19,4 +19,9 @@ jobs:
     - name: Set up Gradle
       uses: gradle/gradle-build-action@v2
     - name: Gradlew clean publishReleasePublicationToMavenRepository
+      env:
+        SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+        SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        OSSRH_USER: ${{ secrets.OSSRH_USER }}
+        OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
       run: ./gradlew clean publishReleasePublicationToMavenRepository
