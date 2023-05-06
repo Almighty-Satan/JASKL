@@ -149,7 +149,7 @@ public class IniConfig extends ConfigImpl {
         }
     }
 
-    private String[] getSectionAndKey(ConfigEntry entry) {
+    private String[] getSectionAndKey(ConfigEntry<?> entry) {
         String path = entry.getPath();
         String section = path.contains(".") ? path.substring(0, path.lastIndexOf('.')) : "section";
         String key = !path.contains(".") ? path : path.substring(path.lastIndexOf('.') + 1);
