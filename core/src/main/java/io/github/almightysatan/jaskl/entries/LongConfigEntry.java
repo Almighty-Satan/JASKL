@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface LongConfigEntry extends ConfigEntry<Long> {
 
+    @SafeVarargs
     static LongConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, long defaultValue, @NotNull Validator<Long>... validators) throws InvalidTypeException, ValidationException {
         class LongConfigEntryImpl extends WritableConfigEntryImpl<Long> implements LongConfigEntry {
             LongConfigEntryImpl() {

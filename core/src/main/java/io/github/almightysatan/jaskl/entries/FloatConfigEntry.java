@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface FloatConfigEntry extends ConfigEntry<Float> {
 
+    @SafeVarargs
     static FloatConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, float defaultValue, @NotNull Validator<Float>... validators) throws InvalidTypeException, ValidationException {
         class FloatConfigEntryImpl extends WritableConfigEntryImpl<Float> implements FloatConfigEntry {
             FloatConfigEntryImpl() {

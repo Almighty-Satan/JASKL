@@ -41,6 +41,7 @@ public interface Validator<T> {
         return value -> {};
     }
 
+    @SafeVarargs
     static <T> Validator<T> of(@NotNull Validator<T>... validators) {
         Objects.requireNonNull(validators);
         if (validators.length == 0)

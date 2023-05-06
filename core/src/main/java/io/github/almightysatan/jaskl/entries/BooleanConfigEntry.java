@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface BooleanConfigEntry extends ConfigEntry<Boolean> {
 
+    @SafeVarargs
     static BooleanConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, boolean defaultValue, @NotNull Validator<Boolean>... validators) throws InvalidTypeException, ValidationException {
         class BooleanConfigEntryImpl extends WritableConfigEntryImpl<Boolean> implements BooleanConfigEntry {
             BooleanConfigEntryImpl() {

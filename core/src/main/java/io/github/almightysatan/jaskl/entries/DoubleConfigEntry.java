@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface DoubleConfigEntry extends ConfigEntry<Double> {
 
+    @SafeVarargs
     static DoubleConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, double defaultValue, @NotNull Validator<Double>... validators) throws InvalidTypeException, ValidationException {
         class DoubleConfigEntryImpl extends WritableConfigEntryImpl<Double> implements DoubleConfigEntry {
             DoubleConfigEntryImpl() {

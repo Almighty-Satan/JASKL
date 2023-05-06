@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface StringConfigEntry extends ConfigEntry<String> {
 
+    @SafeVarargs
     static StringConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull String defaultValue, @NotNull Validator<String>... validators) throws InvalidTypeException, ValidationException {
         class StringConfigEntryImpl extends WritableConfigEntryImpl<String> implements StringConfigEntry {
             StringConfigEntryImpl() {
