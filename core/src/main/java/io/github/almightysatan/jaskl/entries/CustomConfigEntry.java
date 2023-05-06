@@ -34,7 +34,7 @@ import java.util.Objects;
 
 public interface CustomConfigEntry<T> extends ConfigEntry<T> {
 
-    static <T> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
+    static <T> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue)  throws InvalidTypeException, ValidationException {
         class CustomConfigEntryImpl extends ConfigEntryImpl<T> {
 
             private final Class<T> type;

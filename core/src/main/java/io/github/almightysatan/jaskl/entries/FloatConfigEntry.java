@@ -20,17 +20,14 @@
 
 package io.github.almightysatan.jaskl.entries;
 
-import io.github.almightysatan.jaskl.Config;
-import io.github.almightysatan.jaskl.ConfigEntry;
-import io.github.almightysatan.jaskl.Type;
-import io.github.almightysatan.jaskl.Validator;
+import io.github.almightysatan.jaskl.*;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface FloatConfigEntry extends ConfigEntry<Float> {
 
-    static FloatConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, float defaultValue, @NotNull Validator<Float>... validators) {
+    static FloatConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, float defaultValue, @NotNull Validator<Float>... validators) throws InvalidTypeException, ValidationException {
         class FloatConfigEntryImpl extends WritableConfigEntryImpl<Float> implements FloatConfigEntry {
             FloatConfigEntryImpl() {
                 super(Type.validated(Type.FLOAT, validators), path, description, defaultValue);

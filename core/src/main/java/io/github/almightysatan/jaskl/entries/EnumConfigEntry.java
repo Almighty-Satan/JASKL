@@ -20,17 +20,14 @@
 
 package io.github.almightysatan.jaskl.entries;
 
-import io.github.almightysatan.jaskl.Config;
-import io.github.almightysatan.jaskl.ConfigEntry;
-import io.github.almightysatan.jaskl.Type;
-import io.github.almightysatan.jaskl.Validator;
+import io.github.almightysatan.jaskl.*;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface EnumConfigEntry<T extends Enum<T>> extends ConfigEntry<T> {
 
-    static <T extends Enum<T>> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue, @NotNull Validator<T>... validators) {
+    static <T extends Enum<T>> ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
         class EnumConfigEntryImpl extends WritableConfigEntryImpl<T> implements EnumConfigEntry<T> {
             @SuppressWarnings({"unchecked", "rawtypes"})
             EnumConfigEntryImpl() {

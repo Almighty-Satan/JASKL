@@ -20,17 +20,14 @@
 
 package io.github.almightysatan.jaskl.entries;
 
-import io.github.almightysatan.jaskl.Config;
-import io.github.almightysatan.jaskl.ConfigEntry;
-import io.github.almightysatan.jaskl.Type;
-import io.github.almightysatan.jaskl.Validator;
+import io.github.almightysatan.jaskl.*;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface LongConfigEntry extends ConfigEntry<Long> {
 
-    static LongConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, long defaultValue, @NotNull Validator<Long>... validators) {
+    static LongConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, long defaultValue, @NotNull Validator<Long>... validators) throws InvalidTypeException, ValidationException {
         class LongConfigEntryImpl extends WritableConfigEntryImpl<Long> implements LongConfigEntry {
             LongConfigEntryImpl() {
                 super(Type.validated(Type.LONG, validators), path, description, defaultValue);

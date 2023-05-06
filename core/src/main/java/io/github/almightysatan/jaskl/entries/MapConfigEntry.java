@@ -20,10 +20,7 @@
 
 package io.github.almightysatan.jaskl.entries;
 
-import io.github.almightysatan.jaskl.Config;
-import io.github.almightysatan.jaskl.ConfigEntry;
-import io.github.almightysatan.jaskl.Type;
-import io.github.almightysatan.jaskl.Validator;
+import io.github.almightysatan.jaskl.*;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +29,7 @@ import java.util.Map;
 
 public interface MapConfigEntry<K, V> extends ConfigEntry<Map<K, V>> {
 
-    static <K, V> ConfigEntry<Map<K, V>> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Map<K, V> defaultValue, @NotNull Type<K> keyType, @NotNull Type<V> valueType, @NotNull Validator<Map<K, V>>... validators) {
+    static <K, V> ConfigEntry<Map<K, V>> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Map<K, V> defaultValue, @NotNull Type<K> keyType, @NotNull Type<V> valueType, @NotNull Validator<Map<K, V>>... validators) throws InvalidTypeException, ValidationException {
         class MapConfigEntryImpl extends WritableConfigEntryImpl<Map<K, V>> implements MapConfigEntry<K, V> {
             MapConfigEntryImpl() {
                 super(Type.validated(Type.map(keyType, valueType), validators), path, description, defaultValue);
