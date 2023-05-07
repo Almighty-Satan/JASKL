@@ -131,7 +131,22 @@ public class ConfigTest {
      * This test requires a predefined config file with inserted values.
      */
     public static void testMapValues(Supplier<Config> configSupplier) throws IOException {
-        // TODO: Implement maps correctly
+        Config config = configSupplier.get();
+
+        Map<String, String> example0 = new HashMap<>();
+        example0.put("Hello", "World");
+        example0.put("abc", "def");
+        ConfigEntry<Map<String, String>> mapConfigEntry = MapConfigEntry.of(config, "example.map", "Example Map", example0, Type.STRING, Type.STRING);
+
+        config.load();
+
+        Map<String, String> example1 = new HashMap<>();
+        example1.put("Hello", "there");
+        example1.put("abc", "xyz");
+        example1.put("x", "y");
+        Assertions.assertEquals(example1, mapConfigEntry.getValue());
+
+        config.close();
     }
 
     /**

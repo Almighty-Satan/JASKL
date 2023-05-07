@@ -69,7 +69,8 @@ public class PropertiesConfigTest {
 
     @Test
     public void testMapValuesProperties() throws IOException {
-        testMapValues(() -> PropertiesConfig.of(file0, "Example Properties Config"));
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> testMapValues(() -> PropertiesConfig.of(file0, "Example Properties Config")));
     }
 
     @Test

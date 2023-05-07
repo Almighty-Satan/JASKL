@@ -7,3 +7,7 @@ long = 1
 string = "modified"
 enum = "ANOTHER_EXAMPLE"
 list = ["Example3", "Example4"]
+[example.map]
+Hello = "there"
+abc = "xyz"
+x = "y"

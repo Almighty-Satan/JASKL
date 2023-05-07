@@ -10,6 +10,11 @@
     "list": [
       "Example3",
       "Example4"
-    ]
+    ],
+    "map": {
+      "Hello": "there",
+      "abc": "xyz",
+      "x": "y"
+    }
   }
 }

@@ -69,7 +69,8 @@ public class IniConfigTest {
 
     @Test
     public void testMapValuesIni() throws IOException {
-        testMapValues(() -> IniConfig.of(file0, "Example Ini Config"));
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> testMapValues(() -> IniConfig.of(file0, "Example Ini Config")));
     }
 
     @Test

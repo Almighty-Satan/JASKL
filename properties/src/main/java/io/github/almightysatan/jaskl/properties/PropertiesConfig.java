@@ -22,6 +22,7 @@ package io.github.almightysatan.jaskl.properties;
 
 import io.github.almightysatan.jaskl.Config;
 import io.github.almightysatan.jaskl.entries.ListConfigEntry;
+import io.github.almightysatan.jaskl.entries.MapConfigEntry;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
@@ -141,7 +142,7 @@ public class PropertiesConfig extends ConfigImpl {
      */
     private void populateEntries() {
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
-            if (configEntry instanceof ListConfigEntry)
+            if (configEntry instanceof ListConfigEntry || configEntry instanceof MapConfigEntry)
                 throw new UnsupportedOperationException("Lists are not supported in Property Configs.");
             Object value = this.config.get(configEntry.getPath());
             if (value != null)
