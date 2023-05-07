@@ -42,7 +42,10 @@ import java.util.*;
 
 public class YamlConfig extends ConfigImpl {
 
+    private static final DumperOptions DUMPER_OPTIONS;
     private static final CustomConstructor CONSTRUCTOR = new CustomConstructor();
+    private static final Representer REPRESENTER;
+    private static final Representer VALUE_REPRESENTER;
 
     private final File file;
     private Yaml yaml;
@@ -57,11 +60,7 @@ public class YamlConfig extends ConfigImpl {
     public void load() throws IOException, IllegalStateException {
         if (this.yaml != null)
             throw new IllegalStateException();
-
-        DumperOptions dumperOptions = new DumperOptions();
-        dumperOptions.setProcessComments(true);
-        dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        this.yaml = new Yaml(CONSTRUCTOR, new Representer(dumperOptions), dumperOptions);
+        this.yaml = new Yaml(CONSTRUCTOR, REPRESENTER, DUMPER_OPTIONS);
         this.reload();
     }
 
@@ -185,7 +184,7 @@ public class YamlConfig extends ConfigImpl {
     protected @NotNull NodeTuple newNodeTuple(@NotNull String path, @Nullable String comment, @NotNull Object value) {
         Node keyNode = this.yaml.represent(path);
         this.setComment(keyNode, comment);
-        Node valueNode = this.yaml.represent(value);
+        Node valueNode = VALUE_REPRESENTER.represent(value);
         return new NodeTuple(keyNode, valueNode);
     }
 
@@ -223,6 +222,28 @@ public class YamlConfig extends ConfigImpl {
 
     public static @NotNull YamlConfig of(@NotNull File file, @Nullable String description) {
         return new YamlConfig(file, description);
+    }
+
+    static {
+        DUMPER_OPTIONS = new DumperOptions();
+        DUMPER_OPTIONS.setProcessComments(true);
+        DUMPER_OPTIONS.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+
+        REPRESENTER = new Representer(DUMPER_OPTIONS);
+        VALUE_REPRESENTER = new ValueRepresenter(DUMPER_OPTIONS);
+    }
+
+    private static class ValueRepresenter extends Representer {
+
+        public ValueRepresenter(DumperOptions options) {
+            super(options);
+            this.setDefaultScalarStyle(DumperOptions.ScalarStyle.PLAIN);
+        }
+
+        @Override
+        protected Node representScalar(Tag tag, String value, DumperOptions.ScalarStyle style) {
+            return super.representScalar(tag, value, style == null && tag == Tag.STR ? DumperOptions.ScalarStyle.DOUBLE_QUOTED : style);
+        }
     }
 
     private static class CustomConstructor extends SafeConstructor {
