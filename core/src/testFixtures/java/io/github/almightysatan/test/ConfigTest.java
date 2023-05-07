@@ -153,7 +153,7 @@ public class ConfigTest {
 
         Config config0 = configSupplier.get();
         ConfigEntry<String> stringConfigEntry0 = StringConfigEntry.of(config0, "example.string", "Example String", "default");
-        ConfigEntry<Integer> intConfigEntry0 = IntegerConfigEntry.of(config0, "example.integer", "Example String", 0);
+        ConfigEntry<Integer> intConfigEntry0 = IntegerConfigEntry.of(config0, "example.integer", "Example Integer", 0);
 
         config0.load();
 
@@ -167,7 +167,7 @@ public class ConfigTest {
 
         Config config1 = configSupplier.get();
         ConfigEntry<String> stringConfigEntry1 = StringConfigEntry.of(config1, "example.string", "Example String", "default");
-        ConfigEntry<Integer> intConfigEntry1 = IntegerConfigEntry.of(config1, "example.integer", "Example String", 0);
+        ConfigEntry<Integer> intConfigEntry1 = IntegerConfigEntry.of(config1, "example.integer", "Example Integer", 0);
 
         config1.load();
 
