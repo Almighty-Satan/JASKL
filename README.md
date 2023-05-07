@@ -55,7 +55,7 @@ config.write(); // Save the config
 | Double   | ✅    | ✅    | ✅    | ✅       | ✅          | ✅       |
 | Enum     | ✅    | ✅    | ✅    | ✅       | ✅          | ✅       |
 | List     | ✅    | ✅    | ✅    | ✅       | ❌          | ✅       |
-| Map      | ✅    | ❓*³  | ❓*³  | ❓*³     | ❌          | ❓*³     |
+| Map      | ✅    | ✅    | ✅    | ❓*³     | ❌          | ❓*³     |
 | Custom   | ✅    | ✅    | ✅    | ✅       | ✅*²        | ✅       |
 | Comments | ✅    | ❌    | ❌    | ❌       | ❌          | ❌       |
 

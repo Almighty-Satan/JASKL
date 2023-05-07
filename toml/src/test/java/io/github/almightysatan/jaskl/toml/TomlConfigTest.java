@@ -94,6 +94,11 @@ public class TomlConfigTest {
     }
 
     @Test
+    public void testWriteAndLoadMapToml() throws IOException {
+        testWriteAndLoadMap(() -> TomlConfig.of(file1, "Example TOML Config"), file1);
+    }
+
+    @Test
     public void testStripToml() throws IOException {
         testStrip(() -> TomlConfig.of(file1, "Example TOML Config"), file1);
     }
