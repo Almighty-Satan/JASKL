@@ -45,19 +45,19 @@ config.write(); // Save the config
 | MongoDB    | A NoSQL database based implementation for complex configs with remote saves.        | [mongodb-driver](https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync)        |
 
 ### Config Entry Types
-| Type     | YAML | JSON | TOML | Hocon*¹ | Properties | MongoDB |
-|----------|------|------|------|---------|------------|---------|
-| String   | ✅    | ✅    | ✅    | ✅       | ✅          | ✅       |
-| Boolean  | ✅    | ✅    | ✅    | ✅       | ✅          | ✅       |
-| Integer  | ✅    | ✅    | ✅    | ✅       | ✅          | ✅       |
-| Long     | ✅    | ✅    | ✅    | ✅       | ✅          | ✅       |
-| Float    | ✅    | ✅    | ✅    | ✅       | ✅          | ✅       |
-| Double   | ✅    | ✅    | ✅    | ✅       | ✅          | ✅       |
-| Enum     | ✅    | ✅    | ✅    | ✅       | ✅          | ✅       |
-| List     | ✅    | ✅    | ✅    | ✅       | ❌          | ✅       |
-| Map      | ✅    | ✅    | ✅    | ✅       | ❌          | ❓*³     |
-| Custom   | ✅    | ✅    | ✅    | ✅       | ✅*²        | ✅       |
-| Comments | ✅    | ❌    | ❌    | ❌       | ❌          | ❌       |
+| Type     | YAML | JSON | TOML | Properties | Ini | Hocon*¹ | MongoDB |
+|----------|------|------|------|------------|-----|---------|---------|
+| String   | ✅    | ✅    | ✅    | ✅          | ✅   | ✅       | ✅       |
+| Boolean  | ✅    | ✅    | ✅    | ✅          | ✅   | ✅       | ✅       |
+| Integer  | ✅    | ✅    | ✅    | ✅          | ✅   | ✅       | ✅       |
+| Long     | ✅    | ✅    | ✅    | ✅          | ✅   | ✅       | ✅       |
+| Float    | ✅    | ✅    | ✅    | ✅          | ✅   | ✅       | ✅       |
+| Double   | ✅    | ✅    | ✅    | ✅          | ✅   | ✅       | ✅       |
+| Enum     | ✅    | ✅    | ✅    | ✅          | ✅   | ✅       | ✅       |
+| List     | ✅    | ✅    | ✅    | ❌          | ❌   | ✅       | ✅       |
+| Map      | ✅    | ✅    | ✅    | ❌          | ❌   | ✅       | ❓*³     |
+| Custom*² | ✅    | ✅    | ✅    | ✅          | ✅   | ✅       | ✅       |
+| Comments | ✅    | ❌    | ❌    | ❌          | ❌   | ❌       | ❌       |
 
 *¹ Read Only  
 *² Only for supported types  
