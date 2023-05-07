@@ -84,12 +84,12 @@ public class TomlConfigTest {
     }
 
     @Test
-    public void testWriteAndLoadList2Yaml() throws IOException {
+    public void testWriteAndLoadList2Toml() throws IOException {
         testWriteAndLoadList2(() -> TomlConfig.of(file1, "Example TOML Config"), file1);
     }
 
     @Test
-    public void testWriteAndLoadListEnumYaml() throws IOException {
+    public void testWriteAndLoadListEnumToml() throws IOException {
         testWriteAndLoadListEnum(() -> TomlConfig.of(file1, "Example TOML Config"), file1);
     }
 

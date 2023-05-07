@@ -84,12 +84,12 @@ public class JsonConfigTest {
     }
 
     @Test
-    public void testWriteAndLoadList2Yaml() throws IOException {
+    public void testWriteAndLoadList2Json() throws IOException {
         testWriteAndLoadList2(() -> JsonConfig.of(file1, "Example JSON Config"), file1);
     }
 
     @Test
-    public void testWriteAndLoadListEnumYaml() throws IOException {
+    public void testWriteAndLoadListEnumJson() throws IOException {
         testWriteAndLoadListEnum(() -> JsonConfig.of(file1, "Example JSON Config"), file1);
     }
 
@@ -104,7 +104,7 @@ public class JsonConfigTest {
     }
 
     @Test
-    public void testCustomYaml() throws IOException {
+    public void testCustomJson() throws IOException {
         testCustom(() -> JsonConfig.of(file2, "Example JSON Config"));
     }
 }
