@@ -18,8 +18,8 @@ File file = new File("path/to/config.yaml");
 Config config = YamlConfig.of(file, "Config for example values");
 
 // Create entries and add them to the config
-ConfigEntry<String> stringValue = StringConfigEntry.of(config, "example.path.string", "An example String!", "This is the default value!");
-ConfigEntry<ExampleEnum> enumValue = EnumConfigEntry.of(config, "example.path.enum", "An example String!", ExampleEnum.EXAMPLE);
+StringConfigEntry stringValue = StringConfigEntry.of(config, "example.path.string", "An example String!", "This is the default value!");
+EnumConfigEntry<ExampleEnum> enumValue = EnumConfigEntry.of(config, "example.path.enum", "An example String!", ExampleEnum.EXAMPLE);
 
 config.load(); // Load the config from file (doesn't create missing entries)
 config.write(); // Save the config to write missing entries
