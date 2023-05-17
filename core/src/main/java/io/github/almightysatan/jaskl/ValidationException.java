@@ -20,45 +20,28 @@
 
 package io.github.almightysatan.jaskl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+public class ValidationException extends RuntimeException {
 
-public interface ConfigEntry<T> {
+    private final String path;
+    private final String errorMessage;
 
-    /**
-     * Returns the path leading to this ConfigEntry's value.
-     * @return the path of this ConfigEntry
-     */
-    @NotNull
-    String getPath();
+    public ValidationException(String errorMessage) {
+        super(String.format("Config error: unknown entry %s", errorMessage));
+        this.path = null;
+        this.errorMessage = errorMessage;
+    }
 
-    /**
-     * Returns the description of this ConfigEntry.
-     *
-     * @return the description of this ConfigEntry
-     */
-    @Nullable
-    String getDescription();
+    public ValidationException(String path, String errorMessage) {
+        super(String.format("Config error: %s %s", path, errorMessage));
+        this.path = path;
+        this.errorMessage = errorMessage;
+    }
 
-    /**
-     * Returns the value of this ConfigEntry.
-     *
-     * @return the value of this ConfigEntry
-     */
-    @NotNull
-    T getValue();
+    public String getPath() {
+        return this.path;
+    }
 
-    /**
-     * Returns the value of this ConfigEntry.
-     *
-     * @return the value of this ConfigEntry
-     */
-    @NotNull
-    T getDefaultValue();
-
-    /**
-     * Updates the value of this ConfigEntry.
-     */
-    void setValue(@NotNull T value) throws InvalidTypeException, ValidationException;
-
+    public String getErrorMessage() {
+        return this.errorMessage;
+    }
 }

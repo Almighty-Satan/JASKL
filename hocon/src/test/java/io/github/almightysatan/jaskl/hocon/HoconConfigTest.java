@@ -55,6 +55,11 @@ public class HoconConfigTest {
     }
 
     @Test
+    public void testValidationHocon() throws IOException {
+        testValidation(() -> HoconConfig.of(file0, "Example HOCON Config"));
+    }
+
+    @Test
     public void testEnumValuesHocon() throws IOException {
         testEnumValues(() -> HoconConfig.of(file0, "Example HOCON Config"));
     }

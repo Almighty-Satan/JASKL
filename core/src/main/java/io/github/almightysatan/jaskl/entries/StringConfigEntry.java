@@ -20,19 +20,18 @@
 
 package io.github.almightysatan.jaskl.entries;
 
-import io.github.almightysatan.jaskl.Config;
-import io.github.almightysatan.jaskl.ConfigEntry;
-import io.github.almightysatan.jaskl.Type;
+import io.github.almightysatan.jaskl.*;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface StringConfigEntry extends ConfigEntry<String> {
 
-    static StringConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, String defaultValue) {
+    @SafeVarargs
+    static StringConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull String defaultValue, @NotNull Validator<String>... validators) throws InvalidTypeException, ValidationException {
         class StringConfigEntryImpl extends WritableConfigEntryImpl<String> implements StringConfigEntry {
             StringConfigEntryImpl() {
-                super(Type.STRING, path, description, defaultValue);
+                super(Type.validated(Type.STRING, validators), path, description, defaultValue);
                 this.register(config);
             }
         }

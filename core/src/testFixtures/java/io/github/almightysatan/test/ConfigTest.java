@@ -20,9 +20,7 @@
 
 package io.github.almightysatan.test;
 
-import io.github.almightysatan.jaskl.Config;
-import io.github.almightysatan.jaskl.ConfigEntry;
-import io.github.almightysatan.jaskl.Type;
+import io.github.almightysatan.jaskl.*;
 import io.github.almightysatan.jaskl.entries.*;
 import org.junit.jupiter.api.Assertions;
 
@@ -90,6 +88,25 @@ public class ConfigTest {
         Assertions.assertEquals("modified", stringConfigEntry.getValue());
 
         config.close();
+    }
+
+    /**
+     * Test if a config's values can be loaded successfully.
+     * This test requires a predefined config file with inserted values.
+     */
+    public static void testValidation(Supplier<Config> configSupplier) throws IOException {
+        Config config0 = configSupplier.get();
+
+        Assertions.assertThrows(ValidationException.class, () -> IntegerConfigEntry.of(config0, "example.integer", "Example Integer", 0, Validator.INTEGER_NOT_ZERO));
+
+        config0.close();
+
+        Config config1 = configSupplier.get();
+        IntegerConfigEntry.of(config1, "example.integer", "Example Integer", -1, Validator.INTEGER_NEGATIVE);
+
+        Assertions.assertThrows(ValidationException.class, config1::load);
+
+        config1.close();
     }
 
     /**

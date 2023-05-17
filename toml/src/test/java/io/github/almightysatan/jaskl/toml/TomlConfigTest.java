@@ -54,6 +54,11 @@ public class TomlConfigTest {
     }
 
     @Test
+    public void testValidationToml() throws IOException {
+        testValidation(() -> TomlConfig.of(file0, "Example TOML Config"));
+    }
+
+    @Test
     public void testEnumValuesToml() throws IOException {
         testEnumValues(() -> TomlConfig.of(file0, "Example TOML Config"));
     }

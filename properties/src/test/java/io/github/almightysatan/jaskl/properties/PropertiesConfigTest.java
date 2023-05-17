@@ -55,6 +55,11 @@ public class PropertiesConfigTest {
     }
 
     @Test
+    public void testValidationProperties() throws IOException {
+        testValidation(() -> PropertiesConfig.of(file0, "Example Properties Config"));
+    }
+
+    @Test
     public void testEnumValuesProperties() throws IOException {
         testEnumValues(() -> PropertiesConfig.of(file0, "Example Properties Config"));
     }

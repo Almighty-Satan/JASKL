@@ -54,6 +54,11 @@ public class JsonConfigTest {
     }
 
     @Test
+    public void testValidationJson() throws IOException {
+        testValidation(() -> JsonConfig.of(file0, "Example JSON Config"));
+    }
+
+    @Test
     public void testEnumValuesJson() throws IOException {
         testEnumValues(() -> JsonConfig.of(file0, "Example JSON Config"));
     }

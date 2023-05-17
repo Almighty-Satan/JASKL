@@ -20,9 +20,7 @@
 
 package io.github.almightysatan.jaskl.impl;
 
-import io.github.almightysatan.jaskl.Config;
-import io.github.almightysatan.jaskl.ConfigEntry;
-import io.github.almightysatan.jaskl.Type;
+import io.github.almightysatan.jaskl.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -31,9 +29,9 @@ public interface WritableConfigEntry<T> extends ConfigEntry<T> {
 
     Type<T> getType();
 
-    void putValue(@NotNull Object value);
+    void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException;
 
-    @NotNull Object getValueToWrite();
+    @NotNull Object getValueToWrite()  throws InvalidTypeException;
 
     boolean isModified();
 
