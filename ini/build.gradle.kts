@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core"))
+    api(project(":core"))
     implementation("com.github.vincentrussell:java-ini-parser:1.5")
 }

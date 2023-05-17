@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core"))
+    api(project(":core"))
     implementation("com.typesafe:config:1.4.2")
 }
