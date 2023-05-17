@@ -1,4 +1,4 @@
-# JASKL - Just Another Simple ~~C~~Konfig Library
+# JASKL - Just Another Simple Config Library
 ___
 
 JASKL is a simple config library supporting multiple different formats.
@@ -7,10 +7,10 @@ JASKL is a simple config library supporting multiple different formats.
 JASKL is based on `Config`s and `ConfigEntry`s. 
 Create a new Config by instantiating one of the following classes: 
 `YamlConfig`, `JsonConfig`, `TomlConfig`, `PropertiesConfig`,  `HoconConfig` or `MongodbConfig`. 
-After that, new `ConfigEntry`s can be created and added to the config.
+After that, new `ConfigEntry`s can be created and added to the config. The value of a `ConfigEntry` is retrieved via
+`ConfigEntry#getValue` and can never be `null`.
 
 ### Example
-
 ```java
 File file = new File("path/to/config.yaml");
 
@@ -34,7 +34,6 @@ config.write(); // Save the config
 ```
 
 ### Implementations
-
 | Type       | Description                                                                         | Base                                                                                        |
 |------------|-------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
 | YAML       | A human-readable data-serialization language.                                       | [SnakeYAML](https://bitbucket.org/snakeyaml/snakeyaml)                                      |
@@ -63,17 +62,23 @@ config.write(); // Save the config
 *² Only for supported types  
 *³ TBD
 
+### Config Entry Validation
+JASKL can automatically validate config entries (e.g. ensure that a number is always greater than zero) and throws a
+`ValidationException` if an invalid value is detected.
+```java
+IntegerConfigEntry positiveIntegerConfigEntry = IntegerConfigEntry.of(config, "example.integer", "Example Integer", 1, Validator.INTEGER_POSITIVE);
+```
+
 ### Building
 To build the project, open the terminal and type `./gradlew build`. All jars will be located at `/<implementation>/build/libs/<implementation>-<version>.jar`.
 
 ### Gradle
 ```gradle
-dependencies {
-    implementation("io.github.almighty-satan.jaskl:jaskl-<implementation>:<version>")
-}
-
 repositories {
     mavenCentral()
-    maven("https://repo.varoplugin.de/repository/maven-public/")
+}
+
+dependencies {
+    implementation("io.github.almighty-satan.jaskl:jaskl-<implementation>:<version>")
 }
 ```
