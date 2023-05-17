@@ -1,3 +1,6 @@
+![Maven Central](https://img.shields.io/maven-central/v/io.github.almighty-satan.jaskl/jaskl-yaml?style=flat-square)
+![GitHub](https://img.shields.io/github/license/Almighty-Satan/JASKL?style=flat-square)
+
 # JASKL - Just Another Simple Config Library
 ___
 
