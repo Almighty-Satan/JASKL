@@ -180,7 +180,7 @@ public class ConfigTest {
      * This test requires a valid file path.
      */
     public static void testWriteAndLoad(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file.exists() && !file.delete())
+        if (file != null && file.exists() && !file.delete())
             Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
 
         Config config0 = configSupplier.get();
@@ -195,7 +195,8 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        Assertions.assertTrue(file.exists());
+        if (file != null)
+            Assertions.assertTrue(file.exists());
 
         Config config1 = configSupplier.get();
         ConfigEntry<String> stringConfigEntry1 = StringConfigEntry.of(config1, "example.string", "Example String", "default");
@@ -214,7 +215,7 @@ public class ConfigTest {
      * This test requires a valid file path.
      */
     public static void testWriteAndLoadList(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file.exists() && !file.delete())
+        if (file != null && file.exists() && !file.delete())
             Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
 
         Config config0 = configSupplier.get();
@@ -229,7 +230,8 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        Assertions.assertTrue(file.exists());
+        if (file != null)
+            Assertions.assertTrue(file.exists());
 
         Config config1 = configSupplier.get();
         ConfigEntry<List<Double>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example Double List", list0, Type.DOUBLE);
@@ -246,7 +248,7 @@ public class ConfigTest {
      * This test requires a valid file path.
      */
     public static void testWriteAndLoadList2(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file.exists() && !file.delete())
+        if (file != null && file.exists() && !file.delete())
             Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
 
         Config config0 = configSupplier.get();
@@ -261,7 +263,8 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        Assertions.assertTrue(file.exists());
+        if (file != null)
+            Assertions.assertTrue(file.exists());
 
         Config config1 = configSupplier.get();
         ConfigEntry<List<List<Integer>>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example List", list0, Type.list(Type.INTEGER));
@@ -279,7 +282,7 @@ public class ConfigTest {
      * This test requires a valid file path.
      */
     public static void testWriteAndLoadListEnum(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file.exists() && !file.delete())
+        if (file != null && file.exists() && !file.delete())
             Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
 
         Config config0 = configSupplier.get();
@@ -294,7 +297,8 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        Assertions.assertTrue(file.exists());
+        if (file != null)
+            Assertions.assertTrue(file.exists());
 
         Config config1 = configSupplier.get();
         ConfigEntry<List<ExampleEnum>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example Enum List", list0, Type.enumType(ExampleEnum.class));
@@ -311,7 +315,7 @@ public class ConfigTest {
      * This test requires a valid file path.
      */
     public static void testWriteAndLoadMap(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file.exists() && !file.delete())
+        if (file != null && file.exists() && !file.delete())
             Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
 
         Config config0 = configSupplier.get();
@@ -330,7 +334,8 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        Assertions.assertTrue(file.exists());
+        if (file != null)
+            Assertions.assertTrue(file.exists());
 
         Config config1 = configSupplier.get();
         ConfigEntry<Map<Float, String>> mapConfigEntry1 = MapConfigEntry.of(config1, "example.map", "Example Map", map0, Type.FLOAT, Type.STRING);
@@ -347,7 +352,7 @@ public class ConfigTest {
      * This test requires a valid file path.
      */
     public static void testStrip(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file.exists() && !file.delete())
+        if (file != null && file.exists() && !file.delete())
             Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
 
         Config config0 = configSupplier.get();
