@@ -9,6 +9,11 @@ permissions: {}
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo
+        ports:
+          - 27017:27017
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 8
@@ -20,6 +25,7 @@ jobs:
       uses: gradle/gradle-build-action@v2
     - name: Gradlew clean publishReleasePublicationToMavenRepository
       env:
+        MONGO_ADDRESS: "localhost:27017"
         SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
         SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
         OSSRH_USER: ${{ secrets.OSSRH_USER }}
