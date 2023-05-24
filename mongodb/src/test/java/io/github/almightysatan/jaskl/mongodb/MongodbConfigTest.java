@@ -35,7 +35,6 @@ import java.util.*;
 
 import static io.github.almightysatan.test.ConfigTest.*;
 import static io.github.almightysatan.test.ConfigTest.testCustom;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MongodbConfigTest {
     
