@@ -38,16 +38,16 @@ public class MongodbConfig extends ConfigImpl {
 
     private final static UpdateOptions UPDATE_OPTIONS = new UpdateOptions().upsert(true);
 
-    private final String ip;
+    private final String address;
     private final String database;
     private final String collection;
     private MongoClient mongoClient;
     private MongoCollection<Document> mongoCollection;
 
 
-    private MongodbConfig(@NotNull String ip, @NotNull String database, @NotNull String collection) {
+    private MongodbConfig(@NotNull String address, @NotNull String database, @NotNull String collection) {
         super(null);
-        this.ip = Objects.requireNonNull(ip);
+        this.address = Objects.requireNonNull(address);
         this.database = Objects.requireNonNull(database);
         this.collection = Objects.requireNonNull(collection);
     }
@@ -57,7 +57,7 @@ public class MongodbConfig extends ConfigImpl {
         if (this.mongoClient != null) {
             throw new IllegalStateException();
         }
-        this.mongoClient = MongoClients.create("mongodb://" + ip);
+        this.mongoClient = MongoClients.create("mongodb://" + address);
         this.mongoCollection = this.mongoClient.getDatabase(database).getCollection(this.collection);
 
         this.reload();
@@ -142,7 +142,7 @@ public class MongodbConfig extends ConfigImpl {
         }
     }
 
-    public static MongodbConfig of(@NotNull String ip, @NotNull String database, @NotNull String collection) {
-        return new MongodbConfig(ip, database, collection);
+    public static MongodbConfig of(@NotNull String address, @NotNull String database, @NotNull String collection) {
+        return new MongodbConfig(address, database, collection);
     }
 }
