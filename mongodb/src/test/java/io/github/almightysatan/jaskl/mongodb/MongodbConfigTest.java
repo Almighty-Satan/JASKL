@@ -25,7 +25,10 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.*;
@@ -78,7 +81,6 @@ public class MongodbConfigTest {
 
     @Test
     public void testLoadMongo() throws IOException {
-        Assertions.fail();
         testLoad(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
     }
 
