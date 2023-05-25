@@ -36,54 +36,54 @@ public class HoconConfigTest {
 
     @Test
     public void testLoadHocon() throws IOException {
-        testLoad(() -> HoconConfig.of(file0, "Example HOCON Config"));
+        testLoad(() -> HoconConfig.of(file0));
     }
 
     @Test
     public void testLoadAfterClosedHocon() throws IOException {
-        testLoadAfterClosed(() -> HoconConfig.of(file0, "Example HOCON Config"));
+        testLoadAfterClosed(() -> HoconConfig.of(file0));
     }
 
     @Test
     public void testAlreadyLoadedHocon() throws IOException {
-        testAlreadyLoaded(() -> HoconConfig.of(file0, "Example HOCON Config"));
+        testAlreadyLoaded(() -> HoconConfig.of(file0));
     }
 
     @Test
     public void testLoadValuesHocon() throws IOException {
-        testLoadValues(() -> HoconConfig.of(file0, "Example HOCON Config"));
+        testLoadValues(() -> HoconConfig.of(file0));
     }
 
     @Test
     public void testValidationHocon() throws IOException {
-        testValidation(() -> HoconConfig.of(file0, "Example HOCON Config"));
+        testValidation(() -> HoconConfig.of(file0));
     }
 
     @Test
     public void testEnumValuesHocon() throws IOException {
-        testEnumValues(() -> HoconConfig.of(file0, "Example HOCON Config"));
+        testEnumValues(() -> HoconConfig.of(file0));
     }
 
     @Test
     public void testListValuesHocon() throws IOException {
-        testListValues(() -> HoconConfig.of(file0, "Example HOCON Config"));
+        testListValues(() -> HoconConfig.of(file0));
     }
 
     @Test
     public void testMapValuesHocon() throws IOException {
-        testMapValues(() -> HoconConfig.of(file0, "Example HOCON Config"));
+        testMapValues(() -> HoconConfig.of(file0));
     }
 
     @Test
     public void testInvalidPathsHocon() throws IOException {
-        testInvalidPaths(() -> HoconConfig.of(file0, "Example HOCON Config"));
+        testInvalidPaths(() -> HoconConfig.of(file0));
     }
 
     @Test
     public void testWriteAndLoadHocon() throws IOException {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> testWriteAndLoad(() -> HoconConfig.of(file1, "Example HOCON Config"), file1)
+                () -> testWriteAndLoad(() -> HoconConfig.of(file1), file1)
         );
     }
 
@@ -91,7 +91,7 @@ public class HoconConfigTest {
     public void testWriteAndLoadListHocon() throws IOException {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> testWriteAndLoadList(() -> HoconConfig.of(file1, "Example HOCON Config"), file1)
+                () -> testWriteAndLoadList(() -> HoconConfig.of(file1), file1)
         );
     }
 
@@ -99,7 +99,7 @@ public class HoconConfigTest {
     public void testStripHocon() throws IOException {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> testStrip(() -> HoconConfig.of(file1, "Example HOCON Config"), file1)
+                () -> testStrip(() -> HoconConfig.of(file1), file1)
         );
     }
 
@@ -107,7 +107,7 @@ public class HoconConfigTest {
     public void testCustomHocon() throws IOException {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> testCustom(() -> HoconConfig.of(file2, "Example HOCON Config"))
+                () -> testCustom(() -> HoconConfig.of(file2))
         );
     }
 }

@@ -36,73 +36,73 @@ public class PropertiesConfigTest {
 
     @Test
     public void testLoadProperties() throws IOException {
-        testLoad(() -> PropertiesConfig.of(file0, "Example Properties Config"));
+        testLoad(() -> PropertiesConfig.of(file0));
     }
 
     @Test
     public void testLoadAfterClosedProperties() throws IOException {
-        testLoadAfterClosed(() -> PropertiesConfig.of(file0, "Example Properties Config"));
+        testLoadAfterClosed(() -> PropertiesConfig.of(file0));
     }
 
     @Test
     public void testAlreadyLoadedProperties() throws IOException {
-        testAlreadyLoaded(() -> PropertiesConfig.of(file0, "Example Properties Config"));
+        testAlreadyLoaded(() -> PropertiesConfig.of(file0));
     }
 
     @Test
     public void testLoadValuesProperties() throws IOException {
-        testLoadValues(() -> PropertiesConfig.of(file0, "Example Properties Config"));
+        testLoadValues(() -> PropertiesConfig.of(file0));
     }
 
     @Test
     public void testValidationProperties() throws IOException {
-        testValidation(() -> PropertiesConfig.of(file0, "Example Properties Config"));
+        testValidation(() -> PropertiesConfig.of(file0));
     }
 
     @Test
     public void testEnumValuesProperties() throws IOException {
-        testEnumValues(() -> PropertiesConfig.of(file0, "Example Properties Config"));
+        testEnumValues(() -> PropertiesConfig.of(file0));
     }
 
     @Test
     public void testListValuesProperties() throws IOException {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> testListValues(() -> PropertiesConfig.of(file0, "Example Properties Config"))
+                () -> testListValues(() -> PropertiesConfig.of(file0))
         );
     }
 
     @Test
     public void testMapValuesProperties() throws IOException {
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> testMapValues(() -> PropertiesConfig.of(file0, "Example Properties Config")));
+                () -> testMapValues(() -> PropertiesConfig.of(file0)));
     }
 
     @Test
     public void testInvalidPathsProperties() throws IOException {
-        testInvalidPaths(() -> PropertiesConfig.of(file0, "Example Properties Config"));
+        testInvalidPaths(() -> PropertiesConfig.of(file0));
     }
 
     @Test
     public void testWriteAndLoadProperties() throws IOException {
-        testWriteAndLoad(() -> PropertiesConfig.of(file1, "Example Properties Config"), file1);
+        testWriteAndLoad(() -> PropertiesConfig.of(file1), file1);
     }
 
     @Test
     public void testWriteAndLoadListProperties() throws IOException {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> testWriteAndLoadList(() -> PropertiesConfig.of(file1, "Example Properties Config"), file1)
+                () -> testWriteAndLoadList(() -> PropertiesConfig.of(file1), file1)
         );
     }
 
     @Test
     public void testStripProperties() throws IOException {
-        testStrip(() -> PropertiesConfig.of(file1, "Example Properties Config"), file1);
+        testStrip(() -> PropertiesConfig.of(file1), file1);
     }
 
     @Test
     public void testCustomProperties() throws IOException {
-        testCustom(() -> PropertiesConfig.of(file2, "Example Properties Config"));
+        testCustom(() -> PropertiesConfig.of(file2));
     }
 }

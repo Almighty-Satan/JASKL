@@ -35,81 +35,81 @@ public class TomlConfigTest {
 
     @Test
     public void testLoadToml() throws IOException {
-        testLoad(() -> TomlConfig.of(file0, "Example TOML Config"));
+        testLoad(() -> TomlConfig.of(file0));
     }
 
     @Test
     public void testLoadAfterClosedToml() throws IOException {
-        testLoadAfterClosed(() -> TomlConfig.of(file0, "Example TOML Config"));
+        testLoadAfterClosed(() -> TomlConfig.of(file0));
     }
 
     @Test
     public void testAlreadyLoadedToml() throws IOException {
-        testAlreadyLoaded(() -> TomlConfig.of(file0, "Example TOML Config"));
+        testAlreadyLoaded(() -> TomlConfig.of(file0));
     }
 
     @Test
     public void testTomlValues0() throws IOException {
-        testLoadValues(() -> TomlConfig.of(file0, "Example TOML Config"));
+        testLoadValues(() -> TomlConfig.of(file0));
     }
 
     @Test
     public void testValidationToml() throws IOException {
-        testValidation(() -> TomlConfig.of(file0, "Example TOML Config"));
+        testValidation(() -> TomlConfig.of(file0));
     }
 
     @Test
     public void testEnumValuesToml() throws IOException {
-        testEnumValues(() -> TomlConfig.of(file0, "Example TOML Config"));
+        testEnumValues(() -> TomlConfig.of(file0));
     }
 
     @Test
     public void testListValuesToml() throws IOException {
-        testListValues(() -> TomlConfig.of(file0, "Example TOML Config"));
+        testListValues(() -> TomlConfig.of(file0));
     }
 
     @Test
     public void testMapValuesToml() throws IOException {
-        testMapValues(() -> TomlConfig.of(file0, "Example TOML Config"));
+        testMapValues(() -> TomlConfig.of(file0));
     }
 
     @Test
     public void testInvalidPathsToml() throws IOException {
-        testInvalidPaths(() -> TomlConfig.of(file0, "Example TOML Config"));
+        testInvalidPaths(() -> TomlConfig.of(file0));
     }
 
     @Test
     public void testWriteAndLoadToml() throws IOException {
-        testWriteAndLoad(() -> TomlConfig.of(file1, "Example TOML Config"), file1);
+        testWriteAndLoad(() -> TomlConfig.of(file1), file1);
     }
 
     @Test
     public void testWriteAndLoadListToml() throws IOException {
-        testWriteAndLoadList(() -> TomlConfig.of(file1, "Example TOML Config"), file1);
+        testWriteAndLoadList(() -> TomlConfig.of(file1), file1);
     }
 
     @Test
     public void testWriteAndLoadList2Toml() throws IOException {
-        testWriteAndLoadList2(() -> TomlConfig.of(file1, "Example TOML Config"), file1);
+        testWriteAndLoadList2(() -> TomlConfig.of(file1), file1);
     }
 
     @Test
     public void testWriteAndLoadListEnumToml() throws IOException {
-        testWriteAndLoadListEnum(() -> TomlConfig.of(file1, "Example TOML Config"), file1);
+        testWriteAndLoadListEnum(() -> TomlConfig.of(file1), file1);
     }
 
     @Test
     public void testWriteAndLoadMapToml() throws IOException {
-        testWriteAndLoadMap(() -> TomlConfig.of(file1, "Example TOML Config"), file1);
+        testWriteAndLoadMap(() -> TomlConfig.of(file1), file1);
     }
 
     @Test
     public void testStripToml() throws IOException {
-        testStrip(() -> TomlConfig.of(file1, "Example TOML Config"), file1);
+        testStrip(() -> TomlConfig.of(file1), file1);
     }
 
     @Test
     public void testCustomToml() throws IOException {
-        testCustom(() -> TomlConfig.of(file2, "Example TOML Config"));
+        testCustom(() -> TomlConfig.of(file2));
     }
 }

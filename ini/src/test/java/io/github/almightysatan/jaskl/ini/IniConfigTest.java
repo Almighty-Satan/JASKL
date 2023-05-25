@@ -36,73 +36,73 @@ public class IniConfigTest {
 
     @Test
     public void testLoadIni() throws IOException {
-        testLoad(() -> IniConfig.of(file0, "Example Ini Config"));
+        testLoad(() -> IniConfig.of(file0));
     }
 
     @Test
     public void testLoadAfterClosedIni() throws IOException {
-        testLoadAfterClosed(() -> IniConfig.of(file0, "Example Ini Config"));
+        testLoadAfterClosed(() -> IniConfig.of(file0));
     }
 
     @Test
     public void testAlreadyLoadedIni() throws IOException {
-        testAlreadyLoaded(() -> IniConfig.of(file0, "Example Ini Config"));
+        testAlreadyLoaded(() -> IniConfig.of(file0));
     }
 
     @Test
     public void testLoadValuesIni() throws IOException {
-        testLoadValues(() -> IniConfig.of(file0, "Example Ini Config"));
+        testLoadValues(() -> IniConfig.of(file0));
     }
 
     @Test
     public void testValidationIni() throws IOException {
-        testValidation(() -> IniConfig.of(file0, "Example Ini Config"));
+        testValidation(() -> IniConfig.of(file0));
     }
 
     @Test
     public void testEnumValuesIni() throws IOException {
-        testEnumValues(() -> IniConfig.of(file0, "Example Ini Config"));
+        testEnumValues(() -> IniConfig.of(file0));
     }
 
     @Test
     public void testListValuesIni() throws IOException {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> testListValues(() -> IniConfig.of(file0, "Example Ini Config"))
+                () -> testListValues(() -> IniConfig.of(file0))
         );
     }
 
     @Test
     public void testMapValuesIni() throws IOException {
         Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> testMapValues(() -> IniConfig.of(file0, "Example Ini Config")));
+                () -> testMapValues(() -> IniConfig.of(file0)));
     }
 
     @Test
     public void testInvalidPathsIni() throws IOException {
-        testInvalidPaths(() -> IniConfig.of(file0, "Example Ini Config"));
+        testInvalidPaths(() -> IniConfig.of(file0));
     }
 
     @Test
     public void testWriteAndLoadIni() throws IOException {
-        testWriteAndLoad(() -> IniConfig.of(file1, "Example Ini Config"), file1);
+        testWriteAndLoad(() -> IniConfig.of(file1), file1);
     }
 
     @Test
     public void testWriteAndLoadListIni() throws IOException {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
-                () -> testWriteAndLoadList(() -> IniConfig.of(file1, "Example Ini Config"), file1)
+                () -> testWriteAndLoadList(() -> IniConfig.of(file1), file1)
         );
     }
 
     @Test
     public void testStripIni() throws IOException {
-        testStrip(() -> IniConfig.of(file1, "Example Ini Config"), file1);
+        testStrip(() -> IniConfig.of(file1), file1);
     }
 
     @Test
     public void testCustomIni() throws IOException {
-        testCustom(() -> IniConfig.of(file2, "Example Ini Config"));
+        testCustom(() -> IniConfig.of(file2));
     }
 }

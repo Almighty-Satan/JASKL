@@ -35,81 +35,81 @@ public class JsonConfigTest {
 
     @Test
     public void testLoadJson() throws IOException {
-        testLoad(() -> JsonConfig.of(file0, "Example JSON Config"));
+        testLoad(() -> JsonConfig.of(file0));
     }
 
     @Test
     public void testLoadAfterClosedJson() throws IOException {
-        testLoadAfterClosed(() -> JsonConfig.of(file0, "Example JSON Config"));
+        testLoadAfterClosed(() -> JsonConfig.of(file0));
     }
 
     @Test
     public void testAlreadyLoadedJson() throws IOException {
-        testAlreadyLoaded(() -> JsonConfig.of(file0, "Example JSON Config"));
+        testAlreadyLoaded(() -> JsonConfig.of(file0));
     }
 
     @Test
     public void testLoadValuesJson() throws IOException {
-        testLoadValues(() -> JsonConfig.of(file0, "Example JSON Config"));
+        testLoadValues(() -> JsonConfig.of(file0));
     }
 
     @Test
     public void testValidationJson() throws IOException {
-        testValidation(() -> JsonConfig.of(file0, "Example JSON Config"));
+        testValidation(() -> JsonConfig.of(file0));
     }
 
     @Test
     public void testEnumValuesJson() throws IOException {
-        testEnumValues(() -> JsonConfig.of(file0, "Example JSON Config"));
+        testEnumValues(() -> JsonConfig.of(file0));
     }
 
     @Test
     public void testListValuesJson() throws IOException {
-        testListValues(() -> JsonConfig.of(file0, "Example JSON Config"));
+        testListValues(() -> JsonConfig.of(file0));
     }
 
     @Test
     public void testMapValuesJson() throws IOException {
-        testMapValues(() -> JsonConfig.of(file0, "Example JSON Config"));
+        testMapValues(() -> JsonConfig.of(file0));
     }
 
     @Test
     public void testInvalidPathsJson() throws IOException {
-        testInvalidPaths(() -> JsonConfig.of(file0, "Example JSON Config"));
+        testInvalidPaths(() -> JsonConfig.of(file0));
     }
 
     @Test
     public void testWriteAndLoadJson() throws IOException {
-        testWriteAndLoad(() -> JsonConfig.of(file1, "Example JSON Config"), file1);
+        testWriteAndLoad(() -> JsonConfig.of(file1), file1);
     }
 
     @Test
     public void testWriteAndLoadListJson() throws IOException {
-        testWriteAndLoadList(() -> JsonConfig.of(file1, "Example JSON Config"), file1);
+        testWriteAndLoadList(() -> JsonConfig.of(file1), file1);
     }
 
     @Test
     public void testWriteAndLoadList2Json() throws IOException {
-        testWriteAndLoadList2(() -> JsonConfig.of(file1, "Example JSON Config"), file1);
+        testWriteAndLoadList2(() -> JsonConfig.of(file1), file1);
     }
 
     @Test
     public void testWriteAndLoadListEnumJson() throws IOException {
-        testWriteAndLoadListEnum(() -> JsonConfig.of(file1, "Example JSON Config"), file1);
+        testWriteAndLoadListEnum(() -> JsonConfig.of(file1), file1);
     }
 
     @Test
     public void testWriteAndLoadMapJson() throws IOException {
-        testWriteAndLoadMap(() -> JsonConfig.of(file1, "Example JSON Config"), file1);
+        testWriteAndLoadMap(() -> JsonConfig.of(file1), file1);
     }
 
     @Test
     public void testStripJson() throws IOException {
-        testStrip(() -> JsonConfig.of(file1, "Example JSON Config"), file1);
+        testStrip(() -> JsonConfig.of(file1), file1);
     }
 
     @Test
     public void testCustomJson() throws IOException {
-        testCustom(() -> JsonConfig.of(file2, "Example JSON Config"));
+        testCustom(() -> JsonConfig.of(file2));
     }
 }
