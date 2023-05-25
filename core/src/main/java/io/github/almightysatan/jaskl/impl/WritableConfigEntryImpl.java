@@ -37,7 +37,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     public WritableConfigEntryImpl(Type<T> type, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
         super(path, description, defaultValue);
         this.type = type;
-        this.value = type.castToType(defaultValue);
+        this.value = type.toEntryType(defaultValue);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     @Override
     public void setValue(@NotNull T value) throws InvalidTypeException, ValidationException {
         Objects.requireNonNull(value);
-        T parsedValue = this.castToType(value);
+        T parsedValue = this.toType(value);
         if (parsedValue.equals(this.getValue()))
             return;
         this.value = parsedValue;
@@ -63,13 +63,13 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     @Override
     public void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException {
         Objects.requireNonNull(value);
-        this.value = this.castToType(value);
+        this.value = this.toType(value);
         this.modified = false;
     }
 
-    private T castToType(Object value) throws InvalidTypeException, ValidationException {
+    private T toType(@NotNull Object value) throws InvalidTypeException, ValidationException {
         try {
-            return this.getType().castToType(value);
+            return this.getType().toEntryType(value);
         } catch (InvalidTypeException e) {
             throw new InvalidTypeException(this.getPath(), e);
         } catch (ValidationException e) {
@@ -80,7 +80,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     @Override
     public @NotNull Object getValueToWrite()  throws InvalidTypeException {
         try {
-            return this.getType().castToWritable(this.getValue());
+            return this.getType().toWritable(this.getValue());
         } catch (InvalidTypeException e) {
             throw new InvalidTypeException(this.getPath(), e);
         }

@@ -29,23 +29,23 @@ import java.util.*;
 
 public interface Type<T> {
 
-    @NotNull T castToType(@NotNull Object value) throws InvalidTypeException, ValidationException;
+    @NotNull T toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException;
 
-    @NotNull Object castToWritable(@NotNull T value) throws InvalidTypeException;
+    @NotNull Object toWritable(@NotNull T value) throws InvalidTypeException;
 
     static <T> Type<T> validated(Type<T> type, Validator<T> validator) {
         return new Type<T>() {
 
             @Override
-            public @NotNull T castToType(@NotNull Object value) throws InvalidTypeException, ValidationException {
-                T casted = type.castToType(value);
+            public @NotNull T toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException {
+                T casted = type.toEntryType(value);
                 validator.validate(casted);
                 return casted;
             }
 
             @Override
-            public @NotNull Object castToWritable(@NotNull T value) throws InvalidTypeException {
-                return type.castToWritable(value);
+            public @NotNull Object toWritable(@NotNull T value) throws InvalidTypeException {
+                return type.toWritable(value);
             }
         };
     }
@@ -189,11 +189,11 @@ public interface Type<T> {
         Objects.requireNonNull(clazz);
         return new Type<T>() {
             @Override
-            public @NotNull T castToType(@NotNull Object value) throws InvalidTypeException, ValidationException {
+            public @NotNull T toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException {
                 if (value.getClass() == clazz)
                     return (T) value;
 
-                String stringValue = Type.STRING.castToType(value);
+                String stringValue = Type.STRING.toEntryType(value);
                 try {
                     return Enum.valueOf(clazz, stringValue);
                 } catch (IllegalArgumentException e) {
@@ -202,7 +202,7 @@ public interface Type<T> {
             }
 
             @Override
-            public @NotNull Object castToWritable(@NotNull T value) throws InvalidTypeException {
+            public @NotNull Object toWritable(@NotNull T value) throws InvalidTypeException {
                 return value.name();
             }
         };
@@ -213,12 +213,12 @@ public interface Type<T> {
         Objects.requireNonNull(type);
         return new Type<List<T>>() {
             @Override
-            public @NotNull List<T> castToType(@NotNull Object value) throws InvalidTypeException, ValidationException {
+            public @NotNull List<T> toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException {
                 if (value instanceof List) {
                     List<T> listValue = (List<T>) value;
                     List<T> newList = new ArrayList<>(listValue.size());
                     for (Object element : listValue)
-                        newList.add(type.castToType(element));
+                        newList.add(type.toEntryType(element));
 
                     return Collections.unmodifiableList(newList);
                 }
@@ -227,10 +227,10 @@ public interface Type<T> {
             }
 
             @Override
-            public @NotNull Object castToWritable(@NotNull List<T> value) throws InvalidTypeException {
+            public @NotNull Object toWritable(@NotNull List<T> value) throws InvalidTypeException {
                 List<Object> newList = new ArrayList<>(value.size());
                 for (T element : value)
-                    newList.add(type.castToWritable(element));
+                    newList.add(type.toWritable(element));
 
                 return Collections.unmodifiableList(newList);
             }
@@ -243,12 +243,12 @@ public interface Type<T> {
         Objects.requireNonNull(valueType);
         return new Type<Map<K, V>>() {
             @Override
-            public @NotNull Map<K, V> castToType(@NotNull Object value) throws InvalidTypeException, ValidationException {
+            public @NotNull Map<K, V> toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException {
                 if (value instanceof Map) {
                     Map<K, V> mapValue = (Map<K, V>) value;
                     Map<K, V> newMap = new HashMap<>();
                     for (Map.Entry<K, V> entry : mapValue.entrySet())
-                        newMap.put(keyType.castToType(entry.getKey()), valueType.castToType(entry.getValue()));
+                        newMap.put(keyType.toEntryType(entry.getKey()), valueType.toEntryType(entry.getValue()));
 
                     return Collections.unmodifiableMap(newMap);
                 }
@@ -257,10 +257,10 @@ public interface Type<T> {
             }
 
             @Override
-            public @NotNull Object castToWritable(@NotNull Map<K, V> value) throws InvalidTypeException {
+            public @NotNull Object toWritable(@NotNull Map<K, V> value) throws InvalidTypeException {
                 Map<Object, Object> newMap = new HashMap<>();
                 for (Map.Entry<K, V> entry : value.entrySet())
-                    newMap.put(keyType.castToWritable(entry.getKey()), valueType.castToWritable(entry.getValue()));
+                    newMap.put(keyType.toWritable(entry.getKey()), valueType.toWritable(entry.getValue()));
 
                 return Collections.unmodifiableMap(newMap);
             }

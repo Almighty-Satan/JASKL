@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public interface SimpleType<T> extends Type<T> {
 
     @Override
-    default @NotNull Object castToWritable(@NotNull T value) throws InvalidTypeException {
+    default @NotNull Object toWritable(@NotNull T value) throws InvalidTypeException {
         return value;
     }
 }
