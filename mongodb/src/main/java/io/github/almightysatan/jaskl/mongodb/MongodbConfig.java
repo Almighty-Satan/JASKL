@@ -142,6 +142,14 @@ public class MongodbConfig extends ConfigImpl {
         }
     }
 
+    /**
+     * Creates a new {@link MongodbConfig} instance.
+     *
+     * @param address The address of the database. Example: {@code username:password@localhost:27017}
+     * @param database The name of the database
+     * @param collection The name of the collection
+     * @return A new {@link MongodbConfig} instance
+     */
     public static MongodbConfig of(@NotNull String address, @NotNull String database, @NotNull String collection) {
         return new MongodbConfig(address, database, collection);
     }

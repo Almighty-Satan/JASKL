@@ -29,6 +29,7 @@ public interface Config {
     /**
      * Loads the config from a storage location.
      *
+     * @throws IOException if an I/O exception occurs.
      * @throws IllegalStateException if called multiple times.
      */
     void load() throws IOException, IllegalStateException;
@@ -38,18 +39,23 @@ public interface Config {
      * Assumes that {@link Config#load()} has been called already.
      * No files/data storage locations will be created or initialized.
      *
+     * @throws IOException if an I/O exception occurs.
      * @throws IllegalStateException if {@link Config#load()} hasn't been called.
      */
     void reload() throws IOException, IllegalStateException;
 
     /**
      * Saves the configuration to it's corresponding data storage location.
+     *
+     * @throws IOException if an I/O exception occurs.
      */
     void write() throws IOException;
 
     /**
      * Cleans up dead entries from the storage location.
      * An entry is dead if no {@link ConfigEntry} references its path.
+     *
+     * @throws IOException if an I/O exception occurs.
      */
     void strip() throws IOException;
 

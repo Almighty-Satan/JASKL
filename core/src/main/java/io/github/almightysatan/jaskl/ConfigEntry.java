@@ -58,6 +58,8 @@ public interface ConfigEntry<T> {
 
     /**
      * Updates the value of this ConfigEntry.
+     *
+     * @param value The new value
      */
     void setValue(@NotNull T value) throws InvalidTypeException, ValidationException;
 
