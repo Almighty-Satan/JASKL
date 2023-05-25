@@ -33,7 +33,25 @@ public class JsonConfig extends JacksonConfigImpl {
         super(new JsonMapper(), file, description);
     }
 
+    /**
+     * Creates a new {@link JsonConfig} instance.
+     *
+     * @param file The json file. The file will be created automatically if it does not already exist.
+     * @param description The description (comment) of this config file.
+     * @return A new {@link JsonConfig} instance.
+     */
+    @Deprecated
     public static JsonConfig of(@NotNull File file, @Nullable String description) {
         return new JsonConfig(file, description);
+    }
+
+    /**
+     * Creates a new {@link JsonConfig} instance.
+     *
+     * @param file The json file. The file will be created automatically if it does not already exist.
+     * @return A new {@link JsonConfig} instance.
+     */
+    public static JsonConfig of(@NotNull File file) {
+        return new JsonConfig(file, null);
     }
 }

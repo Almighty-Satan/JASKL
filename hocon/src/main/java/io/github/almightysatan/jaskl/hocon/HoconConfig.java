@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * A read-only hocon config implementation.
@@ -42,9 +43,9 @@ public class HoconConfig extends ConfigImpl {
     private final File file;
     private Config config;
 
-    private HoconConfig(File file, String description) {
+    private HoconConfig(@NotNull File file, @Nullable String description) {
         super(description);
-        this.file = file;
+        this.file = Objects.requireNonNull(file);
     }
 
     @Override
@@ -88,7 +89,25 @@ public class HoconConfig extends ConfigImpl {
             this.config = null;
     }
 
+    /**
+     * Creates a new {@link HoconConfig} instance.
+     *
+     * @param file The hocon file. The file will be created automatically if it does not already exist.
+     * @param description The description (comment) of this config file.
+     * @return A new {@link HoconConfig} instance.
+     */
+    @Deprecated
     public static io.github.almightysatan.jaskl.Config of(@NotNull File file, @Nullable String description) {
         return new HoconConfig(file, description);
+    }
+
+    /**
+     * Creates a new {@link HoconConfig} instance.
+     *
+     * @param file The hocon file. The file will be created automatically if it does not already exist.
+     * @return A new {@link HoconConfig} instance.
+     */
+    public static io.github.almightysatan.jaskl.Config of(@NotNull File file) {
+        return new HoconConfig(file, null);
     }
 }

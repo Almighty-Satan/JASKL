@@ -26,12 +26,15 @@ import io.github.almightysatan.jaskl.entries.MapConfigEntry;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
@@ -40,9 +43,9 @@ public class PropertiesConfig extends ConfigImpl {
     private final File file;
     private Properties config;
 
-    private PropertiesConfig(File file, String description) {
+    private PropertiesConfig(@NotNull File file, @Nullable String description) {
         super(description);
-        this.file = file;
+        this.file = Objects.requireNonNull(file);
     }
 
     @Override
@@ -113,13 +116,31 @@ public class PropertiesConfig extends ConfigImpl {
             this.config = null;
     }
 
-    public static Config of(File file, String description) {
+    /**
+     * Creates a new {@link PropertiesConfig} instance.
+     *
+     * @param file The properties file. The file will be created automatically if it does not already exist.
+     * @param description The description (comment) of this config file.
+     * @return A new {@link PropertiesConfig} instance.
+     */
+    @Deprecated
+    public static Config of(@NotNull File file, @Nullable String description) {
         return new PropertiesConfig(file, description);
     }
 
     /**
+     * Creates a new {@link PropertiesConfig} instance.
+     *
+     * @param file The properties file. The file will be created automatically if it does not already exist.
+     * @return A new {@link PropertiesConfig} instance.
+     */
+    public static Config of(@NotNull File file) {
+        return new PropertiesConfig(file, null);
+    }
+
+    /**
      * Takes the current property instance and saves it to the file
-     * @throws IOException
+     * @throws IOException If an I/O exception occurs.
      */
     private void writeToFile() throws IOException {
         try (FileWriter writer = new FileWriter(file)){
@@ -129,7 +150,7 @@ public class PropertiesConfig extends ConfigImpl {
 
     /**
      * Populates the property instance with the values from the file
-     * @throws IOException
+     * @throws IOException If an I/O exception occurs.
      */
     private void readFromFile() throws IOException {
         try (FileReader reader = new FileReader(file)) {

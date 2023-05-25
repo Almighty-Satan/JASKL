@@ -35,7 +35,25 @@ public class TomlConfig extends JacksonConfigImpl {
         super(TomlMapper.builder().enable(TomlWriteFeature.FAIL_ON_NULL_WRITE).build(), file, description);
     }
 
+    /**
+     * Creates a new {@link TomlConfig} instance.
+     *
+     * @param file The toml file. The file will be created automatically if it does not already exist.
+     * @param description The description (comment) of this config file.
+     * @return A new {@link TomlConfig} instance.
+     */
+    @Deprecated
     public static Config of(@NotNull File file, @Nullable String description) {
         return new TomlConfig(file, description);
+    }
+
+    /**
+     * Creates a new {@link TomlConfig} instance.
+     *
+     * @param file The toml file. The file will be created automatically if it does not already exist.
+     * @return A new {@link TomlConfig} instance.
+     */
+    public static Config of(@NotNull File file) {
+        return new TomlConfig(file, null);
     }
 }

@@ -28,8 +28,11 @@ import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import com.github.vincentrussell.ini.Ini;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.util.Objects;
 import java.util.Set;
 
 public class IniConfig extends ConfigImpl {
@@ -37,9 +40,9 @@ public class IniConfig extends ConfigImpl {
     private final File file;
     private Ini config;
 
-    private IniConfig(File file, String description) {
+    private IniConfig(@NotNull File file, @Nullable String description) {
         super(description);
-        this.file = file;
+        this.file = Objects.requireNonNull(file);
     }
 
     @Override
@@ -112,8 +115,26 @@ public class IniConfig extends ConfigImpl {
             this.config = null;
     }
 
-    public static Config of(File file, String description) {
+    /**
+     * Creates a new {@link IniConfig} instance.
+     *
+     * @param file The ini file. The file will be created automatically if it does not already exist.
+     * @param description The description (comment) of this config file.
+     * @return A new {@link IniConfig} instance.
+     */
+    @Deprecated
+    public static Config of(@NotNull File file, @Nullable String description) {
         return new IniConfig(file, description);
+    }
+
+    /**
+     * Creates a new {@link IniConfig} instance.
+     *
+     * @param file The ini file. The file will be created automatically if it does not already exist.
+     * @return A new {@link IniConfig} instance.
+     */
+    public static Config of(@NotNull File file) {
+        return new IniConfig(file, null);
     }
 
     /**
@@ -150,7 +171,7 @@ public class IniConfig extends ConfigImpl {
         }
     }
 
-    private String[] getSectionAndKey(ConfigEntry<?> entry) {
+    private String[] getSectionAndKey(@NotNull ConfigEntry<?> entry) {
         String path = entry.getPath();
         String section = path.contains(".") ? path.substring(0, path.lastIndexOf('.')) : "section";
         String key = !path.contains(".") ? path : path.substring(path.lastIndexOf('.') + 1);
