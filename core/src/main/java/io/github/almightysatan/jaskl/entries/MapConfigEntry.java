@@ -40,4 +40,9 @@ public interface MapConfigEntry<K, V> extends ConfigEntry<Map<K, V>> {
 
         return new MapConfigEntryImpl();
     }
+
+    @SafeVarargs
+    static <K, V> MapConfigEntry<K, V> of(@NotNull Config config, @NotNull String path, @NotNull Map<K, V> defaultValue, @NotNull Type<K> keyType, @NotNull Type<V> valueType, @NotNull Validator<Map<K, V>>... validators) throws InvalidTypeException, ValidationException {
+        return of(config, path, null, defaultValue, keyType, valueType, validators);
+    }
 }

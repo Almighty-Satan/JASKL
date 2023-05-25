@@ -38,4 +38,9 @@ public interface DoubleConfigEntry extends ConfigEntry<Double> {
 
         return new DoubleConfigEntryImpl();
     }
+
+    @SafeVarargs
+    static DoubleConfigEntry of(@NotNull Config config, @NotNull String path, double defaultValue, @NotNull Validator<Double>... validators) throws InvalidTypeException, ValidationException {
+        return of(config, path, null, defaultValue, validators);
+    }
 }

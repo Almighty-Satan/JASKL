@@ -38,4 +38,9 @@ public interface BooleanConfigEntry extends ConfigEntry<Boolean> {
 
         return new BooleanConfigEntryImpl();
     }
+
+    @SafeVarargs
+    static BooleanConfigEntry of(@NotNull Config config, @NotNull String path, boolean defaultValue, @NotNull Validator<Boolean>... validators) throws InvalidTypeException, ValidationException {
+        return of(config, path, null, defaultValue, validators);
+    }
 }

@@ -39,4 +39,9 @@ public interface EnumConfigEntry<T extends Enum<T>> extends ConfigEntry<T> {
 
         return new EnumConfigEntryImpl();
     }
+
+    @SafeVarargs
+    static <T extends Enum<T>> EnumConfigEntry<T> of(@NotNull Config config, @NotNull String path, T defaultValue, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+        return of(config, path, null, defaultValue, validators);
+    }
 }

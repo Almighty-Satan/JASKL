@@ -40,4 +40,9 @@ public interface ListConfigEntry<T> extends ConfigEntry<List<T>> {
 
         return new ListConfigEntryImpl();
     }
+
+    @SafeVarargs
+    static <T> ListConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull List<T> defaultValue, @NotNull Type<T> type, @NotNull Validator<List<T>>... validators) throws InvalidTypeException, ValidationException {
+        return of(config, path, null, defaultValue, type, validators);
+    }
 }

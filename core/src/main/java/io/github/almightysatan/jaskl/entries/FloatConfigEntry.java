@@ -38,4 +38,9 @@ public interface FloatConfigEntry extends ConfigEntry<Float> {
 
         return new FloatConfigEntryImpl();
     }
+
+    @SafeVarargs
+    static FloatConfigEntry of(@NotNull Config config, @NotNull String path, float defaultValue, @NotNull Validator<Float>... validators) throws InvalidTypeException, ValidationException {
+        return of(config, path, null, defaultValue, validators);
+    }
 }

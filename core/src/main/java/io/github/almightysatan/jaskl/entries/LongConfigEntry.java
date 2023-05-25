@@ -38,4 +38,9 @@ public interface LongConfigEntry extends ConfigEntry<Long> {
 
         return new LongConfigEntryImpl();
     }
+
+    @SafeVarargs
+    static LongConfigEntry of(@NotNull Config config, @NotNull String path, long defaultValue, @NotNull Validator<Long>... validators) throws InvalidTypeException, ValidationException {
+        return of(config, path, null, defaultValue, validators);
+    }
 }

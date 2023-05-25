@@ -38,4 +38,9 @@ public interface IntegerConfigEntry extends ConfigEntry<Integer> {
 
         return new IntegerConfigEntryImpl();
     }
+
+    @SafeVarargs
+    static IntegerConfigEntry of(@NotNull Config config, @NotNull String path, int defaultValue, @NotNull Validator<Integer>... validators) throws InvalidTypeException, ValidationException {
+        return of(config, path, null, defaultValue, validators);
+    }
 }
