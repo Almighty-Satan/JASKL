@@ -20,25 +20,27 @@
 
 package io.github.almightysatan.jaskl.hocon;
 
+import com.typesafe.config.*;
 import io.github.almightysatan.jaskl.ConfigEntry;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
+import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
-import com.typesafe.config.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Objects;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 /**
- * A read-only hocon config implementation.
- * Since the underlying configuration api doesn't support writing without weird hacks,
- * writing is currently unsupported.
+ * A hocon config implementation.
  */
 public class HoconConfig extends ConfigImpl {
 
     private static final ConfigParseOptions PARSE_OPTIONS = ConfigParseOptions.defaults().setSyntax(ConfigSyntax.CONF)
             .setAllowMissing(false).setIncluder(new NopIncluder());
+    private static final ConfigRenderOptions RENDER_OPTIONS = ConfigRenderOptions.defaults().setJson(false).setOriginComments(false);
 
     private final File file;
     private Config config;
@@ -69,18 +71,43 @@ public class HoconConfig extends ConfigImpl {
             try {
                 Object value = this.config.getValue(configEntry.getPath()).unwrapped();
                 configEntry.putValue(value);
-            } catch (ConfigException.Missing ignored) {}
+            } catch (ConfigException.Missing ignored) {
+            }
         }
     }
 
     @Override
-    public void write() {
-        throw new UnsupportedOperationException("Hocon configs do not support writing yet.");
+    public void write() throws IOException {
+        Config config = this.config;
+        if (config == null)
+            throw new IllegalStateException();
+        Util.createFileAndPath(this.file);
+
+        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
+            if (configEntry.isModified()) {
+                ConfigValue value = ConfigValueFactory.fromAnyRef(configEntry.getValueToWrite());
+                if (configEntry.getDescription() != null)
+                    value = value.withOrigin(value.origin().withComments(Collections.singletonList(configEntry.getDescription())));
+                config = config.withValue(configEntry.getPath(), value);
+            }
+        }
+
+        this.writeIfNecessary(config, true);
     }
 
     @Override
-    public void strip() {
-        throw new UnsupportedOperationException("Hocon configs do not support writing yet.");
+    public void strip() throws IOException {
+        Config config = this.config;
+        if (config == null)
+            throw new IllegalStateException();
+        Util.createFileAndPath(this.file);
+
+        List<String> pathsToRemove = new ArrayList<>();
+        this.resolvePathsToStrip("", config.root(), this.getPaths(), pathsToRemove);
+        for (String path : pathsToRemove)
+            config = config.withoutPath(path);
+
+        this.writeIfNecessary(config, false);
     }
 
     @Override
@@ -89,14 +116,39 @@ public class HoconConfig extends ConfigImpl {
             this.config = null;
     }
 
+    protected void writeIfNecessary(@NotNull Config config, boolean setDescription) throws IOException {
+        if (config != this.config) {
+            ConfigObject root = setDescription ? config.root().withOrigin(this.config.root().origin().withComments(this.getDescription() == null ? null : Collections.singletonList(this.getDescription()))) : config.root();
+            String output = root.render(RENDER_OPTIONS);
+            try (FileWriter fileWriter = new FileWriter(this.file)) {
+                fileWriter.write(output);
+            }
+            this.config = config;
+        }
+    }
+
+    protected void resolvePathsToStrip(@NotNull String path, @NotNull ConfigObject node, @NotNull Set<String> paths, @NotNull List<String> toRemove) {
+        for (Map.Entry<String, ConfigValue> tuple : node.entrySet()) {
+            String fieldPath = (path.isEmpty() ? "" : path + ".") + tuple.getKey();
+            if (tuple.getValue() instanceof ConfigObject) {
+                ConfigObject child = (ConfigObject) tuple.getValue();
+                this.resolvePathsToStrip(fieldPath, child, paths, toRemove);
+                if (child.entrySet().isEmpty())
+                    toRemove.add(fieldPath);
+            } else {
+                if (!paths.contains(fieldPath))
+                    toRemove.add(fieldPath);
+            }
+        }
+    }
+
     /**
      * Creates a new {@link HoconConfig} instance.
      *
-     * @param file The hocon file. The file will be created automatically if it does not already exist.
+     * @param file        The hocon file. The file will be created automatically if it does not already exist.
      * @param description The description (comment) of this config file.
      * @return A new {@link HoconConfig} instance.
      */
-    @Deprecated
     public static io.github.almightysatan.jaskl.Config of(@NotNull File file, @Nullable String description) {
         return new HoconConfig(file, description);
     }

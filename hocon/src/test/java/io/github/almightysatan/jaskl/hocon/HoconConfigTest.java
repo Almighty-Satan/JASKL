@@ -21,6 +21,7 @@
 package io.github.almightysatan.jaskl.hocon;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -81,33 +82,37 @@ public class HoconConfigTest {
 
     @Test
     public void testWriteAndLoadHocon() throws IOException {
-        Assertions.assertThrows(
-                UnsupportedOperationException.class,
-                () -> testWriteAndLoad(() -> HoconConfig.of(file1), file1)
-        );
+        testWriteAndLoad(() -> HoconConfig.of(file1), file1);
     }
 
     @Test
     public void testWriteAndLoadListHocon() throws IOException {
-        Assertions.assertThrows(
-                UnsupportedOperationException.class,
-                () -> testWriteAndLoadList(() -> HoconConfig.of(file1), file1)
-        );
+        testWriteAndLoadList(() -> HoconConfig.of(file1), file1);
+    }
+
+    @Test
+    public void testWriteAndLoadList2Hocon() throws IOException {
+        testWriteAndLoadList2(() -> HoconConfig.of(file1), file1);
+    }
+
+    @Test
+    public void testWriteAndLoadListEnumHocon() throws IOException {
+        testWriteAndLoadListEnum(() -> HoconConfig.of(file1), file1);
+    }
+
+    @Disabled
+    @Test
+    public void testWriteAndLoadMapHocon() throws IOException {
+        testWriteAndLoadMap(() -> HoconConfig.of(file1), file1);
     }
 
     @Test
     public void testStripHocon() throws IOException {
-        Assertions.assertThrows(
-                UnsupportedOperationException.class,
-                () -> testStrip(() -> HoconConfig.of(file1), file1)
-        );
+        testStrip(() -> HoconConfig.of(file1), file1);
     }
 
     @Test
     public void testCustomHocon() throws IOException {
-        Assertions.assertThrows(
-                UnsupportedOperationException.class,
-                () -> testCustom(() -> HoconConfig.of(file2))
-        );
+        testCustom(() -> HoconConfig.of(file2));
     }
 }
