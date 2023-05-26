@@ -24,6 +24,7 @@ import io.github.almightysatan.jaskl.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 public interface WritableConfigEntry<T> extends ConfigEntry<T> {
 
@@ -31,7 +32,11 @@ public interface WritableConfigEntry<T> extends ConfigEntry<T> {
 
     void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException;
 
-    @NotNull Object getValueToWrite()  throws InvalidTypeException;
+    @NotNull Object getValueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor)  throws InvalidTypeException;
+
+    default @NotNull Object getValueToWrite() {
+        return this.getValueToWrite(Function.identity());
+    }
 
     boolean isModified();
 

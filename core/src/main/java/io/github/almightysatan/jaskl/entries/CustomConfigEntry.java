@@ -31,6 +31,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 public interface CustomConfigEntry<T> extends ConfigEntry<T> {
 
@@ -171,8 +172,8 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
                 }
 
                 @Override
-                public @NotNull Object getValueToWrite() throws InvalidTypeException {
-                    return this.entry.getValueToWrite();
+                public @NotNull Object getValueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException {
+                    return this.entry.getValueToWrite(keyPreprocessor);
                 }
 
                 @Override

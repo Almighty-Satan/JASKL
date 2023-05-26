@@ -27,7 +27,6 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -144,7 +143,6 @@ public class MongodbConfigTest {
         testWriteAndLoadListEnum(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_3), null);
     }
 
-    @Disabled // TODO this fails
     @Test
     public void testWriteAndLoadMapMongo() throws IOException {
         testWriteAndLoadMap(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_4), null);

@@ -20,8 +20,6 @@
 
 package io.github.almightysatan.jaskl.hocon;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -100,7 +98,6 @@ public class HoconConfigTest {
         testWriteAndLoadListEnum(() -> HoconConfig.of(file1), file1);
     }
 
-    @Disabled
     @Test
     public void testWriteAndLoadMapHocon() throws IOException {
         testWriteAndLoadMap(() -> HoconConfig.of(file1), file1);

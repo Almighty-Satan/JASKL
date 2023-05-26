@@ -26,12 +26,13 @@ import org.jetbrains.annotations.NotNull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.function.Function;
 
 public interface Type<T> {
 
     @NotNull T toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException;
 
-    @NotNull Object toWritable(@NotNull T value) throws InvalidTypeException;
+    @NotNull Object toWritable(@NotNull T value, @NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException;
 
     static <T> Type<T> validated(Type<T> type, Validator<T> validator) {
         return new Type<T>() {
@@ -44,8 +45,8 @@ public interface Type<T> {
             }
 
             @Override
-            public @NotNull Object toWritable(@NotNull T value) throws InvalidTypeException {
-                return type.toWritable(value);
+            public @NotNull Object toWritable(@NotNull T value, @NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException {
+                return type.toWritable(value, keyPreprocessor);
             }
         };
     }
@@ -202,7 +203,7 @@ public interface Type<T> {
             }
 
             @Override
-            public @NotNull Object toWritable(@NotNull T value) throws InvalidTypeException {
+            public @NotNull Object toWritable(@NotNull T value, @NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException {
                 return value.name();
             }
         };
@@ -227,10 +228,10 @@ public interface Type<T> {
             }
 
             @Override
-            public @NotNull Object toWritable(@NotNull List<T> value) throws InvalidTypeException {
+            public @NotNull Object toWritable(@NotNull List<T> value, @NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException {
                 List<Object> newList = new ArrayList<>(value.size());
                 for (T element : value)
-                    newList.add(type.toWritable(element));
+                    newList.add(type.toWritable(element, keyPreprocessor));
 
                 return Collections.unmodifiableList(newList);
             }
@@ -257,10 +258,10 @@ public interface Type<T> {
             }
 
             @Override
-            public @NotNull Object toWritable(@NotNull Map<K, V> value) throws InvalidTypeException {
+            public @NotNull Object toWritable(@NotNull Map<K, V> value, @NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException {
                 Map<Object, Object> newMap = new HashMap<>();
                 for (Map.Entry<K, V> entry : value.entrySet())
-                    newMap.put(keyType.toWritable(entry.getKey()), valueType.toWritable(entry.getValue()));
+                    newMap.put(keyPreprocessor.apply(keyType.toWritable(entry.getKey(), keyPreprocessor)), valueType.toWritable(entry.getValue(), keyPreprocessor));
 
                 return Collections.unmodifiableMap(newMap);
             }

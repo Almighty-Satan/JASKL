@@ -85,7 +85,7 @@ public class HoconConfig extends ConfigImpl {
 
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             if (configEntry.isModified()) {
-                ConfigValue value = ConfigValueFactory.fromAnyRef(configEntry.getValueToWrite());
+                ConfigValue value = ConfigValueFactory.fromAnyRef(configEntry.getValueToWrite(Object::toString));
                 if (configEntry.getDescription() != null)
                     value = value.withOrigin(value.origin().withComments(Collections.singletonList(configEntry.getDescription())));
                 config = config.withValue(configEntry.getPath(), value);

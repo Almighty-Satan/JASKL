@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements WritableConfigEntry<T> {
 
@@ -78,9 +79,9 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     }
 
     @Override
-    public @NotNull Object getValueToWrite()  throws InvalidTypeException {
+    public @NotNull Object getValueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor)  throws InvalidTypeException {
         try {
-            return this.getType().toWritable(this.getValue());
+            return this.getType().toWritable(this.getValue(), keyPreprocessor);
         } catch (InvalidTypeException e) {
             throw new InvalidTypeException(this.getPath(), e);
         }

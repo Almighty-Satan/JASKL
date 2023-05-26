@@ -24,11 +24,13 @@ import io.github.almightysatan.jaskl.InvalidTypeException;
 import io.github.almightysatan.jaskl.Type;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
+
 @FunctionalInterface
 public interface SimpleType<T> extends Type<T> {
 
     @Override
-    default @NotNull Object toWritable(@NotNull T value) throws InvalidTypeException {
+    default @NotNull Object toWritable(@NotNull T value, @NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException {
         return value;
     }
 }
