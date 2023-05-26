@@ -231,6 +231,16 @@ public class YamlConfig extends ConfigImpl {
         return new YamlConfig(file, description);
     }
 
+    /**
+     * Creates a new {@link YamlConfig} instance.
+     *
+     * @param file The yaml file. The file will be created automatically if it does not already exist.
+     * @return A new {@link YamlConfig} instance.
+     */
+    public static @NotNull YamlConfig of(@NotNull File file) {
+        return new YamlConfig(file, null);
+    }
+
     static {
         DUMPER_OPTIONS = new DumperOptions();
         DUMPER_OPTIONS.setProcessComments(true);
