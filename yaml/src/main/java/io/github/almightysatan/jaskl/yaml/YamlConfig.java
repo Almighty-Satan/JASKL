@@ -202,6 +202,8 @@ public class YamlConfig extends ConfigImpl {
             Node valueNode = tuple.getValueNode();
             String fieldPath = (path.isEmpty() ? "" : path + ".") + ((ScalarNode) tuple.getKeyNode()).getValue();
             if (valueNode instanceof MappingNode) {
+                if (paths.contains(fieldPath))
+                    continue;
                 MappingNode child = (MappingNode) valueNode;
                 changed |= this.stripNodes(fieldPath, child, paths);
                 if (child.getValue().isEmpty())

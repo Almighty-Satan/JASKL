@@ -143,6 +143,8 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
             Entry<String, JsonNode> field = it.next();
             String fieldPath = path.isEmpty() ? field.getKey() : path + "." + field.getKey();
             if (field.getValue() instanceof ObjectNode) {
+                if (paths.contains(fieldPath))
+                    continue;
                 ObjectNode child = (ObjectNode) field.getValue();
                 changed |= stripNodes(fieldPath, child, paths);
                 if (child.isEmpty())

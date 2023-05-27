@@ -127,19 +127,26 @@ public class HoconConfig extends ConfigImpl {
         }
     }
 
-    protected void resolvePathsToStrip(@NotNull String path, @NotNull ConfigObject node, @NotNull Set<String> paths, @NotNull List<String> toRemove) {
-        for (Map.Entry<String, ConfigValue> tuple : node.entrySet()) {
-            String fieldPath = (path.isEmpty() ? "" : path + ".") + tuple.getKey();
-            if (tuple.getValue() instanceof ConfigObject) {
-                ConfigObject child = (ConfigObject) tuple.getValue();
-                this.resolvePathsToStrip(fieldPath, child, paths, toRemove);
-                if (child.entrySet().isEmpty())
+    protected int resolvePathsToStrip(@NotNull String path, @NotNull ConfigObject node, @NotNull Set<String> paths, @NotNull List<String> toRemove) {
+        int numRemoved = 0;
+        for (Map.Entry<String, ConfigValue> entry : node.entrySet()) {
+            String fieldPath = (path.isEmpty() ? "" : path + ".") + entry.getKey();
+            if (entry.getValue() instanceof ConfigObject) {
+                if (paths.contains(fieldPath))
+                    continue;
+                ConfigObject child = (ConfigObject) entry.getValue();
+                int numChildrenRemoved = this.resolvePathsToStrip(fieldPath, child, paths, toRemove);
+                int numChildren = child.entrySet().size();
+                if (numChildren == 0 || numChildren == numChildrenRemoved) {
                     toRemove.add(fieldPath);
-            } else {
-                if (!paths.contains(fieldPath))
-                    toRemove.add(fieldPath);
+                    numRemoved++;
+                }
+            } else if (!paths.contains(fieldPath)) {
+                toRemove.add(fieldPath);
+                numRemoved++;
             }
         }
+        return numRemoved;
     }
 
     /**
