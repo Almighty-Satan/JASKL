@@ -109,6 +109,11 @@ public class TomlConfigTest {
     }
 
     @Test
+    public void testStripMapToml() throws IOException {
+        testStripMap(() -> TomlConfig.of(file1), file1);
+    }
+
+    @Test
     public void testCustomToml() throws IOException {
         testCustom(() -> TomlConfig.of(file2));
     }

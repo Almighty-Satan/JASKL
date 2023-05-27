@@ -109,6 +109,11 @@ public class HoconConfigTest {
     }
 
     @Test
+    public void testStripMapHocon() throws IOException {
+        testStripMap(() -> HoconConfig.of(file1), file1);
+    }
+
+    @Test
     public void testCustomHocon() throws IOException {
         testCustom(() -> HoconConfig.of(file2));
     }

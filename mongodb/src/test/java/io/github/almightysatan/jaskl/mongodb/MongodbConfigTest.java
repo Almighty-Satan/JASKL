@@ -46,6 +46,7 @@ public class MongodbConfigTest {
     private static final String COLLECTION_4 = "test4";
     private static final String COLLECTION_5 = "test5";
     private static final String COLLECTION_6 = "test6";
+    private static final String COLLECTION_7 = "test7";
 
     private static String mongoAddress;
 
@@ -154,7 +155,12 @@ public class MongodbConfigTest {
     }
 
     @Test
+    public void testStripMapMongo() throws IOException {
+        testStripMap(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_6), null);
+    }
+
+    @Test
     public void testCustomMongo() throws IOException {
-        testCustom(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_6));
+        testCustom(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_7));
     }
 }

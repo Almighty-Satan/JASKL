@@ -348,8 +348,7 @@ public class ConfigTest {
     }
 
     /**
-     * Test if a config can be created, saved and loaded again.
-     * This test requires a valid file path.
+     * Test if strip works as intended
      */
     public static void testStrip(Supplier<Config> configSupplier, File file) throws IOException {
         if (file != null && file.exists() && !file.delete())
@@ -382,6 +381,54 @@ public class ConfigTest {
 
         Assertions.assertEquals("modified", stringConfigEntry2.getValue());
         Assertions.assertEquals(0, intConfigEntry2.getValue());
+    }
+
+    /**
+     * Test if strip can be run with maps
+     */
+    public static void testStripMap(Supplier<Config> configSupplier, File file) throws IOException {
+        if (file != null && file.exists() && !file.delete())
+            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
+
+        Map<String, String> map0 = new HashMap<>();
+        map0.put("Hello", "World");
+        map0.put("abc", "def");
+        Map<String, String> map1 = new HashMap<>();
+        map1.put("0", "1");
+        map1.put("2", "3");
+
+        Map<String, String> map0New = new HashMap<>();
+        map0New.put("Hello", "there");
+        map0New.put("1234", "5678");
+        Map<String, String> map1New = new HashMap<>();
+        map1New.put("0", "0");
+        map1New.put("1", "1");
+        map1New.put("2", "2");
+        map1New.put("3", "3");
+
+        Config config0 = configSupplier.get();
+        MapConfigEntry<String, String> mapConfigEntry0 = MapConfigEntry.of(config0, "example.0.map0", null, map0, Type.STRING, Type.STRING);
+        MapConfigEntry<String, String> mapConfigEntry1 = MapConfigEntry.of(config0, "example.1.map1", null, map1, Type.STRING, Type.STRING);
+
+        config0.load();
+        config0.write();
+        config0.close();
+
+        Config config1 = configSupplier.get();
+        MapConfigEntry.of(config1, "example.1.map1", null, map1New, Type.STRING, Type.STRING);
+
+        config1.load();
+        config1.strip();
+        config1.close();
+
+        Config config2 = configSupplier.get();
+        MapConfigEntry<String, String> mapConfigEntry0New = MapConfigEntry.of(config2, "example.0.map0", null, map0New, Type.STRING, Type.STRING);
+        MapConfigEntry<String, String> mapConfigEntry1New = MapConfigEntry.of(config2, "example.1.map1", null, map1New, Type.STRING, Type.STRING);
+
+        config2.load();
+
+        Assertions.assertEquals(map0New, mapConfigEntry0New.getValue());
+        Assertions.assertEquals(map1, mapConfigEntry1New.getValue());
     }
 
     /**

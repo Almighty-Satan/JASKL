@@ -109,6 +109,11 @@ public class YamlConfigTest {
     }
 
     @Test
+    public void testStripMapYaml() throws IOException {
+        testStripMap(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
+    }
+
+    @Test
     public void testCustomYaml() throws IOException {
         testCustom(() -> YamlConfig.of(file2, "Example YAML Config"));
     }

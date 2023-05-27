@@ -109,6 +109,11 @@ public class JsonConfigTest {
     }
 
     @Test
+    public void testStripMapJson() throws IOException {
+        testStripMap(() -> JsonConfig.of(file1), file1);
+    }
+
+    @Test
     public void testCustomJson() throws IOException {
         testCustom(() -> JsonConfig.of(file2));
     }
