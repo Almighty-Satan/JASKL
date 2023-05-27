@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -94,12 +95,13 @@ public class IniConfig extends ConfigImpl {
         Ini stripped = new Ini();
         Set<String> paths = this.getPaths();
         for (String section : this.config.getSections()) {
-            for (String key : this.config.getSection(section).keySet()) {
-                if (!paths.contains(key)) {
+            for (Map.Entry<String, Object> entry : this.config.getSection(section).entrySet()) {
+                String path = section + "." + entry.getKey();
+                if (!paths.contains(path)) {
                     shouldWrite = true;
                     continue;
                 }
-                stripped.putValue(section, key, this.config.getValue(section, key));
+                stripped.putValue(section, entry.getKey(), entry.getValue());
             }
         }
 
