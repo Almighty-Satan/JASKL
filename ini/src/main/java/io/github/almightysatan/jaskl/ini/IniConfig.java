@@ -124,7 +124,6 @@ public class IniConfig extends ConfigImpl {
      * @param description The description (comment) of this config file.
      * @return A new {@link IniConfig} instance.
      */
-    @Deprecated
     public static Config of(@NotNull File file, @Nullable String description) {
         return new IniConfig(file, description);
     }
@@ -145,7 +144,7 @@ public class IniConfig extends ConfigImpl {
      */
     private void writeToFile() throws IOException {
         try (FileWriter writer = new FileWriter(file)){
-            this.config.store(writer, this.getDescription() == null ? "" : this.getDescription());
+            this.config.store(writer, this.getDescription());
         }
     }
 
