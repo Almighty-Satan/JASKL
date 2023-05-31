@@ -38,8 +38,9 @@ public abstract class ConfigImpl implements Config {
 
     public void registerEntry(@NotNull ConfigEntry<?> entry) {
         Objects.requireNonNull(entry);
-        if (this.entries.containsKey(entry.getPath()))
-            throw new IllegalArgumentException("Path already registered!");
+        for (String path : this.getPaths())
+            if (path.startsWith(entry.getPath()) || entry.getPath().startsWith(path))
+                throw new IllegalArgumentException(String.format("Paths have to be prefix-free! %s", entry.getPath()));
         this.entries.put(entry.getPath(), entry);
     }
 
