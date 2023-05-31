@@ -32,8 +32,8 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.*;
 
-import static io.github.almightysatan.test.ConfigTest.*;
-import static io.github.almightysatan.test.ConfigTest.testCustom;
+import static io.github.almightysatan.jaskl.test.ConfigTest.*;
+import static io.github.almightysatan.jaskl.test.ConfigTest.testCustom;
 
 public class MongodbConfigTest {
     

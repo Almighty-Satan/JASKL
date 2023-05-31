@@ -18,7 +18,7 @@
  * USA
  */
 
-package io.github.almightysatan.test;
+package io.github.almightysatan.jaskl.test;
 
 public enum ExampleEnum {
 

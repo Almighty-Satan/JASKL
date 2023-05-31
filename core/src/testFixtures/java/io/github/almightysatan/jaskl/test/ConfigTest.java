@@ -18,7 +18,7 @@
  * USA
  */
 
-package io.github.almightysatan.test;
+package io.github.almightysatan.jaskl.test;
 
 import io.github.almightysatan.jaskl.*;
 import io.github.almightysatan.jaskl.entries.*;

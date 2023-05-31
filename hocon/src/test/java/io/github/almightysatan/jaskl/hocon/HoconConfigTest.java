@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static io.github.almightysatan.test.ConfigTest.*;
+import static io.github.almightysatan.jaskl.test.ConfigTest.*;
 
 public class HoconConfigTest {
 
