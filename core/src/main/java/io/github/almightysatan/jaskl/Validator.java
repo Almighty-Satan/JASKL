@@ -37,12 +37,12 @@ public interface Validator<T> {
      */
     void validate(@NotNull T value) throws ValidationException;
 
-    static <T> Validator<T> nop() {
+    static <T> @NotNull Validator<T> nop() {
         return value -> {};
     }
 
     @SafeVarargs
-    static <T> Validator<T> of(@NotNull Validator<T>... validators) {
+    static <T> @NotNull Validator<T> of(@NotNull Validator<T>... validators) {
         Objects.requireNonNull(validators);
         if (validators.length == 0)
             return nop();
