@@ -1,5 +1,7 @@
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.almighty-satan.jaskl/jaskl-yaml?style=flat-square)
 ![GitHub](https://img.shields.io/github/license/Almighty-Satan/JASKL?style=flat-square)
+![CI](https://img.shields.io/github/actions/workflow/status/Almighty-Satan/JASKL/gradle-build.yml?branch=master&style=flat-square)
+![Last Commit](https://img.shields.io/github/last-commit/Almighty-Satan/JASKL?style=flat-square)
 
 # JASKL - Just Another Simple Config Library
 ___
@@ -50,19 +52,19 @@ config.write(); // Save the config
 ### Config Entry Types
 | Type     | YAML | Hocon | JSON | TOML | Properties | Ini | MongoDB |
 |----------|------|-------|------|------|------------|-----|---------|
-| String   | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| Boolean  | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| Integer  | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| Long     | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| Float    | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| Double   | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| Enum     | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| List     | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
-| Map      | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
-| Custom*¹ | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| Comments | ✅    | ✅     | ❌    | ❌    | ❌          | ❌   | ❌       |
+| String   | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
+| Boolean  | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
+| Integer  | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
+| Long     | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
+| Float    | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
+| Double   | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
+| Enum     | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
+| List     | ✅   | ✅   | ✅   | ✅   | ❌        | ❌  | ✅      |
+| Map      | ✅   | ✅   | ✅   | ✅   | ❌        | ❌  | ✅      |
+| Custom\*¹| ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
+| Comments | ✅   | ✅   | ❌   | ❌   | ❌        | ❌  | ❌      |
 
-*¹ Only for supported types  
+\*¹ Only for supported types  
 
 ### Config Entry Validation
 JASKL can automatically validate config entries (e.g. ensure that a number is always greater than zero) and throws a
