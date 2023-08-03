@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 public interface IntegerConfigEntry extends ConfigEntry<Integer> {
 
     @SafeVarargs
-    static IntegerConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, int defaultValue, @NotNull Validator<Integer>... validators) throws InvalidTypeException, ValidationException {
+    static @NotNull IntegerConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, int defaultValue, @NotNull Validator<Integer>... validators) throws InvalidTypeException, ValidationException {
         class IntegerConfigEntryImpl extends WritableConfigEntryImpl<Integer> implements IntegerConfigEntry {
             IntegerConfigEntryImpl() {
                 super(Type.validated(Type.INTEGER, validators), path, description, defaultValue);
@@ -40,7 +40,7 @@ public interface IntegerConfigEntry extends ConfigEntry<Integer> {
     }
 
     @SafeVarargs
-    static IntegerConfigEntry of(@NotNull Config config, @NotNull String path, int defaultValue, @NotNull Validator<Integer>... validators) throws InvalidTypeException, ValidationException {
+    static @NotNull IntegerConfigEntry of(@NotNull Config config, @NotNull String path, int defaultValue, @NotNull Validator<Integer>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);
     }
 }

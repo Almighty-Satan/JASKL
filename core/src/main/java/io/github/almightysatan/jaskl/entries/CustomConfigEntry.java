@@ -35,7 +35,7 @@ import java.util.function.Function;
 
 public interface CustomConfigEntry<T> extends ConfigEntry<T> {
 
-    static <T> CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue)  throws InvalidTypeException, ValidationException {
+    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue)  throws InvalidTypeException, ValidationException {
         class CustomConfigEntryImpl extends ConfigEntryImpl<T> implements CustomConfigEntry<T> {
 
             private final Class<T> type;
@@ -190,7 +190,7 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
         return new CustomConfigEntryImpl();
     }
 
-    static <T> CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, T defaultValue) throws InvalidTypeException, ValidationException {
+    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, T defaultValue) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue);
     }
 }

@@ -20,28 +20,46 @@
 
 package io.github.almightysatan.jaskl;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+
+/**
+ * Thrown if a config entry fails validation
+ */
 public class ValidationException extends RuntimeException {
 
     private final String path;
     private final String errorMessage;
 
-    public ValidationException(String errorMessage) {
-        super(String.format("Config error: unknown entry %s", errorMessage));
+    public ValidationException(@NotNull String errorMessage) {
+        super(String.format("Config error: unknown entry %s", Objects.requireNonNull(errorMessage)));
         this.path = null;
         this.errorMessage = errorMessage;
     }
 
-    public ValidationException(String path, String errorMessage) {
-        super(String.format("Config error: %s %s", path, errorMessage));
+    public ValidationException(@NotNull String path, @NotNull String errorMessage) {
+        super(String.format("Config error: %s %s", Objects.requireNonNull(path), Objects.requireNonNull(errorMessage)));
         this.path = path;
         this.errorMessage = errorMessage;
     }
 
-    public String getPath() {
+    /**
+     * Returns the path of the config entry that failed validation.
+     *
+     * @return The path of the config entry
+     */
+    public @Nullable String getPath() {
         return this.path;
     }
 
-    public String getErrorMessage() {
+    /**
+     * Returns the error message
+     *
+     * @return The error message
+     */
+    public @NotNull String getErrorMessage() {
         return this.errorMessage;
     }
 }

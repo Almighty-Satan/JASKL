@@ -94,25 +94,25 @@ public interface Validator<T> {
 
     Validator<String> STRING_NOT_EMPTY = value -> { if (value.isEmpty()) throw new ValidationException("should not be empty"); };
 
-    static Validator<String> stringMinLength(int size) { return value -> { if (value.length() < size) throw new ValidationException("should be at least " + size + " characters long"); };}
+    static @NotNull Validator<String> stringMinLength(int size) { return value -> { if (value.length() < size) throw new ValidationException("should be at least " + size + " characters long"); };}
 
-    static Validator<String> stringMaxLength(int size) { return value -> { if (value.length() > size) throw new ValidationException("should not be longer than " + size + " characters"); };}
+    static @NotNull Validator<String> stringMaxLength(int size) { return value -> { if (value.length() > size) throw new ValidationException("should not be longer than " + size + " characters"); };}
 
-    static <T> Validator<List<T>> listNotEmpty() { return value -> { if (value.isEmpty()) throw new ValidationException("should not be empty"); };}
+    static <T> @NotNull Validator<List<T>> listNotEmpty() { return value -> { if (value.isEmpty()) throw new ValidationException("should not be empty"); };}
 
-    static <T> Validator<List<T>> listMinSize(int size) { return value -> { if (value.size() < size) throw new ValidationException("should have at least " + size + " entries"); };}
+    static <T> @NotNull Validator<List<T>> listMinSize(int size) { return value -> { if (value.size() < size) throw new ValidationException("should have at least " + size + " entries"); };}
 
-    static <T> Validator<List<T>> listMaxSize(int size) { return value -> { if (value.size() > size) throw new ValidationException("should not have more than " + size + " entries"); };}
+    static <T> @NotNull Validator<List<T>> listMaxSize(int size) { return value -> { if (value.size() > size) throw new ValidationException("should not have more than " + size + " entries"); };}
 
-    static <T> Validator<List<T>> listForEach(Validator<T> validator) { return value -> value.forEach(validator::validate);}
+    static <T> @NotNull Validator<List<T>> listForEach(Validator<T> validator) { return value -> value.forEach(validator::validate);}
 
-    static <K, V> Validator<Map<K, V>> mapNotEmpty() { return value -> { if (value.isEmpty()) throw new ValidationException("should not be empty"); };}
+    static <K, V> @NotNull Validator<Map<K, V>> mapNotEmpty() { return value -> { if (value.isEmpty()) throw new ValidationException("should not be empty"); };}
 
-    static <K, V> Validator<Map<K, V>> mapMinSize(int size) { return value -> { if (value.size() < size) throw new ValidationException("should have at least " + size + " entries"); };}
+    static <K, V> @NotNull Validator<Map<K, V>> mapMinSize(int size) { return value -> { if (value.size() < size) throw new ValidationException("should have at least " + size + " entries"); };}
 
-    static <K, V> Validator<Map<K, V>> mapMaxSize(int size) { return value -> { if (value.size() > size) throw new ValidationException("should not have more than " + size + " entries"); };}
+    static <K, V> @NotNull Validator<Map<K, V>> mapMaxSize(int size) { return value -> { if (value.size() > size) throw new ValidationException("should not have more than " + size + " entries"); };}
 
-    static <K, V> Validator<Map<K, V>> mapForEachKey(Validator<K> validator) { return value -> value.keySet().forEach(validator::validate);}
+    static <K, V> @NotNull Validator<Map<K, V>> mapForEachKey(Validator<K> validator) { return value -> value.keySet().forEach(validator::validate);}
 
-    static <K, V> Validator<Map<K, V>> mapForEachValue(Validator<V> validator) { return value -> value.values().forEach(validator::validate);}
+    static <K, V> @NotNull Validator<Map<K, V>> mapForEachValue(Validator<V> validator) { return value -> value.values().forEach(validator::validate);}
 }

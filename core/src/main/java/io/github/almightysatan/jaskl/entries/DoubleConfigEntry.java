@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 public interface DoubleConfigEntry extends ConfigEntry<Double> {
 
     @SafeVarargs
-    static DoubleConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, double defaultValue, @NotNull Validator<Double>... validators) throws InvalidTypeException, ValidationException {
+    static @NotNull DoubleConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, double defaultValue, @NotNull Validator<Double>... validators) throws InvalidTypeException, ValidationException {
         class DoubleConfigEntryImpl extends WritableConfigEntryImpl<Double> implements DoubleConfigEntry {
             DoubleConfigEntryImpl() {
                 super(Type.validated(Type.DOUBLE, validators), path, description, defaultValue);
@@ -40,7 +40,7 @@ public interface DoubleConfigEntry extends ConfigEntry<Double> {
     }
 
     @SafeVarargs
-    static DoubleConfigEntry of(@NotNull Config config, @NotNull String path, double defaultValue, @NotNull Validator<Double>... validators) throws InvalidTypeException, ValidationException {
+    static @NotNull DoubleConfigEntry of(@NotNull Config config, @NotNull String path, double defaultValue, @NotNull Validator<Double>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);
     }
 }

@@ -20,21 +20,23 @@
 
 package io.github.almightysatan.jaskl;
 
+import org.jetbrains.annotations.NotNull;
+
 public class InvalidTypeException extends RuntimeException {
 
-    public InvalidTypeException(Class<?> expected, Class<?> actual) {
+    public InvalidTypeException(@NotNull Class<?> expected, @NotNull Class<?> actual) {
         super(String.format("Invalid type: expected=%s, actual=%s", expected.getName(), actual.getName()));
     }
 
-    public InvalidTypeException(Class<?> enumClass, String enumName) {
+    public InvalidTypeException(@NotNull Class<?> enumClass, @NotNull String enumName) {
         super(String.format("Invalid type: enumClass=%s enumName=%s", enumClass.getName(), enumName));
     }
 
-    public InvalidTypeException(String path, Class<?> type) {
+    public InvalidTypeException(@NotNull String path, @NotNull Class<?> type) {
         super(String.format("Unknown type: path=%s, type=%s", path, type.getName()));
     }
 
-    public InvalidTypeException(String path, InvalidTypeException cause) {
+    public InvalidTypeException(@NotNull String path, @NotNull InvalidTypeException cause) {
         super(String.format("Invalid type: path=%s", path), cause);
     }
 }
