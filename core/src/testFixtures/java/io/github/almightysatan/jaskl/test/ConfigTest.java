@@ -21,6 +21,7 @@
 package io.github.almightysatan.jaskl.test;
 
 import io.github.almightysatan.jaskl.*;
+import io.github.almightysatan.jaskl.annotation.AnnotationConfigManager;
 import io.github.almightysatan.jaskl.entries.*;
 import org.junit.jupiter.api.Assertions;
 
@@ -448,5 +449,26 @@ public class ConfigTest {
         config1.load();
 
         Assertions.assertEquals(value, entry1.getValue());
+    }
+
+    public static void testAnnotation(Supplier<Config> configSupplier) throws IOException {
+        Config config0 = configSupplier.get();
+        ExampleAnnotationConfig annotationConfig0 = AnnotationConfigManager.register(config0, ExampleAnnotationConfig.class);
+
+        config0.load();
+
+        Assertions.assertEquals(new ExampleAnnotationConfig().test, annotationConfig0.test);
+
+        annotationConfig0.test = "Hello World";
+
+        config0.write();
+        config0.close();
+
+        Config config1 = configSupplier.get();
+        ExampleAnnotationConfig annotationConfig1 = AnnotationConfigManager.register(config1, ExampleAnnotationConfig.class);
+
+        config1.load();
+
+        Assertions.assertEquals("Hello World", annotationConfig1.test);
     }
 }

@@ -22,6 +22,7 @@ package io.github.almightysatan.jaskl;
 
 import io.github.almightysatan.jaskl.impl.SimpleType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -270,5 +271,24 @@ public interface Type<T> {
                 return Collections.unmodifiableMap(newMap);
             }
         };
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    static @Nullable Type<?> of(Class<?> type) {
+        if (type == boolean.class || type == Boolean.class)
+            return Type.BOOLEAN;
+        if (type == double.class || type == Double.class)
+            return Type.DOUBLE;
+        if (type == float.class || type == Float.class)
+            return Type.FLOAT;
+        if (type == int.class || type == Integer.class)
+            return Type.INTEGER;
+        if (type == long.class || type == Long.class)
+            return Type.LONG;
+        if (type == String.class)
+            return Type.STRING;
+        if (type.isEnum())
+            return Type.enumType((Class<? extends Enum>) type);
+        return null;
     }
 }
