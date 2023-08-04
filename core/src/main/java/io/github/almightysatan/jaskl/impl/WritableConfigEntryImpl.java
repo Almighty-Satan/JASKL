@@ -74,7 +74,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
         } catch (InvalidTypeException e) {
             throw new InvalidTypeException(this.getPath(), e);
         } catch (ValidationException e) {
-            throw new ValidationException(this.getPath(), e.getErrorMessage());
+            throw new ValidationException(this.getPath(), e);
         }
     }
 

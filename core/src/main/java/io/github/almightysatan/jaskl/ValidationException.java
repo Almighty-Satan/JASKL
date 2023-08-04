@@ -34,15 +34,19 @@ public class ValidationException extends RuntimeException {
     private final String errorMessage;
 
     public ValidationException(@NotNull String errorMessage) {
-        super(String.format("Config error: unknown entry %s", Objects.requireNonNull(errorMessage)));
+        this(errorMessage, (Throwable) null);
+    }
+
+    public ValidationException(@NotNull String errorMessage, @Nullable Throwable cause) {
+        super(String.format("Config error: unknown entry %s", Objects.requireNonNull(errorMessage)), cause);
         this.path = null;
         this.errorMessage = errorMessage;
     }
 
-    public ValidationException(@NotNull String path, @NotNull String errorMessage) {
-        super(String.format("Config error: %s %s", Objects.requireNonNull(path), Objects.requireNonNull(errorMessage)));
+    public ValidationException(@NotNull String path, @NotNull ValidationException exception) {
+        super(String.format("Config error: %s %s", Objects.requireNonNull(path), Objects.requireNonNull(exception.errorMessage)), exception.getCause());
         this.path = path;
-        this.errorMessage = errorMessage;
+        this.errorMessage = exception.errorMessage;
     }
 
     /**

@@ -452,8 +452,10 @@ public class ConfigTest {
     }
 
     public static void testAnnotation(Supplier<Config> configSupplier) throws IOException {
+        AnnotationConfigManager annotationConfigManager = AnnotationConfigManager.create();
+
         Config config0 = configSupplier.get();
-        ExampleAnnotationConfig annotationConfig0 = AnnotationConfigManager.register(config0, ExampleAnnotationConfig.class);
+        ExampleAnnotationConfig annotationConfig0 = annotationConfigManager.init(config0, ExampleAnnotationConfig.class);
 
         config0.load();
 
@@ -465,10 +467,14 @@ public class ConfigTest {
         config0.close();
 
         Config config1 = configSupplier.get();
-        ExampleAnnotationConfig annotationConfig1 = AnnotationConfigManager.register(config1, ExampleAnnotationConfig.class);
+        ExampleAnnotationConfig annotationConfig1 = annotationConfigManager.init(config1, ExampleAnnotationConfig.class);
 
         config1.load();
 
         Assertions.assertEquals("Hello World", annotationConfig1.test);
+
+        annotationConfig1.test = "1234";
+
+        Assertions.assertThrows(ValidationException.class, config1::write);
     }
 }

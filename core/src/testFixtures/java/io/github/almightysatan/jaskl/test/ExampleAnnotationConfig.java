@@ -21,10 +21,13 @@
 package io.github.almightysatan.jaskl.test;
 
 import io.github.almightysatan.jaskl.annotation.Entry;
+import io.github.almightysatan.jaskl.annotation.Validate;
 
 public class ExampleAnnotationConfig {
 
     @Entry
+    @Validate.StringNotEmpty
+    @Validate.StringMinLength(5)
     public String test = "Default String";
 
     public ExampleAnnotationConfig() {}

@@ -79,9 +79,10 @@ You can also use annotation-based configs:
 public class ExampleAnnotationConfig {
 
     @Entry
+    @Validate.StringNotEmpty
     public String myString = "Default String"; // Default values should not be null
 
-    @Entry
+    @Entry("some.other.path")
     @Description("Enter description here") // May be ignored if the implementation does not support comments
     public int myInt = 5;
 
@@ -89,10 +90,12 @@ public class ExampleAnnotationConfig {
 }
 ```
 ```java
+AnnotationConfigManager annotationConfigManager = AnnotationConfigManager.create(); // Create an AnnotationConfigManager. The instance can be reused.
+
 Config yamlConfig = YamlConfig.of(file); // Create a config
 
 // Register our annotated class
-ExampleAnnotationConfig config = AnnotationConfigManager.register(yamlConfig, ExampleAnnotationConfig.class);
+ExampleAnnotationConfig config = annotationConfigManager.init(yamlConfig, ExampleAnnotationConfig.class);
 
 yamlConfig.load(); // Load the config from storage
 
