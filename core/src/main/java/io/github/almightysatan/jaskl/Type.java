@@ -43,7 +43,13 @@ public interface Type<T> {
             @Override
             public @NotNull T toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException {
                 T casted = type.toEntryType(value);
-                validator.validate(casted);
+                try {
+                    validator.validate(casted);
+                } catch (ValidationException e) {
+                    throw e;
+                } catch (Throwable t) {
+                    throw new ValidationException("Exception while validating", t);
+                }
                 return casted;
             }
 

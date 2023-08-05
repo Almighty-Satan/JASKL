@@ -48,7 +48,7 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
         this.validators.put(annotationClass, (Function) validatorFunction);
     }
 
-    public <T> @NotNull T init(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException {
+    public <T> @NotNull T init(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException, InvalidTypeException, ValidationException {
         Objects.requireNonNull(config);
         Objects.requireNonNull(configClass);
         try {
@@ -102,7 +102,8 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
         private final Object instance;
         private Object prevFieldValue;
 
-        public WritableAnnotationConfigEntry(@NotNull Type<T> type, @NotNull String path, @Nullable String description, @NotNull T defaultValue, @NotNull Field field, @NotNull Object instance) {
+        public WritableAnnotationConfigEntry(@NotNull Type<T> type, @NotNull String path, @Nullable String description, @NotNull T defaultValue,
+                                             @NotNull Field field, @NotNull Object instance) throws InvalidTypeException, ValidationException {
             super(type, path, description, defaultValue);
             this.field = field;
             this.instance = instance;
@@ -135,7 +136,7 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
 
         @Override
         public boolean isModified() {
-            return checkField() || super.isModified();
+            return this.checkField() || super.isModified();
         }
 
         private boolean checkField() {

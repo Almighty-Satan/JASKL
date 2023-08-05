@@ -21,6 +21,8 @@
 package io.github.almightysatan.jaskl.annotation;
 
 import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.InvalidTypeException;
+import io.github.almightysatan.jaskl.ValidationException;
 import io.github.almightysatan.jaskl.Validator;
 import io.github.almightysatan.jaskl.impl.AnnotationConfigManagerImpl;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +39,7 @@ public interface AnnotationConfigManager {
         this.register(annotationClass, annotation -> validator);
     }
 
-    <T> @NotNull T init(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException;
+    <T> @NotNull T init(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException, InvalidTypeException, ValidationException;
 
     static @NotNull AnnotationConfigManager create() {
         return new AnnotationConfigManagerImpl();

@@ -35,7 +35,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     private T value;
     private boolean modified = true; // true by default because Config#write should write the entry to the config if it does not exist
 
-    public WritableConfigEntryImpl(@NotNull Type<T> type, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
+    public WritableConfigEntryImpl(@NotNull Type<T> type, @NotNull String path, @Nullable String description, @NotNull T defaultValue) throws InvalidTypeException, ValidationException {
         super(path, description, defaultValue);
         this.type = Objects.requireNonNull(type);
         this.value = type.toEntryType(defaultValue);
