@@ -39,8 +39,24 @@ public interface AnnotationConfigManager {
         this.register(annotationClass, annotation -> validator);
     }
 
+    /**
+     * Registers config entries for the given annotated class.
+     *
+     * @param config a config instance
+     * @param configClass a class containing annotated fields
+     * @return an instance of the given class
+     * @param <T> the type of the class
+     * @throws InvalidAnnotationConfigException if the config class is misconfigured
+     * @throws InvalidTypeException if a default value fails type checking
+     * @throws ValidationException if a default value fails validation
+     */
     <T> @NotNull T init(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException, InvalidTypeException, ValidationException;
 
+    /**
+     * Creates a new {@link AnnotationConfigManager}.
+     *
+     * @return a new instance
+     */
     static @NotNull AnnotationConfigManager create() {
         return new AnnotationConfigManagerImpl();
     }
