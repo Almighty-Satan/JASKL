@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     api(project(":jackson"))
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:2.15.1")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:2.15.2")
 }
