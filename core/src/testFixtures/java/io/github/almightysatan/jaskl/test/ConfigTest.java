@@ -476,5 +476,9 @@ public class ConfigTest {
         annotationConfig1.test = "1234";
 
         Assertions.assertThrows(ValidationException.class, config1::write);
+
+        annotationConfig1.test = null;
+
+        Assertions.assertThrows(InvalidTypeException.class, config1::write);
     }
 }

@@ -53,7 +53,6 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
 
     @Override
     public void setValue(@NotNull T value) throws InvalidTypeException, ValidationException {
-        Objects.requireNonNull(value);
         T parsedValue = this.toType(value);
         if (parsedValue.equals(this.getValue()))
             return;
@@ -63,12 +62,13 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
 
     @Override
     public void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException {
-        Objects.requireNonNull(value);
         this.value = this.toType(value);
         this.modified = false;
     }
 
-    private T toType(@NotNull Object value) throws InvalidTypeException, ValidationException {
+    private T toType(@Nullable Object value) throws InvalidTypeException, ValidationException {
+        if (value == null)
+            throw new InvalidTypeException(this.getPath());
         try {
             return this.getType().toEntryType(value);
         } catch (InvalidTypeException e) {
