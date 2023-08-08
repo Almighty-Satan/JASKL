@@ -31,8 +31,10 @@ public interface Config {
      *
      * @throws IOException if an I/O exception occurs.
      * @throws IllegalStateException if called multiple times.
+     * @throws InvalidTypeException if a value does not match its expected {@link Type}
+     * @throws ValidationException if a value fails validation
      */
-    void load() throws IOException, IllegalStateException;
+    void load() throws IOException, IllegalStateException, InvalidTypeException, ValidationException;
 
     /**
      * Reloads the config.
@@ -41,15 +43,19 @@ public interface Config {
      *
      * @throws IOException if an I/O exception occurs.
      * @throws IllegalStateException if {@link Config#load()} hasn't been called.
+     * @throws InvalidTypeException if a value does not match its expected {@link Type}
+     * @throws ValidationException if a value fails validation
      */
-    void reload() throws IOException, IllegalStateException;
+    void reload() throws IOException, IllegalStateException, InvalidTypeException, ValidationException;;
 
     /**
      * Saves the configuration to it's corresponding data storage location.
      *
      * @throws IOException if an I/O exception occurs.
+     * @throws InvalidTypeException if a value does not match its expected {@link Type}
+     * @throws ValidationException if a value fails validation
      */
-    void write() throws IOException;
+    void write() throws IOException, InvalidTypeException, ValidationException;;
 
     /**
      * Cleans up dead entries from the storage location.

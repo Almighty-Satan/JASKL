@@ -39,4 +39,8 @@ public class InvalidTypeException extends RuntimeException {
     public InvalidTypeException(@NotNull String path, @NotNull InvalidTypeException cause) {
         super(String.format("Invalid type: path=%s", path), cause);
     }
+
+    public InvalidTypeException(@NotNull String path) {
+        super(String.format("Invalid type: path=%s is null", path));
+    }
 }

@@ -43,8 +43,10 @@ public interface ConfigEntry<T> {
      * Returns the value of this ConfigEntry.
      *
      * @return the value of this ConfigEntry
+     * @throws InvalidTypeException if the value does not match its expected {@link Type}
+     * @throws ValidationException  if the value fails validation
      */
-    @NotNull T getValue();
+    @NotNull T getValue() throws InvalidTypeException, ValidationException;
 
     /**
      * Returns the value of this ConfigEntry.
@@ -57,6 +59,8 @@ public interface ConfigEntry<T> {
      * Updates the value of this ConfigEntry.
      *
      * @param value The new value
+     * @throws InvalidTypeException if the given value does not match its expected {@link Type}
+     * @throws ValidationException  if the given value fails validation
      */
     void setValue(@NotNull T value) throws InvalidTypeException, ValidationException;
 

@@ -117,4 +117,14 @@ public class YamlConfigTest {
     public void testCustomYaml() throws IOException {
         testCustom(() -> YamlConfig.of(file2, "Example YAML Config"));
     }
+
+    @Test
+    public void testAnnotationYaml() throws IOException {
+        testAnnotation(() -> YamlConfig.of(file1, "Example YAML Config"));
+    }
+
+    @Test
+    public void testAnnotationMapYaml() throws IOException {
+        testAnnotationMap(() -> YamlConfig.of(file1, "Example YAML Config"));
+    }
 }

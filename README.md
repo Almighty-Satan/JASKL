@@ -73,6 +73,41 @@ JASKL can automatically validate config entries (e.g. ensure that a number is al
 IntegerConfigEntry positiveIntegerConfigEntry = IntegerConfigEntry.of(config, "example.integer", "Example Integer", 1, Validator.INTEGER_POSITIVE);
 ```
 
+### Annotation-based Configs
+You can also use annotation-based configs:
+```java
+public class ExampleAnnotationConfig {
+
+    @Entry
+    @Validate.StringNotEmpty
+    public String myString = "Default String"; // Default values should not be null
+
+    @Entry("some.other.path")
+    @Description("Enter description here") // May be ignored if the implementation does not support comments
+    public int myInt = 5;
+
+    public ExampleAnnotationConfig() {} // An empty constructor is required
+}
+```
+```java
+AnnotationConfigManager annotationConfigManager = AnnotationConfigManager.create(); // Create an AnnotationConfigManager. The instance can be reused.
+
+Config yamlConfig = YamlConfig.of(file); // Create a config
+
+// Register our annotated class
+ExampleAnnotationConfig config = annotationConfigManager.init(yamlConfig, ExampleAnnotationConfig.class);
+
+yamlConfig.load(); // Load the config from storage
+
+System.out.println(config.myString); // Print some value we just loaded
+
+config.myString = "Hello World"; // Change the value
+
+// Write the config to storage
+// This also checks/validates changed values
+yamlConfig.write();
+```
+
 ### Building
 To build the project, open the terminal and type `./gradlew build`. All jars will be located at `/<implementation>/build/libs/<implementation>-<version>.jar`.
 

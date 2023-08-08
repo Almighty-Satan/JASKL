@@ -18,31 +18,18 @@
  * USA
  */
 
-package io.github.almightysatan.jaskl.impl;
+package io.github.almightysatan.jaskl.annotation;
 
-import io.github.almightysatan.jaskl.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-import java.util.function.Function;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface WritableConfigEntry<T> extends ConfigEntry<T> {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Description {
 
-    Type<T> getType();
-
-    void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException;
-
-    @NotNull Object getValueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException, ValidationException;
-
-    default @NotNull Object getValueToWrite() throws InvalidTypeException, ValidationException {
-        return this.getValueToWrite(Function.identity());
-    }
-
-    boolean isModified();
-
-    default WritableConfigEntry<T> register(@NotNull Config config) {
-        Objects.requireNonNull(config);
-        ((ConfigImpl) config).registerEntry(this);
-        return this;
-    }
+    @NotNull String value();
 }

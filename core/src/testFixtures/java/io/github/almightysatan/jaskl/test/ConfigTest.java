@@ -21,6 +21,7 @@
 package io.github.almightysatan.jaskl.test;
 
 import io.github.almightysatan.jaskl.*;
+import io.github.almightysatan.jaskl.annotation.AnnotationConfigManager;
 import io.github.almightysatan.jaskl.entries.*;
 import org.junit.jupiter.api.Assertions;
 
@@ -448,5 +449,66 @@ public class ConfigTest {
         config1.load();
 
         Assertions.assertEquals(value, entry1.getValue());
+    }
+
+    public static void testAnnotation(Supplier<Config> configSupplier) throws IOException {
+        AnnotationConfigManager annotationConfigManager = AnnotationConfigManager.create();
+
+        Config config0 = configSupplier.get();
+        ExampleAnnotationConfig annotationConfig0 = annotationConfigManager.init(config0, ExampleAnnotationConfig.class);
+
+        config0.load();
+
+        Assertions.assertEquals(new ExampleAnnotationConfig().annotationTestString, annotationConfig0.annotationTestString);
+
+        annotationConfig0.annotationTestString = "Hello World";
+
+        config0.write();
+        config0.close();
+
+        Config config1 = configSupplier.get();
+        ExampleAnnotationConfig annotationConfig1 = annotationConfigManager.init(config1, ExampleAnnotationConfig.class);
+
+        config1.load();
+
+        Assertions.assertEquals("Hello World", annotationConfig1.annotationTestString);
+
+        annotationConfig1.annotationTestString = "1234";
+
+        Assertions.assertThrows(ValidationException.class, config1::write);
+
+        annotationConfig1.annotationTestString = null;
+
+        Assertions.assertThrows(InvalidTypeException.class, config1::write);
+    }
+
+    public static void testAnnotationMap(Supplier<Config> configSupplier) throws IOException {
+        AnnotationConfigManager annotationConfigManager = AnnotationConfigManager.create();
+
+        Config config0 = configSupplier.get();
+        ExampleAnnotationMapConfig annotationConfig0 = annotationConfigManager.init(config0, ExampleAnnotationMapConfig.class);
+
+        config0.load();
+
+        Map<Integer, String> innerMap = new HashMap<>();
+        innerMap.put(2, "Hello There");
+        innerMap.put(5, "Hello World");
+
+        Map<Integer, Map<Integer, String>> outerMap = new HashMap<>();
+        outerMap.put(11, innerMap);
+
+        annotationConfig0.test0 = outerMap;
+        annotationConfig0.test1 = outerMap;
+
+        config0.write();
+        config0.close();
+
+        Config config1 = configSupplier.get();
+        ExampleAnnotationMapConfig annotationConfig1 = annotationConfigManager.init(config1, ExampleAnnotationMapConfig.class);
+
+        config1.load();
+
+        Assertions.assertEquals("Hello World", annotationConfig1.test0.get(11).get(5));
+        Assertions.assertEquals("Hello World", ((Map<?, ?>) annotationConfig1.test1.get(11)).get(5));
     }
 }

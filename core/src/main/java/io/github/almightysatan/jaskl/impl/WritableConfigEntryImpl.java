@@ -35,7 +35,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     private T value;
     private boolean modified = true; // true by default because Config#write should write the entry to the config if it does not exist
 
-    public WritableConfigEntryImpl(@NotNull Type<T> type, @NotNull String path, @Nullable String description, @NotNull T defaultValue) {
+    public WritableConfigEntryImpl(@NotNull Type<T> type, @NotNull String path, @Nullable String description, @NotNull T defaultValue) throws InvalidTypeException, ValidationException {
         super(path, description, defaultValue);
         this.type = Objects.requireNonNull(type);
         this.value = type.toEntryType(defaultValue);
@@ -47,15 +47,14 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     }
 
     @Override
-    public @NotNull T getValue() {
+    public @NotNull T getValue() throws InvalidTypeException, ValidationException {
         return this.value;
     }
 
     @Override
     public void setValue(@NotNull T value) throws InvalidTypeException, ValidationException {
-        Objects.requireNonNull(value);
         T parsedValue = this.toType(value);
-        if (parsedValue.equals(this.getValue()))
+        if (parsedValue.equals(this.value))
             return;
         this.value = parsedValue;
         this.modified = true;
@@ -63,23 +62,24 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
 
     @Override
     public void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException {
-        Objects.requireNonNull(value);
         this.value = this.toType(value);
         this.modified = false;
     }
 
-    private T toType(@NotNull Object value) throws InvalidTypeException, ValidationException {
+    private T toType(@Nullable Object value) throws InvalidTypeException, ValidationException {
+        if (value == null)
+            throw new InvalidTypeException(this.getPath());
         try {
             return this.getType().toEntryType(value);
         } catch (InvalidTypeException e) {
             throw new InvalidTypeException(this.getPath(), e);
         } catch (ValidationException e) {
-            throw new ValidationException(this.getPath(), e.getErrorMessage());
+            throw new ValidationException(this.getPath(), e);
         }
     }
 
     @Override
-    public @NotNull Object getValueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor)  throws InvalidTypeException {
+    public @NotNull Object getValueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor)  throws InvalidTypeException, ValidationException {
         try {
             return this.getType().toWritable(this.getValue(), keyPreprocessor);
         } catch (InvalidTypeException e) {

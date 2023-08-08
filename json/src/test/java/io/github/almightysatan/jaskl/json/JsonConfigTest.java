@@ -20,6 +20,7 @@
 
 package io.github.almightysatan.jaskl.json;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -116,5 +117,15 @@ public class JsonConfigTest {
     @Test
     public void testCustomJson() throws IOException {
         testCustom(() -> JsonConfig.of(file2));
+    }
+
+    @Test
+    public void testAnnotationJson() throws IOException {
+        testAnnotation(() -> JsonConfig.of(file1));
+    }
+
+    @Test
+    public void testAnnotationMapJson() throws IOException {
+        testAnnotationMap(() -> JsonConfig.of(file1));
     }
 }

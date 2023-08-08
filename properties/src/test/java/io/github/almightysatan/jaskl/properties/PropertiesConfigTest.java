@@ -105,4 +105,9 @@ public class PropertiesConfigTest {
     public void testCustomProperties() throws IOException {
         testCustom(() -> PropertiesConfig.of(file2));
     }
+
+    @Test
+    public void testAnnotationProperties() throws IOException {
+        testAnnotation(() -> PropertiesConfig.of(file1));
+    }
 }
