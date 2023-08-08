@@ -20,6 +20,7 @@
 
 package io.github.almightysatan.jaskl.hocon;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -116,5 +117,15 @@ public class HoconConfigTest {
     @Test
     public void testCustomHocon() throws IOException {
         testCustom(() -> HoconConfig.of(file2));
+    }
+
+    @Test
+    public void testAnnotationHocon() throws IOException {
+        testAnnotation(() -> HoconConfig.of(file1));
+    }
+
+    @Test
+    public void testAnnotationMapHocon() throws IOException {
+        testAnnotationMap(() -> HoconConfig.of(file1));
     }
 }

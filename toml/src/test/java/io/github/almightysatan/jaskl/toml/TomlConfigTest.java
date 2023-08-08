@@ -20,6 +20,7 @@
 
 package io.github.almightysatan.jaskl.toml;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -116,5 +117,15 @@ public class TomlConfigTest {
     @Test
     public void testCustomToml() throws IOException {
         testCustom(() -> TomlConfig.of(file2));
+    }
+
+    @Test
+    public void testAnnotationToml() throws IOException {
+        testAnnotation(() -> TomlConfig.of(file1));
+    }
+
+    @Test
+    public void testAnnotationMapToml() throws IOException {
+        testAnnotationMap(() -> TomlConfig.of(file1));
     }
 }

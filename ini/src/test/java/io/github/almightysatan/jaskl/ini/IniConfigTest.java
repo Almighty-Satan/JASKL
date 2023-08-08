@@ -105,4 +105,9 @@ public class IniConfigTest {
     public void testCustomIni() throws IOException {
         testCustom(() -> IniConfig.of(file2));
     }
+
+    @Test
+    public void testAnnotationIni() throws IOException {
+        testAnnotation(() -> IniConfig.of(file1));
+    }
 }
