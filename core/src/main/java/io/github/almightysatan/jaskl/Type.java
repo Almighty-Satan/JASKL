@@ -24,6 +24,8 @@ import io.github.almightysatan.jaskl.impl.SimpleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
@@ -337,5 +339,47 @@ public interface Type<T> {
         if (types == null)
             return null;
         return of(Arrays.asList(types));
+    }
+
+    static @Nullable Type<?> of(@Nullable ParameterizedType generics) {
+        if (generics == null)
+            return null;
+
+        Class<?> typeClass = (Class<?>) generics.getRawType();
+
+        if (List.class.isAssignableFrom(typeClass)) {
+            java.lang.reflect.Type[] typeArgs = generics.getActualTypeArguments();
+            if (typeArgs.length != 1)
+                return null;
+            java.lang.reflect.Type typeArg = typeArgs[0];
+            Type<?> type = typeArg instanceof ParameterizedType ? of((ParameterizedType) typeArg) : of((Class<?>) typeArg);
+            if (type == null)
+                return null;
+            return Type.list(type);
+        }
+        if (Map.class.isAssignableFrom(typeClass)) {
+            java.lang.reflect.Type[] typeArgs = generics.getActualTypeArguments();
+            if (typeArgs.length != 2)
+                return null;
+            java.lang.reflect.Type keyTypeArg = typeArgs[0];
+            Type<?> keyType = keyTypeArg instanceof ParameterizedType ? of((ParameterizedType) keyTypeArg) : of((Class<?>) keyTypeArg);
+            if (keyType == null)
+                return null;
+            java.lang.reflect.Type valueTypeArg = typeArgs[1];
+            Type<?> valueType = valueTypeArg instanceof ParameterizedType ? of((ParameterizedType) valueTypeArg) : of((Class<?>) valueTypeArg);
+            if (valueType == null)
+                return null;
+            return Type.map(keyType, valueType);
+        }
+
+        return of(typeClass);
+    }
+
+    static @Nullable Type<?> of(@Nullable Field field) {
+        if (field == null)
+            return null;
+        if (field.getGenericType() instanceof ParameterizedType)
+            return of((ParameterizedType) field.getGenericType());
+        return of(field.getType());
     }
 }

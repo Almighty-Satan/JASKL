@@ -490,11 +490,15 @@ public class ConfigTest {
 
         config0.load();
 
-        Map<Integer, String> map = new HashMap<>();
-        map.put(2, "Hello There");
-        map.put(5, "Hello World");
+        Map<Integer, String> innerMap = new HashMap<>();
+        innerMap.put(2, "Hello There");
+        innerMap.put(5, "Hello World");
 
-        annotationConfig0.test = map;
+        Map<Integer, Map<Integer, String>> outerMap = new HashMap<>();
+        outerMap.put(11, innerMap);
+
+        annotationConfig0.test0 = outerMap;
+        annotationConfig0.test1 = outerMap;
 
         config0.write();
         config0.close();
@@ -504,6 +508,7 @@ public class ConfigTest {
 
         config1.load();
 
-        Assertions.assertEquals("Hello World", annotationConfig1.test.get(5));
+        Assertions.assertEquals("Hello World", annotationConfig1.test0.get(11).get(5));
+        Assertions.assertEquals("Hello World", annotationConfig1.test1.get(11).get(5));
     }
 }

@@ -27,8 +27,11 @@ import java.util.Map;
 
 public class ExampleAnnotationMapConfig {
 
-    @Entry(value = "test.annotation.map", type = {Map.class, Integer.class, String.class})
-    public Map<Integer, String> test = new HashMap<>();
+    @Entry("test.annotation.map0")
+    public Map<Integer, Map<Integer, String>> test0 = new HashMap<>();
+
+    @Entry(value = "test.annotation.map1", type = {Map.class, Integer.class, Map.class, Integer.class, String.class})
+    public Map<Integer, Map<Integer, String>> test1 = new HashMap<>();
 
     public ExampleAnnotationMapConfig() {}
 }
