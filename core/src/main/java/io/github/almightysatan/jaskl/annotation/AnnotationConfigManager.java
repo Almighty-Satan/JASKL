@@ -27,6 +27,7 @@ import io.github.almightysatan.jaskl.Validator;
 import io.github.almightysatan.jaskl.impl.AnnotationConfigManagerImpl;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 public interface AnnotationConfigManager {
@@ -34,6 +35,7 @@ public interface AnnotationConfigManager {
     <T> void registerValidatorFunction(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction);
 
     default void registerValidator(@NotNull Class<?> annotationClass, @NotNull Validator<?> validator) {
+        Objects.requireNonNull(validator);
         this.registerValidatorFunction(annotationClass, annotation -> validator);
     }
 
