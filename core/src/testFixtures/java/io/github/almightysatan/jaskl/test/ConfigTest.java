@@ -445,15 +445,17 @@ public class ConfigTest {
     public static void testCustom(Supplier<Config> configSupplier) throws IOException {
         ExampleCustomObject value = new ExampleCustomObject("Default", 5, ExampleEnum.EXAMPLE);
         Config config0 = configSupplier.get();
-        ConfigEntry<ExampleCustomObject> entry0 = CustomConfigEntry.of(config0, "example", "Hello World", value);
+        ConfigEntry<ExampleCustomObject> entry0 = CustomConfigEntry.of(config0, "example.custom", "Hello World", value, ExampleCustomObject.class);
 
         config0.load();
         config0.write();
+        config0.close();
 
         Config config1 = configSupplier.get();
-        ConfigEntry<ExampleCustomObject> entry1 = CustomConfigEntry.of(config1, "example", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE));
+        ConfigEntry<ExampleCustomObject> entry1 = CustomConfigEntry.of(config1, "example.custom", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE), ExampleCustomObject.class);
 
         config1.load();
+        config1.close();
 
         Assertions.assertEquals(value, entry1.getValue());
     }

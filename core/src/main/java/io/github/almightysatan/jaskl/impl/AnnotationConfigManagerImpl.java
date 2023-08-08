@@ -28,15 +28,13 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 
 public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
 
     private final Map<Class<?>, Function<Object, Validator<Object>>> validators = new HashMap<>();
-    
+
     public AnnotationConfigManagerImpl() {
         this.registerDefaultAnnotations();
     }
@@ -54,41 +52,9 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
         try {
             T instance = configClass.newInstance();
 
-            for (Field field : configClass.getFields()) {
-                if (Modifier.isFinal(field.getModifiers()))
-                    throw new InvalidAnnotationConfigException(String.format("Field %s is final", field.getName()));
-
-                Entry annotation = field.getAnnotation(Entry.class);
-                if (annotation != null) {
-                    String path = annotation.value().isEmpty() ? field.getName() : annotation.value();
-                    Object defaultValue = field.get(instance);
-                    if (defaultValue == null)
-                        throw new InvalidAnnotationConfigException(String.format("Default value of field %s is null", field.getName()));
-
-                    TypeHint typeHintAnnotation = field.getAnnotation(TypeHint.class);
-                    @SuppressWarnings("unchecked")
-                    Type<Object> type = (Type<Object>) (typeHintAnnotation != null ? Type.of(typeHintAnnotation.value()) : Type.of(field));
-                    if (type == null)
-                        throw new InvalidAnnotationConfigException(String.format("Unknown type for field %s", field.getName()));
-
-                    Description descriptionAnnotation = field.getAnnotation(Description.class);
-                    String description = descriptionAnnotation != null ? descriptionAnnotation.value() : null;
-
-                    for (Annotation a : field.getAnnotations()) {
-                        Function<Object, Validator<Object>> validatorFunction = this.validators.get(a.annotationType());
-                        if (validatorFunction != null) {
-                            Object annotationInstance = field.getAnnotation(a.annotationType());
-                            try {
-                                type = Type.validated(type, validatorFunction.apply(annotationInstance));
-                            } catch (Throwable t) {
-                                throw new InvalidAnnotationConfigException(t);
-                            }
-                        }
-                    }
-
-                    WritableConfigEntry<?> entry = new WritableAnnotationConfigEntry<>(type, path, description, defaultValue, field, instance);
-                    entry.register(config);
-                }
+            for (Property property : this.loadProperties(configClass, instance, true, true)) {
+                WritableConfigEntry<?> entry = new WritableAnnotationConfigEntry<>(property.type, property.path, property.description, property.defaultValue, property.field, instance);
+                entry.register(config);
             }
 
             return instance;
@@ -161,6 +127,120 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    public <T> @NotNull Type<T> createCustomType(@NotNull Class<T> clazz) throws InvalidAnnotationConfigException {
+        Objects.requireNonNull(clazz);
+        try {
+            Property[] properties = this.loadProperties(clazz, clazz.newInstance(), false, false);
+
+            return new Type<T>() {
+                @SuppressWarnings("unchecked")
+                @Override
+                public @NotNull T toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException {
+                    if (clazz.isAssignableFrom(value.getClass()))
+                        return (T) value;
+                    if (value instanceof Map) {
+                        Map<String, ?> mapValue = (Map<String, ?>) value;
+
+                        try {
+                            T instance = clazz.newInstance();
+                            for (Property property : properties) {
+                                Object propertyValue = mapValue.get(property.path);
+                                if (propertyValue == null)
+                                    throw new InvalidTypeException(property.path);
+                                property.field.set(instance, property.type.toEntryType(propertyValue));
+                            }
+                            return instance;
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                    throw new InvalidTypeException(Map.class, value.getClass());
+                }
+
+                @Override
+                public @NotNull Object toWritable(@NotNull T value, @NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException {
+                    Map<Object, Object> map = new HashMap<>();
+                    for (Property property : properties)
+                        try {
+                            map.put(keyPreprocessor.apply(property.path), property.type.toWritable(property.field.get(value), keyPreprocessor));
+                        } catch (IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                    return Collections.unmodifiableMap(map);
+                }
+            };
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new InvalidAnnotationConfigException(e);
+        }
+    }
+
+    private <T> @NotNull Property[] loadProperties(@NotNull Class<T> clazz, @NotNull T instance, boolean loadDescription,
+                                                   boolean loadDefaultValue) throws IllegalAccessException, InvalidAnnotationConfigException {
+        List<Property> properties = new ArrayList<>();
+
+        for (Field field : clazz.getFields()) {
+            if (Modifier.isFinal(field.getModifiers()))
+                throw new InvalidAnnotationConfigException(String.format("Field %s is final", field.getName()));
+
+            Entry annotation = field.getAnnotation(Entry.class);
+            if (annotation != null) {
+                String path = annotation.value().isEmpty() ? field.getName() : annotation.value();
+                Object defaultValue = null;
+                if (loadDefaultValue) {
+                    defaultValue = field.get(instance);
+                    if (defaultValue == null)
+                        throw new InvalidAnnotationConfigException(String.format("Default value of field %s is null", field.getName()));
+                }
+
+                TypeHint typeHintAnnotation = field.getAnnotation(TypeHint.class);
+                @SuppressWarnings("unchecked")
+                Type<Object> type = (Type<Object>) (typeHintAnnotation != null ? Type.of(typeHintAnnotation.value()) : Type.of(field));
+                if (type == null)
+                    throw new InvalidAnnotationConfigException(String.format("Unknown type for field %s", field.getName()));
+
+                String description = null;
+                if (loadDescription) {
+                    Description descriptionAnnotation = field.getAnnotation(Description.class);
+                    description = descriptionAnnotation != null ? descriptionAnnotation.value() : null;
+                }
+
+                for (Annotation a : field.getAnnotations()) {
+                    Function<Object, Validator<Object>> validatorFunction = this.validators.get(a.annotationType());
+                    if (validatorFunction != null) {
+                        Object annotationInstance = field.getAnnotation(a.annotationType());
+                        try {
+                            type = Type.validated(type, validatorFunction.apply(annotationInstance));
+                        } catch (Throwable t) {
+                            throw new InvalidAnnotationConfigException(t);
+                        }
+                    }
+                }
+                properties.add(new Property(field, path, description, type, defaultValue));
+            }
+        }
+
+        return properties.toArray(new Property[0]);
+    }
+
+    private static class Property {
+
+        private final Field field;
+        private final String path;
+        private final String description;
+        private final Type<Object> type;
+        private final Object defaultValue;
+
+        private Property(Field field, String path, String description, Type<Object> type, Object defaultValue) {
+            this.field = field;
+            this.path = path;
+            this.description = description;
+            this.type = type;
+            this.defaultValue = defaultValue;
         }
     }
 

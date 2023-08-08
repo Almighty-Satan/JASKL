@@ -20,18 +20,18 @@
 
 package io.github.almightysatan.jaskl.test;
 
-import io.github.almightysatan.jaskl.ConfigProperty;
+import io.github.almightysatan.jaskl.annotation.Entry;
 
 import java.util.Objects;
 
 public class ExampleCustomObject {
 
-    @ConfigProperty("exampleString")
-    private String exampleString;
-    @ConfigProperty("exampleInt")
-    private int exampleInt;
-    @ConfigProperty("exampleEnum")
-    private ExampleEnum exampleEnum;
+    @Entry("exampleString")
+    public String exampleString;
+    @Entry("exampleInt")
+    public int exampleInt;
+    @Entry("exampleEnum")
+    public ExampleEnum exampleEnum;
 
     public ExampleCustomObject() {}
 

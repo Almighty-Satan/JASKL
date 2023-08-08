@@ -20,6 +20,8 @@
 
 package io.github.almightysatan.jaskl;
 
+import io.github.almightysatan.jaskl.annotation.AnnotationConfigManager;
+import io.github.almightysatan.jaskl.annotation.InvalidAnnotationConfigException;
 import io.github.almightysatan.jaskl.impl.SimpleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -251,7 +253,6 @@ public interface Type<T> {
         };
     }
 
-    @SuppressWarnings("unchecked")
     static <K, V> @NotNull Type<Map<K, V>> map(@NotNull Type<K> keyType, @NotNull Type<V> valueType) {
         Objects.requireNonNull(keyType);
         Objects.requireNonNull(valueType);
@@ -259,6 +260,7 @@ public interface Type<T> {
             @Override
             public @NotNull Map<K, V> toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException {
                 if (value instanceof Map) {
+                    @SuppressWarnings("unchecked")
                     Map<K, V> mapValue = (Map<K, V>) value;
                     Map<K, V> newMap = new HashMap<>();
                     for (Map.Entry<K, V> entry : mapValue.entrySet())
@@ -279,6 +281,10 @@ public interface Type<T> {
                 return Collections.unmodifiableMap(newMap);
             }
         };
+    }
+
+    static <T> @NotNull Type<T> custom(@NotNull Class<T> clazz) throws InvalidAnnotationConfigException {
+        return AnnotationConfigManager.create().createCustomType(clazz);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
