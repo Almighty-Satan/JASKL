@@ -459,9 +459,9 @@ public class ConfigTest {
 
         config0.load();
 
-        Assertions.assertEquals(new ExampleAnnotationConfig().test, annotationConfig0.test);
+        Assertions.assertEquals(new ExampleAnnotationConfig().annotationTestString, annotationConfig0.annotationTestString);
 
-        annotationConfig0.test = "Hello World";
+        annotationConfig0.annotationTestString = "Hello World";
 
         config0.write();
         config0.close();
@@ -471,13 +471,13 @@ public class ConfigTest {
 
         config1.load();
 
-        Assertions.assertEquals("Hello World", annotationConfig1.test);
+        Assertions.assertEquals("Hello World", annotationConfig1.annotationTestString);
 
-        annotationConfig1.test = "1234";
+        annotationConfig1.annotationTestString = "1234";
 
         Assertions.assertThrows(ValidationException.class, config1::write);
 
-        annotationConfig1.test = null;
+        annotationConfig1.annotationTestString = null;
 
         Assertions.assertThrows(InvalidTypeException.class, config1::write);
     }

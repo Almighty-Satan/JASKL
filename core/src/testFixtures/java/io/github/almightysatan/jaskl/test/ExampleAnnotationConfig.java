@@ -28,7 +28,7 @@ public class ExampleAnnotationConfig {
     @Entry
     @Validate.StringNotEmpty
     @Validate.StringMinLength(5)
-    public String test = "Default String";
+    public String annotationTestString = "Default String";
 
     public ExampleAnnotationConfig() {}
 }
