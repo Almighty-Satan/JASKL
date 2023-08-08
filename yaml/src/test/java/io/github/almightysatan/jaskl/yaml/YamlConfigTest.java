@@ -29,6 +29,7 @@ import static io.github.almightysatan.jaskl.test.ConfigTest.*;
 
 public class YamlConfigTest {
 
+    File fileEmpty = new File("src/test/resources/empty.yaml");
     File file0 = new File("src/test/resources/example.yaml");
     File file1 = new File("build/tmp/test/write.yaml");
     File file2 = new File("build/tmp/test/writeCustom.yaml");
@@ -46,6 +47,11 @@ public class YamlConfigTest {
     @Test
     public void testAlreadyLoadedYaml() throws IOException {
         testAlreadyLoaded(() -> YamlConfig.of(file0, "Example YAML Config"));
+    }
+
+    @Test
+    public void testEmptyConfigYaml() throws IOException {
+        testEmptyConfig(() -> YamlConfig.of(fileEmpty));
     }
 
     @Test

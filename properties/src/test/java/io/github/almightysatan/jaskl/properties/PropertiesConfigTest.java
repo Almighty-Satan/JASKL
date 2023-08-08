@@ -30,6 +30,7 @@ import static io.github.almightysatan.jaskl.test.ConfigTest.*;
 
 public class PropertiesConfigTest {
 
+    File fileEmpty = new File("src/test/resources/empty.properties");
     File file0 = new File("src/test/resources/example.properties");
     File file1 = new File("build/tmp/test/write.properties");
     File file2 = new File("build/tmp/test/writeCustom.properties");
@@ -47,6 +48,11 @@ public class PropertiesConfigTest {
     @Test
     public void testAlreadyLoadedProperties() throws IOException {
         testAlreadyLoaded(() -> PropertiesConfig.of(file0));
+    }
+
+    @Test
+    public void testEmptyConfigProperties() throws IOException {
+        testEmptyConfig(() -> PropertiesConfig.of(fileEmpty));
     }
 
     @Test

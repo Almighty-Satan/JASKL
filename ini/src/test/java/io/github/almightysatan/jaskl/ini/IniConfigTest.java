@@ -30,6 +30,7 @@ import static io.github.almightysatan.jaskl.test.ConfigTest.*;
 
 public class IniConfigTest {
 
+    File fileEmpty = new File("src/test/resources/empty.ini");
     File file0 = new File("src/test/resources/example.ini");
     File file1 = new File("build/tmp/test/write.ini");
     File file2 = new File("build/tmp/test/writeCustom.ini");
@@ -47,6 +48,11 @@ public class IniConfigTest {
     @Test
     public void testAlreadyLoadedIni() throws IOException {
         testAlreadyLoaded(() -> IniConfig.of(file0));
+    }
+
+    @Test
+    public void testEmptyConfigIni() throws IOException {
+        testEmptyConfig(() -> IniConfig.of(fileEmpty));
     }
 
     @Test

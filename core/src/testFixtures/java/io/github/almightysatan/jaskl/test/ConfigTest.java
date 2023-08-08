@@ -65,6 +65,13 @@ public class ConfigTest {
         config.close();
     }
 
+    public static void testEmptyConfig(Supplier<Config> configSupplier) throws IOException {
+        Config config = configSupplier.get();
+        config.load();
+        config.write();
+        config.close();
+    }
+
     /**
      * Test if a config's values can be loaded successfully.
      * This test requires a predefined config file with inserted values.

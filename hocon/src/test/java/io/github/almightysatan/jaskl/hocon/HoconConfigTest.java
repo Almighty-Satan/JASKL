@@ -30,6 +30,7 @@ import static io.github.almightysatan.jaskl.test.ConfigTest.*;
 
 public class HoconConfigTest {
 
+    File fileEmpty = new File("src/test/resources/empty.hocon");
     File file0 = new File("src/test/resources/example.hocon");
     File file1 = new File("build/tmp/test/write.hocon");
     File file2 = new File("build/tmp/test/writeCustom.hocon");
@@ -47,6 +48,11 @@ public class HoconConfigTest {
     @Test
     public void testAlreadyLoadedHocon() throws IOException {
         testAlreadyLoaded(() -> HoconConfig.of(file0));
+    }
+
+    @Test
+    public void testEmptyConfigHocon() throws IOException {
+        testEmptyConfig(() -> HoconConfig.of(fileEmpty));
     }
 
     @Test

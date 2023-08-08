@@ -30,6 +30,7 @@ import static io.github.almightysatan.jaskl.test.ConfigTest.*;
 
 public class TomlConfigTest {
 
+    File fileEmpty = new File("src/test/resources/empty.toml");
     File file0 = new File("src/test/resources/example.toml");
     File file1 = new File("build/tmp/test/write.toml");
     File file2 = new File("build/tmp/test/writeCustom.toml");
@@ -47,6 +48,11 @@ public class TomlConfigTest {
     @Test
     public void testAlreadyLoadedToml() throws IOException {
         testAlreadyLoaded(() -> TomlConfig.of(file0));
+    }
+
+    @Test
+    public void testEmptyConfigToml() throws IOException {
+        testEmptyConfig(() -> TomlConfig.of(fileEmpty));
     }
 
     @Test

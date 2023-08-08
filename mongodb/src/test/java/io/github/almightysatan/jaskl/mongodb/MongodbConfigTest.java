@@ -96,6 +96,11 @@ public class MongodbConfigTest {
     }
 
     @Test
+    public void testEmptyConfigMongo() throws IOException {
+        testEmptyConfig(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
+    }
+
+    @Test
     public void testLoadValuesMongo() throws IOException {
         testLoadValues(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
     }

@@ -30,6 +30,7 @@ import static io.github.almightysatan.jaskl.test.ConfigTest.*;
 
 public class JsonConfigTest {
 
+    File fileEmpty = new File("src/test/resources/empty.json");
     File file0 = new File("src/test/resources/example.json");
     File file1 = new File("build/tmp/test/write.json");
     File file2 = new File("build/tmp/test/writeCustom.json");
@@ -47,6 +48,11 @@ public class JsonConfigTest {
     @Test
     public void testAlreadyLoadedJson() throws IOException {
         testAlreadyLoaded(() -> JsonConfig.of(file0));
+    }
+
+    @Test
+    public void testEmptyConfigJson() throws IOException {
+        testEmptyConfig(() -> JsonConfig.of(fileEmpty));
     }
 
     @Test
