@@ -80,7 +80,7 @@ public class ExampleAnnotationConfig {
 
     @Entry
     @Validate.StringNotEmpty
-    public String myString = "Default String"; // Default values should not be null
+    public String myString = "Default String"; // Annotated fields must be public and default values should not be null
 
     @Entry("some.other.path")
     @Description("Enter description here") // May be ignored if the implementation does not support comments
