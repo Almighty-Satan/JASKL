@@ -481,4 +481,29 @@ public class ConfigTest {
 
         Assertions.assertThrows(InvalidTypeException.class, config1::write);
     }
+
+    public static void testAnnotationMap(Supplier<Config> configSupplier) throws IOException {
+        AnnotationConfigManager annotationConfigManager = AnnotationConfigManager.create();
+
+        Config config0 = configSupplier.get();
+        ExampleAnnotationMapConfig annotationConfig0 = annotationConfigManager.init(config0, ExampleAnnotationMapConfig.class);
+
+        config0.load();
+
+        Map<Integer, String> map = new HashMap<>();
+        map.put(2, "Hello There");
+        map.put(5, "Hello World");
+
+        annotationConfig0.test = map;
+
+        config0.write();
+        config0.close();
+
+        Config config1 = configSupplier.get();
+        ExampleAnnotationMapConfig annotationConfig1 = annotationConfigManager.init(config1, ExampleAnnotationMapConfig.class);
+
+        config1.load();
+
+        Assertions.assertEquals("Hello World", annotationConfig1.test.get(5));
+    }
 }

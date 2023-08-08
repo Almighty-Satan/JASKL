@@ -280,7 +280,9 @@ public interface Type<T> {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    static @Nullable Type<?> of(Class<?> type) {
+    static @Nullable Type<?> of(@Nullable Class<?> type) {
+        if (type == null)
+            return null;
         if (type == boolean.class || type == Boolean.class)
             return Type.BOOLEAN;
         if (type == double.class || type == Double.class)
@@ -296,5 +298,44 @@ public interface Type<T> {
         if (type.isEnum())
             return Type.enumType((Class<? extends Enum>) type);
         return null;
+    }
+
+    static @Nullable Type<?> of(@Nullable Iterator<Class<?>> types) {
+        if (types == null || !types.hasNext())
+            return null;
+
+        Class<?> typeClass = types.next();
+        if (typeClass == null)
+            return null;
+
+        if (List.class.isAssignableFrom(typeClass)) {
+            Type<?> type = of(types);
+            if (type == null)
+                return null;
+            return Type.list(type);
+        }
+        if (Map.class.isAssignableFrom(typeClass)) {
+            Type<?> keyType = of(types);
+            Type<?> valueType = of(types);
+            if (keyType == null)
+                return null;
+            if (valueType == null)
+                return null;
+            return Type.map(keyType, valueType);
+        }
+
+        return of(typeClass);
+    }
+
+    static @Nullable Type<?> of(@Nullable List<Class<?>> types) {
+        if (types == null)
+            return null;
+        return of(types.iterator());
+    }
+
+    static @Nullable Type<?> of(@Nullable Class<?>[] types) {
+        if (types == null)
+            return null;
+        return of(Arrays.asList(types));
     }
 }

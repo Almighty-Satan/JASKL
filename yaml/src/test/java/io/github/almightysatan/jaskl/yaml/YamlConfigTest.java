@@ -123,4 +123,10 @@ public class YamlConfigTest {
         file1.delete();
         testAnnotation(() -> YamlConfig.of(file1, "Example YAML Config"));
     }
+
+    @Test
+    public void testAnnotationMapYaml() throws IOException {
+        file1.delete();
+        testAnnotationMap(() -> YamlConfig.of(file1, "Example YAML Config"));
+    }
 }

@@ -18,20 +18,17 @@
  * USA
  */
 
-package io.github.almightysatan.jaskl.annotation;
+package io.github.almightysatan.jaskl.test;
 
-import org.jetbrains.annotations.NotNull;
+import io.github.almightysatan.jaskl.annotation.Entry;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.HashMap;
+import java.util.Map;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Entry {
+public class ExampleAnnotationMapConfig {
 
-    @NotNull String value() default "";
+    @Entry(value = "test.annotation.map", type = {Map.class, Integer.class, String.class})
+    public Map<Integer, String> test = new HashMap<>();
 
-    @NotNull Class<?>[] type() default {};
+    public ExampleAnnotationMapConfig() {}
 }

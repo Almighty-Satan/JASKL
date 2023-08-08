@@ -66,7 +66,7 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
                         throw new InvalidAnnotationConfigException(String.format("Default value of field %s is null", field.getName()));
 
                     @SuppressWarnings("unchecked")
-                    Type<Object> type = (Type<Object>) Type.of(field.getType());
+                    Type<Object> type = (Type<Object>) (annotation.type().length == 0 ? Type.of(field.getType()) : Type.of(annotation.type()));
                     if (type == null)
                         throw new InvalidAnnotationConfigException(String.format("Unknown type for field %s", field.getName()));
 
