@@ -31,12 +31,11 @@ import java.util.function.Function;
 
 public interface AnnotationConfigManager {
 
-    // TODO rename me
-    <T> void register(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction);
+    // rename this maybe???
+    <T> void registerValidatorFunction(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction);
 
-    // TODO rename me
-    default void register0(@NotNull Class<?> annotationClass, @NotNull Validator<?> validator) {
-        this.register(annotationClass, annotation -> validator);
+    default void registerValidator(@NotNull Class<?> annotationClass, @NotNull Validator<?> validator) {
+        this.registerValidatorFunction(annotationClass, annotation -> validator);
     }
 
     /**
