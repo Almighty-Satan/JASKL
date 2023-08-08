@@ -125,14 +125,14 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
 
         @Override
         public void setValue(@NotNull T value) throws InvalidTypeException, ValidationException {
-            this.setField(value);
             super.setValue(value);
+            this.setField(super.getValue());
         }
 
         @Override
         public void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException {
-            this.setField(value);
             super.putValue(value);
+            this.setField(super.getValue());
         }
 
         @Override

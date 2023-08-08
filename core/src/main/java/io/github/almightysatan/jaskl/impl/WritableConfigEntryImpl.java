@@ -54,7 +54,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     @Override
     public void setValue(@NotNull T value) throws InvalidTypeException, ValidationException {
         T parsedValue = this.toType(value);
-        if (parsedValue.equals(this.getValue()))
+        if (parsedValue.equals(this.value))
             return;
         this.value = parsedValue;
         this.modified = true;
