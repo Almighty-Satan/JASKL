@@ -69,12 +69,14 @@ public class YamlConfig extends ConfigImpl {
         if (this.yaml == null)
             throw new IllegalStateException();
         if (!this.file.exists()) {
-            this.root = new MappingNode(Tag.MAP, new ArrayList<>(), DumperOptions.FlowStyle.BLOCK);
+            this.createRoot();
             return;
         }
 
         try (FileReader fileReader = new FileReader(this.file)) {
             this.root = (MappingNode) this.yaml.compose(fileReader);
+            if (this.root == null)
+                this.createRoot();
             this.loadValues("", this.root);
         }
     }
@@ -117,6 +119,10 @@ public class YamlConfig extends ConfigImpl {
     public void close() {
         this.yaml = null;
         this.root = null;
+    }
+
+    protected void createRoot() {
+        this.root = new MappingNode(Tag.MAP, new ArrayList<>(), DumperOptions.FlowStyle.BLOCK);
     }
 
     protected void loadValues(@NotNull String path, @NotNull MappingNode node) {

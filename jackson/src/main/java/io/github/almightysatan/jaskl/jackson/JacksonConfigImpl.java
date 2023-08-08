@@ -22,10 +22,7 @@ package io.github.almightysatan.jaskl.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.ValueNode;
+import com.fasterxml.jackson.databind.node.*;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
@@ -65,8 +62,11 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
         if (!this.file.exists())
             return;
 
+        JsonNode root = this.mapper.readTree(this.file);
+        if (root instanceof MissingNode)
+            return;
         try {
-            this.root = (ObjectNode) this.mapper.readTree(this.file);
+            this.root = (ObjectNode) root;
         } catch (ClassCastException e) {
             throw new IOException(e);
         }
