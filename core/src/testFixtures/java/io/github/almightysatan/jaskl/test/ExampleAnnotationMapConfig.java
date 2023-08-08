@@ -21,6 +21,7 @@
 package io.github.almightysatan.jaskl.test;
 
 import io.github.almightysatan.jaskl.annotation.Entry;
+import io.github.almightysatan.jaskl.annotation.TypeHint;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +31,9 @@ public class ExampleAnnotationMapConfig {
     @Entry("test.annotation.map0")
     public Map<Integer, Map<Integer, String>> test0 = new HashMap<>();
 
-    @Entry(value = "test.annotation.map1", type = {Map.class, Integer.class, Map.class, Integer.class, String.class})
-    public Map<Integer, Map<Integer, String>> test1 = new HashMap<>();
+    @Entry(value = "test.annotation.map1")
+    @TypeHint({Map.class, Integer.class, Map.class, Integer.class, String.class})
+    public Map<?, ?> test1 = new HashMap<>();
 
     public ExampleAnnotationMapConfig() {}
 }

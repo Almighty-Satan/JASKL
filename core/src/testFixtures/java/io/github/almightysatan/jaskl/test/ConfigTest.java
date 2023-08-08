@@ -509,6 +509,6 @@ public class ConfigTest {
         config1.load();
 
         Assertions.assertEquals("Hello World", annotationConfig1.test0.get(11).get(5));
-        Assertions.assertEquals("Hello World", annotationConfig1.test1.get(11).get(5));
+        Assertions.assertEquals("Hello World", ((Map<?, ?>) annotationConfig1.test1.get(11)).get(5));
     }
 }

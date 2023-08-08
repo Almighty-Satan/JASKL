@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Entry {
+public @interface TypeHint {
 
-    @NotNull String value() default "";
+    @NotNull Class<?>[] value();
 }
