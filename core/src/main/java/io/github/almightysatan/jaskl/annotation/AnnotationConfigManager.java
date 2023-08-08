@@ -31,7 +31,6 @@ import java.util.function.Function;
 
 public interface AnnotationConfigManager {
 
-    // rename this maybe???
     <T> void registerValidatorFunction(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction);
 
     default void registerValidator(@NotNull Class<?> annotationClass, @NotNull Validator<?> validator) {
