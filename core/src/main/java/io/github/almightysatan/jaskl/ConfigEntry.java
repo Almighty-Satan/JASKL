@@ -20,6 +20,7 @@
 
 package io.github.almightysatan.jaskl;
 
+import io.github.almightysatan.jaskl.impl.WritableConfigEntryImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,4 +64,26 @@ public interface ConfigEntry<T> {
      * @throws ValidationException  if the given value fails validation
      */
     void setValue(@NotNull T value) throws InvalidTypeException, ValidationException;
+
+    @SafeVarargs
+    static <T> @NotNull ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue, Type<T> type, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+        ConfigEntry<T> entry = new WritableConfigEntryImpl<>(Type.validated(type, validators), path, description, defaultValue);
+        config.registerEntry(entry);
+        return entry;
+    }
+
+    @SafeVarargs
+    static <T> @NotNull ConfigEntry<T> of(@NotNull Config config, @NotNull String path, T defaultValue, Type<T> type, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+        return of(config, path, null, defaultValue, type, validators);
+    }
+
+    @SafeVarargs
+    static <T> @NotNull ConfigEntry<T> of(@NotNull String path, @Nullable String description, T defaultValue, Type<T> type, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+        return new WritableConfigEntryImpl<>(Type.validated(type, validators), path, description, defaultValue);
+    }
+
+    @SafeVarargs
+    static <T> @NotNull ConfigEntry<T> of(@NotNull String path, T defaultValue, Type<T> type, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+        return of(path, null, defaultValue, type, validators);
+    }
 }
