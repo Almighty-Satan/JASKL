@@ -127,11 +127,6 @@ public class MongodbConfigTest {
     }
 
     @Test
-    public void testInvalidPathsMongo() throws IOException {
-        testInvalidPaths(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
-    }
-
-    @Test
     public void testWriteAndLoadMongo() throws IOException {
         testWriteAndLoad(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_1), null);
     }

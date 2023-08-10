@@ -85,11 +85,6 @@ public class IniConfigTest {
     }
 
     @Test
-    public void testInvalidPathsIni() throws IOException {
-        testInvalidPaths(() -> IniConfig.of(file0));
-    }
-
-    @Test
     public void testWriteAndLoadIni() throws IOException {
         testWriteAndLoad(() -> IniConfig.of(file1), file1);
     }

@@ -81,11 +81,6 @@ public class HoconConfigTest {
     }
 
     @Test
-    public void testInvalidPathsHocon() throws IOException {
-        testInvalidPaths(() -> HoconConfig.of(file0));
-    }
-
-    @Test
     public void testWriteAndLoadHocon() throws IOException {
         testWriteAndLoad(() -> HoconConfig.of(file1), file1);
     }

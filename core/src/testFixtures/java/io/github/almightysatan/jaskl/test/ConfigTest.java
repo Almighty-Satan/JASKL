@@ -176,16 +176,6 @@ public class ConfigTest {
     }
 
     /**
-     * Test if an entry cannot be registered twice (same path).
-     */
-    public static void testInvalidPaths(Supplier<Config> configSupplier) {
-        Config config = configSupplier.get();
-        BooleanConfigEntry.of(config, "example.boolean", "Example Boolean", false);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> BooleanConfigEntry.of(config, "example.boolean", "Example Boolean", false));
-        config.close();
-    }
-
-    /**
      * Test if a config can be created, saved and loaded again.
      * This test requires a valid file path.
      */

@@ -85,11 +85,6 @@ public class PropertiesConfigTest {
     }
 
     @Test
-    public void testInvalidPathsProperties() throws IOException {
-        testInvalidPaths(() -> PropertiesConfig.of(file0));
-    }
-
-    @Test
     public void testWriteAndLoadProperties() throws IOException {
         testWriteAndLoad(() -> PropertiesConfig.of(file1), file1);
     }

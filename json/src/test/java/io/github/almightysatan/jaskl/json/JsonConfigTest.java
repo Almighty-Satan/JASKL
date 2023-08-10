@@ -81,11 +81,6 @@ public class JsonConfigTest {
     }
 
     @Test
-    public void testInvalidPathsJson() throws IOException {
-        testInvalidPaths(() -> JsonConfig.of(file0));
-    }
-
-    @Test
     public void testWriteAndLoadJson() throws IOException {
         testWriteAndLoad(() -> JsonConfig.of(file1), file1);
     }

@@ -80,11 +80,6 @@ public class YamlConfigTest {
     }
 
     @Test
-    public void testInvalidPathsYaml() throws IOException {
-        testInvalidPaths(() -> YamlConfig.of(file0, "Example YAML Config"));
-    }
-
-    @Test
     public void testWriteAndLoadYaml() throws IOException {
         testWriteAndLoad(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
     }

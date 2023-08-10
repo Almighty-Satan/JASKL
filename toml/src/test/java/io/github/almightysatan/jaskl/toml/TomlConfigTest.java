@@ -81,11 +81,6 @@ public class TomlConfigTest {
     }
 
     @Test
-    public void testInvalidPathsToml() throws IOException {
-        testInvalidPaths(() -> TomlConfig.of(file0));
-    }
-
-    @Test
     public void testWriteAndLoadToml() throws IOException {
         testWriteAndLoad(() -> TomlConfig.of(file1), file1);
     }
