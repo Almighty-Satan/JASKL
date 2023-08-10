@@ -30,7 +30,7 @@ import java.util.function.Function;
 
 public interface WritableConfigEntry<T> extends ConfigEntry<T> {
 
-    Type<T> getType();
+    @NotNull Type<T> getType();
 
     void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException;
 

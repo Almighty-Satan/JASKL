@@ -63,5 +63,4 @@ public interface ConfigEntry<T> {
      * @throws ValidationException  if the given value fails validation
      */
     void setValue(@NotNull T value) throws InvalidTypeException, ValidationException;
-
 }

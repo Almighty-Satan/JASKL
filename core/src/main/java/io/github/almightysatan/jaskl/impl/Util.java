@@ -20,12 +20,14 @@
 
 package io.github.almightysatan.jaskl.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.IOException;
 
 public class Util {
 
-    public static void createFileAndPath(File file) throws IOException {
+    public static void createFileAndPath(@NotNull File file) throws IOException {
         if (!file.exists()) {
             if (!file.getParentFile().exists())
                 file.getParentFile().mkdirs();

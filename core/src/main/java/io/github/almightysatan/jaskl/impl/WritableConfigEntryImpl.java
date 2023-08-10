@@ -42,7 +42,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     }
 
     @Override
-    public Type<T> getType() {
+    public @NotNull Type<T> getType() {
         return this.type;
     }
 
@@ -66,7 +66,7 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
         this.modified = false;
     }
 
-    private T toType(@Nullable Object value) throws InvalidTypeException, ValidationException {
+    private @NotNull T toType(@Nullable Object value) throws InvalidTypeException, ValidationException {
         if (value == null)
             throw new InvalidTypeException(this.getPath());
         try {

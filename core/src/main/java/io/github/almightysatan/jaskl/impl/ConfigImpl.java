@@ -45,9 +45,8 @@ public abstract class ConfigImpl implements Config {
         this.entries.put(entry.getPath(), entry);
     }
 
-    @Nullable
     @Override
-    public String getDescription() {
+    public @Nullable String getDescription() {
         return description;
     }
 
@@ -65,8 +64,7 @@ public abstract class ConfigImpl implements Config {
      *
      * @return a set of all the paths of the config entries
      */
-    @NotNull
-    public Set<String> getPaths() {
+    public @NotNull Set<String> getPaths() {
         return this.getEntries().keySet();
     }
 
@@ -75,13 +73,12 @@ public abstract class ConfigImpl implements Config {
      *
      * @return a collection of all config entries
      */
-    @NotNull
-    public Collection<ConfigEntry<?>> getValues() {
+    public @NotNull Collection<ConfigEntry<?>> getValues() {
         return this.getEntries().values();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected Collection<WritableConfigEntry<?>> getCastedValues() {
+    protected @NotNull Collection<WritableConfigEntry<?>> getCastedValues() {
         return (Collection<WritableConfigEntry<?>>) (Collection) getEntries().values();
     }
 }

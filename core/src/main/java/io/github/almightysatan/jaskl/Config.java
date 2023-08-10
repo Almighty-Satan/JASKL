@@ -54,7 +54,7 @@ public interface Config {
      * @throws InvalidTypeException if a value does not match its expected {@link Type}
      * @throws ValidationException if a value fails validation
      */
-    void reload() throws IOException, IllegalStateException, InvalidTypeException, ValidationException;;
+    void reload() throws IOException, IllegalStateException, InvalidTypeException, ValidationException;
 
     /**
      * Saves the configuration to it's corresponding data storage location.
@@ -63,7 +63,7 @@ public interface Config {
      * @throws InvalidTypeException if a value does not match its expected {@link Type}
      * @throws ValidationException if a value fails validation
      */
-    void write() throws IOException, InvalidTypeException, ValidationException;;
+    void write() throws IOException, InvalidTypeException, ValidationException;
 
     /**
      * Cleans up dead entries from the storage location.
