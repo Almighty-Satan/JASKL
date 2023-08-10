@@ -61,7 +61,7 @@ public class PropertiesConfigTest {
     }
 
     @Test
-    public void testValidationProperties() throws IOException {
+    public void testValidationProperties() {
         testValidation(() -> PropertiesConfig.of(file0));
     }
 
@@ -71,7 +71,7 @@ public class PropertiesConfigTest {
     }
 
     @Test
-    public void testListValuesProperties() throws IOException {
+    public void testListValuesProperties() {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
                 () -> testListValues(() -> PropertiesConfig.of(file0))
@@ -79,7 +79,7 @@ public class PropertiesConfigTest {
     }
 
     @Test
-    public void testMapValuesProperties() throws IOException {
+    public void testMapValuesProperties() {
         Assertions.assertThrows(UnsupportedOperationException.class,
                 () -> testMapValues(() -> PropertiesConfig.of(file0)));
     }
@@ -90,7 +90,7 @@ public class PropertiesConfigTest {
     }
 
     @Test
-    public void testWriteAndLoadListProperties() throws IOException {
+    public void testWriteAndLoadListProperties() {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
                 () -> testWriteAndLoadList(() -> PropertiesConfig.of(file1), file1)

@@ -20,7 +20,6 @@
 
 package io.github.almightysatan.jaskl.json;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -61,7 +60,7 @@ public class JsonConfigTest {
     }
 
     @Test
-    public void testValidationJson() throws IOException {
+    public void testValidationJson() {
         testValidation(() -> JsonConfig.of(file0));
     }
 

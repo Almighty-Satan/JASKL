@@ -53,7 +53,7 @@ public class MongodbConfigTest {
     private static String mongoAddress;
 
     @BeforeAll
-    public static void checkEnv() throws IOException {
+    public static void checkEnv() {
         Assumptions.assumeTrue((mongoAddress = System.getenv("MONGO_ADDRESS")) != null);
 
         try (MongoClient mongoClient = MongoClients.create("mongodb://" + mongoAddress)) {
@@ -107,7 +107,7 @@ public class MongodbConfigTest {
     }
 
     @Test
-    public void testValidationMongo() throws IOException {
+    public void testValidationMongo() {
         testValidation(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
     }
 

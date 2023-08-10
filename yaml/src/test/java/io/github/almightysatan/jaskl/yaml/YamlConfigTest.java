@@ -60,7 +60,7 @@ public class YamlConfigTest {
     }
 
     @Test
-    public void testValidationYaml() throws IOException {
+    public void testValidationYaml() {
         testValidation(() -> YamlConfig.of(file0, "Example YAML Config"));
     }
 

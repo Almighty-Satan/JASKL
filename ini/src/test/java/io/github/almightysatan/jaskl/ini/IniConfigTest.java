@@ -61,7 +61,7 @@ public class IniConfigTest {
     }
 
     @Test
-    public void testValidationIni() throws IOException {
+    public void testValidationIni() {
         testValidation(() -> IniConfig.of(file0));
     }
 
@@ -71,7 +71,7 @@ public class IniConfigTest {
     }
 
     @Test
-    public void testListValuesIni() throws IOException {
+    public void testListValuesIni() {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
                 () -> testListValues(() -> IniConfig.of(file0))
@@ -79,7 +79,7 @@ public class IniConfigTest {
     }
 
     @Test
-    public void testMapValuesIni() throws IOException {
+    public void testMapValuesIni() {
         Assertions.assertThrows(UnsupportedOperationException.class,
                 () -> testMapValues(() -> IniConfig.of(file0)));
     }
@@ -90,7 +90,7 @@ public class IniConfigTest {
     }
 
     @Test
-    public void testWriteAndLoadListIni() throws IOException {
+    public void testWriteAndLoadListIni() {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,
                 () -> testWriteAndLoadList(() -> IniConfig.of(file1), file1)

@@ -20,7 +20,6 @@
 
 package io.github.almightysatan.jaskl.toml;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -61,7 +60,7 @@ public class TomlConfigTest {
     }
 
     @Test
-    public void testValidationToml() throws IOException {
+    public void testValidationToml() {
         testValidation(() -> TomlConfig.of(file0));
     }
 
