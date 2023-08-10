@@ -22,6 +22,7 @@ package io.github.almightysatan.jaskl.test;
 
 import io.github.almightysatan.jaskl.*;
 import io.github.almightysatan.jaskl.annotation.AnnotationConfigManager;
+import io.github.almightysatan.jaskl.annotation.InvalidAnnotationConfigException;
 import io.github.almightysatan.jaskl.entries.*;
 import org.junit.jupiter.api.Assertions;
 
@@ -444,18 +445,26 @@ public class ConfigTest {
      */
     public static void testCustom(Supplier<Config> configSupplier) throws IOException {
         ExampleCustomObject value = new ExampleCustomObject("Default", 5, ExampleEnum.EXAMPLE);
+        ExampleNestedCustomObject nestedValue = new ExampleNestedCustomObject(value);
         Config config0 = configSupplier.get();
-        ConfigEntry<ExampleCustomObject> entry0 = CustomConfigEntry.of(config0, "example", "Hello World", value);
+        ConfigEntry<ExampleCustomObject> entry0 = CustomConfigEntry.of(config0, "example.custom", "Hello World", value, ExampleCustomObject.class);
+        ConfigEntry<ExampleNestedCustomObject> entry1 = CustomConfigEntry.of(config0, "example.nestedCustom", "Hello World", nestedValue, ExampleNestedCustomObject.class);
 
         config0.load();
         config0.write();
+        config0.close();
 
         Config config1 = configSupplier.get();
-        ConfigEntry<ExampleCustomObject> entry1 = CustomConfigEntry.of(config1, "example", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE));
+        ConfigEntry<ExampleCustomObject> entry2 = CustomConfigEntry.of(config1, "example.custom", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE), ExampleCustomObject.class);
+        ConfigEntry<ExampleNestedCustomObject> entry3 = CustomConfigEntry.of(config1, "example.nestedCustom", "Hello World", new ExampleNestedCustomObject(new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE)), ExampleNestedCustomObject.class);
+
+        Assertions.assertThrows(InvalidAnnotationConfigException.class, () -> CustomConfigEntry.of(config1, "example.nestedCustom", new ExampleCircularCustomObject(), ExampleCircularCustomObject.class));
 
         config1.load();
+        config1.close();
 
-        Assertions.assertEquals(value, entry1.getValue());
+        Assertions.assertEquals(value, entry2.getValue());
+        Assertions.assertEquals(nestedValue, entry3.getValue());
     }
 
     public static void testAnnotation(Supplier<Config> configSupplier) throws IOException {

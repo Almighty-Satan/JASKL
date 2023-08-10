@@ -50,19 +50,19 @@ config.write(); // Save the config
 | MongoDB    | A NoSQL database based implementation for complex configs with remote saves.        | [mongodb-driver](https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync)        |
 
 ### Config Entry Types
-| Type     | YAML | Hocon | JSON | TOML | Properties | Ini | MongoDB |
-|----------|------|-------|------|------|------------|-----|---------|
-| String   | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
-| Boolean  | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
-| Integer  | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
-| Long     | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
-| Float    | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
-| Double   | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
-| Enum     | ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
-| List     | ✅   | ✅   | ✅   | ✅   | ❌        | ❌  | ✅      |
-| Map      | ✅   | ✅   | ✅   | ✅   | ❌        | ❌  | ✅      |
-| Custom\*¹| ✅   | ✅   | ✅   | ✅   | ✅        | ✅  | ✅      |
-| Comments | ✅   | ✅   | ❌   | ❌   | ❌        | ❌  | ❌      |
+| Type           | YAML | Hocon | JSON | TOML | Properties | Ini | MongoDB |
+|----------------|------|-------|------|------|------------|-----|---------|
+| String         | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
+| Boolean        | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
+| Integer        | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
+| Long           | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
+| Float          | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
+| Double         | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
+| Enum           | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
+| List           | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
+| Map            | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
+| Custom Objects | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
+| Comments       | ✅    | ✅     | ❌    | ❌    | ❌          | ❌   | ❌       |
 
 \*¹ Only for supported types  
 

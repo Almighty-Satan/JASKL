@@ -20,12 +20,11 @@
 
 package io.github.almightysatan.jaskl;
 
+import io.github.almightysatan.jaskl.annotation.InvalidAnnotationConfigException;
+import io.github.almightysatan.jaskl.impl.AnnotationConfigManagerImpl;
 import io.github.almightysatan.jaskl.impl.SimpleType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
@@ -251,7 +250,6 @@ public interface Type<T> {
         };
     }
 
-    @SuppressWarnings("unchecked")
     static <K, V> @NotNull Type<Map<K, V>> map(@NotNull Type<K> keyType, @NotNull Type<V> valueType) {
         Objects.requireNonNull(keyType);
         Objects.requireNonNull(valueType);
@@ -259,6 +257,7 @@ public interface Type<T> {
             @Override
             public @NotNull Map<K, V> toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException {
                 if (value instanceof Map) {
+                    @SuppressWarnings("unchecked")
                     Map<K, V> mapValue = (Map<K, V>) value;
                     Map<K, V> newMap = new HashMap<>();
                     for (Map.Entry<K, V> entry : mapValue.entrySet())
@@ -281,105 +280,7 @@ public interface Type<T> {
         };
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    static @Nullable Type<?> of(@Nullable Class<?> type) {
-        if (type == null)
-            return null;
-        if (type == boolean.class || type == Boolean.class)
-            return Type.BOOLEAN;
-        if (type == double.class || type == Double.class)
-            return Type.DOUBLE;
-        if (type == float.class || type == Float.class)
-            return Type.FLOAT;
-        if (type == int.class || type == Integer.class)
-            return Type.INTEGER;
-        if (type == long.class || type == Long.class)
-            return Type.LONG;
-        if (type == String.class)
-            return Type.STRING;
-        if (type.isEnum())
-            return Type.enumType((Class<? extends Enum>) type);
-        return null;
-    }
-
-    static @Nullable Type<?> of(@Nullable Iterator<Class<?>> types) {
-        if (types == null || !types.hasNext())
-            return null;
-
-        Class<?> typeClass = types.next();
-        if (typeClass == null)
-            return null;
-
-        if (List.class.isAssignableFrom(typeClass)) {
-            Type<?> type = of(types);
-            if (type == null)
-                return null;
-            return Type.list(type);
-        }
-        if (Map.class.isAssignableFrom(typeClass)) {
-            Type<?> keyType = of(types);
-            Type<?> valueType = of(types);
-            if (keyType == null)
-                return null;
-            if (valueType == null)
-                return null;
-            return Type.map(keyType, valueType);
-        }
-
-        return of(typeClass);
-    }
-
-    static @Nullable Type<?> of(@Nullable List<Class<?>> types) {
-        if (types == null)
-            return null;
-        return of(types.iterator());
-    }
-
-    static @Nullable Type<?> of(@Nullable Class<?>[] types) {
-        if (types == null)
-            return null;
-        return of(Arrays.asList(types));
-    }
-
-    static @Nullable Type<?> of(@Nullable ParameterizedType generics) {
-        if (generics == null)
-            return null;
-
-        Class<?> typeClass = (Class<?>) generics.getRawType();
-
-        if (List.class.isAssignableFrom(typeClass)) {
-            java.lang.reflect.Type[] typeArgs = generics.getActualTypeArguments();
-            if (typeArgs.length != 1)
-                return null;
-            java.lang.reflect.Type typeArg = typeArgs[0];
-            Type<?> type = typeArg instanceof ParameterizedType ? of((ParameterizedType) typeArg) : of((Class<?>) typeArg);
-            if (type == null)
-                return null;
-            return Type.list(type);
-        }
-        if (Map.class.isAssignableFrom(typeClass)) {
-            java.lang.reflect.Type[] typeArgs = generics.getActualTypeArguments();
-            if (typeArgs.length != 2)
-                return null;
-            java.lang.reflect.Type keyTypeArg = typeArgs[0];
-            Type<?> keyType = keyTypeArg instanceof ParameterizedType ? of((ParameterizedType) keyTypeArg) : of((Class<?>) keyTypeArg);
-            if (keyType == null)
-                return null;
-            java.lang.reflect.Type valueTypeArg = typeArgs[1];
-            Type<?> valueType = valueTypeArg instanceof ParameterizedType ? of((ParameterizedType) valueTypeArg) : of((Class<?>) valueTypeArg);
-            if (valueType == null)
-                return null;
-            return Type.map(keyType, valueType);
-        }
-
-        return of(typeClass);
-    }
-
-    static @Nullable Type<?> of(@Nullable Field field) {
-        if (field == null)
-            return null;
-        if (field.getGenericType() instanceof ParameterizedType)
-            return of((ParameterizedType) field.getGenericType());
-        return of(field.getType());
+    static <T> @NotNull Type<T> custom(@NotNull Class<T> clazz) throws InvalidAnnotationConfigException {
+        return AnnotationConfigManagerImpl.INSTANCE.createCustomObjectType(clazz);
     }
 }

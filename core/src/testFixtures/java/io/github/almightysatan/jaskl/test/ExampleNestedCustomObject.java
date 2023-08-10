@@ -24,42 +24,34 @@ import io.github.almightysatan.jaskl.annotation.Entry;
 
 import java.util.Objects;
 
-public class ExampleCustomObject {
+public class ExampleNestedCustomObject {
 
-    @Entry("exampleString")
-    public String exampleString;
-    @Entry("exampleInt")
-    public int exampleInt;
-    @Entry("exampleEnum")
-    public ExampleEnum exampleEnum;
+    @Entry("exampleNestedCustomObject")
+    public ExampleCustomObject object;
 
-    public ExampleCustomObject() {}
+    public ExampleNestedCustomObject() {}
 
-    public ExampleCustomObject(String exampleString, int exampleInt, ExampleEnum exampleEnum) {
-        this.exampleString = exampleString;
-        this.exampleInt = exampleInt;
-        this.exampleEnum = exampleEnum;
+    public ExampleNestedCustomObject(ExampleCustomObject object) {
+        this.object = object;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ExampleCustomObject that = (ExampleCustomObject) o;
-        return exampleInt == that.exampleInt && Objects.equals(exampleString, that.exampleString) && exampleEnum == that.exampleEnum;
+        ExampleNestedCustomObject that = (ExampleNestedCustomObject) o;
+        return Objects.equals(object, that.object);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(exampleString, exampleInt, exampleEnum);
+        return Objects.hash(object);
     }
 
     @Override
     public String toString() {
-        return "ExampleCustomObject{" +
-                "exampleString='" + exampleString + '\'' +
-                ", exampleInt=" + exampleInt +
-                ", exampleEnum=" + exampleEnum +
+        return "ExampleNestedCustomObject{" +
+                "object=" + object +
                 '}';
     }
 }

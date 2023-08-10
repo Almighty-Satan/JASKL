@@ -20,10 +20,7 @@
 
 package io.github.almightysatan.jaskl.annotation;
 
-import io.github.almightysatan.jaskl.Config;
-import io.github.almightysatan.jaskl.InvalidTypeException;
-import io.github.almightysatan.jaskl.ValidationException;
-import io.github.almightysatan.jaskl.Validator;
+import io.github.almightysatan.jaskl.*;
 import io.github.almightysatan.jaskl.impl.AnnotationConfigManagerImpl;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,6 +48,16 @@ public interface AnnotationConfigManager {
      * @throws ValidationException if a default value fails validation
      */
     <T> @NotNull T init(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException, InvalidTypeException, ValidationException;
+
+    /**
+     * Returns a {@link Type} for the given annotated class.
+     *
+     * @param typeClass a class containing annotated fields
+     * @return the {@link Type}
+     * @param <T> the type of the class
+     * @throws InvalidAnnotationConfigException if the type class is misconfigured
+     */
+    <T> @NotNull Type<T> createCustomObjectType(@NotNull Class<T> typeClass) throws InvalidAnnotationConfigException;
 
     /**
      * Creates a new {@link AnnotationConfigManager}.
