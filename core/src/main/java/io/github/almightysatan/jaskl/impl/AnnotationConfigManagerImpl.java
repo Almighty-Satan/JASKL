@@ -49,6 +49,7 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
         Objects.requireNonNull(annotationClass);
         Objects.requireNonNull(validatorFunction);
         this.validators.put(annotationClass, (Function) validatorFunction);
+        this.typeCache.clear();
     }
 
     @Override
