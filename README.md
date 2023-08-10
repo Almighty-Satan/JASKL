@@ -62,9 +62,7 @@ config.write(); // Save the config
 | List           | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
 | Map            | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
 | Custom Objects | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
-| Comments       | ✅    | ✅     | ❌    | ❌    | ❌          | ❌   | ❌       |
-
-\*¹ Only for supported types  
+| Comments       | ✅    | ✅     | ❌    | ❌    | ❌          | ❌   | ❌       |  
 
 ### Config Entry Validation
 JASKL can automatically validate config entries (e.g. ensure that a number is always greater than zero) and throws a
