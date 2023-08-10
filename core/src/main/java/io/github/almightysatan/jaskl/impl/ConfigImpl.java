@@ -39,9 +39,16 @@ public abstract class ConfigImpl implements Config {
     @Override
     public void registerEntry(@NotNull ConfigEntry<?> entry) {
         Objects.requireNonNull(entry);
-        for (String path : this.getPaths())
-            if (path.startsWith(entry.getPath()) || entry.getPath().startsWith(path))
+
+        String entryPathDot = entry.getPath() + ".";
+        for (String path : this.getPaths()) {
+            if (path.equals(entry.getPath()))
+                throw new IllegalArgumentException(String.format("Duplicate path %s", entry.getPath()));
+
+            if (path.startsWith(entryPathDot) || entry.getPath().startsWith(path + "."))
                 throw new IllegalArgumentException(String.format("Paths have to be prefix-free! %s", entry.getPath()));
+        }
+
         this.entries.put(entry.getPath(), entry);
     }
 
