@@ -33,19 +33,24 @@ import java.util.function.Function;
 
 public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
 
+    public static final AnnotationConfigManager INSTANCE = new AnnotationConfigManagerImpl();
+
     private final Map<Class<?>, Function<Object, Validator<Object>>> validators = new HashMap<>();
+    private final Map<Class<?>, Type<?>> typeCache = new HashMap<>();
 
     public AnnotationConfigManagerImpl() {
         this.registerDefaultAnnotations();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
     public <T> void registerValidatorFunction(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction) {
         Objects.requireNonNull(annotationClass);
         Objects.requireNonNull(validatorFunction);
         this.validators.put(annotationClass, (Function) validatorFunction);
     }
 
+    @Override
     public <T> @NotNull T init(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException, InvalidTypeException, ValidationException {
         Objects.requireNonNull(config);
         Objects.requireNonNull(configClass);
@@ -130,22 +135,29 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
         }
     }
 
-    public <T> @NotNull Type<T> createCustomType(@NotNull Class<T> clazz) throws InvalidAnnotationConfigException {
-        Objects.requireNonNull(clazz);
-        try {
-            Property[] properties = this.loadProperties(clazz, clazz.newInstance(), false, false);
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> @NotNull Type<T> createCustomObjectType(@NotNull Class<T> typeClass) throws InvalidAnnotationConfigException {
+        Objects.requireNonNull(typeClass);
 
-            return new Type<T>() {
+        Type<T> cachedType = (Type<T>) this.typeCache.get(typeClass);
+        if (cachedType != null)
+            return cachedType;
+
+        try {
+            Property[] properties = this.loadProperties(typeClass, typeClass.newInstance(), false, false);
+
+            Type<T> type = new Type<T>() {
                 @SuppressWarnings("unchecked")
                 @Override
                 public @NotNull T toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException {
-                    if (clazz.isAssignableFrom(value.getClass()))
+                    if (typeClass.isAssignableFrom(value.getClass()))
                         return (T) value;
                     if (value instanceof Map) {
                         Map<String, ?> mapValue = (Map<String, ?>) value;
 
                         try {
-                            T instance = clazz.newInstance();
+                            T instance = typeClass.newInstance();
                             for (Property property : properties) {
                                 Object propertyValue = mapValue.get(property.path);
                                 if (propertyValue == null)
@@ -174,6 +186,8 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
                     return Collections.unmodifiableMap(map);
                 }
             };
+            this.typeCache.put(typeClass, type);
+            return type;
         } catch (InstantiationException | IllegalAccessException e) {
             throw new InvalidAnnotationConfigException(e);
         }

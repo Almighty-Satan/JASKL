@@ -20,8 +20,8 @@
 
 package io.github.almightysatan.jaskl;
 
-import io.github.almightysatan.jaskl.annotation.AnnotationConfigManager;
 import io.github.almightysatan.jaskl.annotation.InvalidAnnotationConfigException;
+import io.github.almightysatan.jaskl.impl.AnnotationConfigManagerImpl;
 import io.github.almightysatan.jaskl.impl.SimpleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -284,7 +284,7 @@ public interface Type<T> {
     }
 
     static <T> @NotNull Type<T> custom(@NotNull Class<T> clazz) throws InvalidAnnotationConfigException {
-        return AnnotationConfigManager.create().createCustomType(clazz);
+        return AnnotationConfigManagerImpl.INSTANCE.createCustomObjectType(clazz);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

@@ -49,7 +49,7 @@ public interface AnnotationConfigManager {
      */
     <T> @NotNull T init(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException, InvalidTypeException, ValidationException;
 
-    <T> @NotNull Type<T> createCustomType(@NotNull Class<T> clazz);
+    <T> @NotNull Type<T> createCustomObjectType(@NotNull Class<T> typeClass);
 
     /**
      * Creates a new {@link AnnotationConfigManager}.
