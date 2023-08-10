@@ -103,7 +103,7 @@ public class ConfigTest {
      * Test if a config's values can be loaded successfully.
      * This test requires a predefined config file with inserted values.
      */
-    public static void testValidation(Supplier<Config> configSupplier) throws IOException {
+    public static void testValidation(Supplier<Config> configSupplier) {
         Config config0 = configSupplier.get();
 
         Assertions.assertThrows(ValidationException.class, () -> IntegerConfigEntry.of(config0, "example.integer", "Example Integer", 0, Validator.INTEGER_NOT_ZERO));
