@@ -45,14 +45,14 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public <T> void registerValidatorFunction(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction) {
+    public <T> void addValidatorFunction(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction) {
         Objects.requireNonNull(annotationClass);
         Objects.requireNonNull(validatorFunction);
         this.validators.put(annotationClass, (Function) validatorFunction);
     }
 
     @Override
-    public <T> @NotNull T init(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException, InvalidTypeException, ValidationException {
+    public <T> @NotNull T registerEntries(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException, InvalidTypeException, ValidationException {
         Objects.requireNonNull(config);
         Objects.requireNonNull(configClass);
         try {
@@ -370,34 +370,34 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
     }
 
     private void registerDefaultAnnotations() {
-        this.registerValidator(Validate.DoubleNotZero.class, Validator.DOUBLE_NOT_ZERO);
-        this.registerValidator(Validate.DoubleNotPositive.class, Validator.DOUBLE_NOT_POSITIVE);
-        this.registerValidator(Validate.DoubleNotNegative.class, Validator.DOUBLE_NOT_NEGATIVE);
-        this.registerValidator(Validate.DoublePositive.class, Validator.DOUBLE_POSITIVE);
-        this.registerValidator(Validate.DoubleNegative.class, Validator.DOUBLE_NEGATIVE);
-        this.registerValidator(Validate.FloatNotZero.class, Validator.FLOAT_NOT_ZERO);
-        this.registerValidator(Validate.FloatNotPositive.class, Validator.FLOAT_NOT_POSITIVE);
-        this.registerValidator(Validate.FloatNotNegative.class, Validator.FLOAT_NOT_NEGATIVE);
-        this.registerValidator(Validate.FloatPositive.class, Validator.FLOAT_POSITIVE);
-        this.registerValidator(Validate.FloatNegative.class, Validator.FLOAT_NEGATIVE);
-        this.registerValidator(Validate.IntegerNotZero.class, Validator.INTEGER_NOT_ZERO);
-        this.registerValidator(Validate.IntegerNotPositive.class, Validator.INTEGER_NOT_POSITIVE);
-        this.registerValidator(Validate.IntegerNotNegative.class, Validator.INTEGER_NOT_NEGATIVE);
-        this.registerValidator(Validate.IntegerPositive.class, Validator.INTEGER_POSITIVE);
-        this.registerValidator(Validate.IntegerNegative.class, Validator.INTEGER_NEGATIVE);
-        this.registerValidator(Validate.LongNotZero.class, Validator.LONG_NOT_ZERO);
-        this.registerValidator(Validate.LongNotPositive.class, Validator.LONG_NOT_POSITIVE);
-        this.registerValidator(Validate.LongNotNegative.class, Validator.LONG_NOT_NEGATIVE);
-        this.registerValidator(Validate.LongPositive.class, Validator.LONG_POSITIVE);
-        this.registerValidator(Validate.LongNegative.class, Validator.LONG_NEGATIVE);
-        this.registerValidator(Validate.StringNotEmpty.class, Validator.STRING_NOT_EMPTY);
-        this.registerValidatorFunction(Validate.StringMinLength.class, annotation -> Validator.stringMinLength(annotation.value()));
-        this.registerValidatorFunction(Validate.StringMaxLength.class, annotation -> Validator.stringMaxLength(annotation.value()));
-        this.registerValidator(Validate.ListNotEmpty.class, Validator.listNotEmpty());
-        this.registerValidatorFunction(Validate.ListMinSize.class, annotation -> Validator.listMinSize(annotation.value()));
-        this.registerValidatorFunction(Validate.ListMaxSize.class, annotation -> Validator.listMaxSize(annotation.value()));
-        this.registerValidator(Validate.MapNotEmpty.class, Validator.mapNotEmpty());
-        this.registerValidatorFunction(Validate.MapMinSize.class, annotation -> Validator.mapMinSize(annotation.value()));
-        this.registerValidatorFunction(Validate.MapMaxSize.class, annotation -> Validator.mapMaxSize(annotation.value()));
+        this.addValidator(Validate.DoubleNotZero.class, Validator.DOUBLE_NOT_ZERO);
+        this.addValidator(Validate.DoubleNotPositive.class, Validator.DOUBLE_NOT_POSITIVE);
+        this.addValidator(Validate.DoubleNotNegative.class, Validator.DOUBLE_NOT_NEGATIVE);
+        this.addValidator(Validate.DoublePositive.class, Validator.DOUBLE_POSITIVE);
+        this.addValidator(Validate.DoubleNegative.class, Validator.DOUBLE_NEGATIVE);
+        this.addValidator(Validate.FloatNotZero.class, Validator.FLOAT_NOT_ZERO);
+        this.addValidator(Validate.FloatNotPositive.class, Validator.FLOAT_NOT_POSITIVE);
+        this.addValidator(Validate.FloatNotNegative.class, Validator.FLOAT_NOT_NEGATIVE);
+        this.addValidator(Validate.FloatPositive.class, Validator.FLOAT_POSITIVE);
+        this.addValidator(Validate.FloatNegative.class, Validator.FLOAT_NEGATIVE);
+        this.addValidator(Validate.IntegerNotZero.class, Validator.INTEGER_NOT_ZERO);
+        this.addValidator(Validate.IntegerNotPositive.class, Validator.INTEGER_NOT_POSITIVE);
+        this.addValidator(Validate.IntegerNotNegative.class, Validator.INTEGER_NOT_NEGATIVE);
+        this.addValidator(Validate.IntegerPositive.class, Validator.INTEGER_POSITIVE);
+        this.addValidator(Validate.IntegerNegative.class, Validator.INTEGER_NEGATIVE);
+        this.addValidator(Validate.LongNotZero.class, Validator.LONG_NOT_ZERO);
+        this.addValidator(Validate.LongNotPositive.class, Validator.LONG_NOT_POSITIVE);
+        this.addValidator(Validate.LongNotNegative.class, Validator.LONG_NOT_NEGATIVE);
+        this.addValidator(Validate.LongPositive.class, Validator.LONG_POSITIVE);
+        this.addValidator(Validate.LongNegative.class, Validator.LONG_NEGATIVE);
+        this.addValidator(Validate.StringNotEmpty.class, Validator.STRING_NOT_EMPTY);
+        this.addValidatorFunction(Validate.StringMinLength.class, annotation -> Validator.stringMinLength(annotation.value()));
+        this.addValidatorFunction(Validate.StringMaxLength.class, annotation -> Validator.stringMaxLength(annotation.value()));
+        this.addValidator(Validate.ListNotEmpty.class, Validator.listNotEmpty());
+        this.addValidatorFunction(Validate.ListMinSize.class, annotation -> Validator.listMinSize(annotation.value()));
+        this.addValidatorFunction(Validate.ListMaxSize.class, annotation -> Validator.listMaxSize(annotation.value()));
+        this.addValidator(Validate.MapNotEmpty.class, Validator.mapNotEmpty());
+        this.addValidatorFunction(Validate.MapMinSize.class, annotation -> Validator.mapMinSize(annotation.value()));
+        this.addValidatorFunction(Validate.MapMaxSize.class, annotation -> Validator.mapMaxSize(annotation.value()));
     }
 }

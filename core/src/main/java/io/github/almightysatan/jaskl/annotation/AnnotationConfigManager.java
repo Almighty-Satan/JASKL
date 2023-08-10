@@ -29,15 +29,17 @@ import java.util.function.Function;
 
 public interface AnnotationConfigManager {
 
-    <T> void registerValidatorFunction(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction);
+    <T> void addValidatorFunction(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction);
 
-    default void registerValidator(@NotNull Class<?> annotationClass, @NotNull Validator<?> validator) {
+    default void addValidator(@NotNull Class<?> annotationClass, @NotNull Validator<?> validator) {
         Objects.requireNonNull(validator);
-        this.registerValidatorFunction(annotationClass, annotation -> validator);
+        this.addValidatorFunction(annotationClass, annotation -> validator);
     }
 
     /**
-     * Registers config entries for the given annotated class.
+     * Registers config entries for the given annotated class and returns an instance of that class.
+     * The returned instance can be used to read and modify the values of these config entries. Values are validated
+     * when the config is loaded/written.
      *
      * @param config a config instance
      * @param configClass a class containing annotated fields
@@ -47,7 +49,7 @@ public interface AnnotationConfigManager {
      * @throws InvalidTypeException if a default value fails type checking
      * @throws ValidationException if a default value fails validation
      */
-    <T> @NotNull T init(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException, InvalidTypeException, ValidationException;
+    <T> @NotNull T registerEntries(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException, InvalidTypeException, ValidationException;
 
     /**
      * Returns a {@link Type} for the given annotated class.
