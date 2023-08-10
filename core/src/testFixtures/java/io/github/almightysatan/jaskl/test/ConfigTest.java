@@ -182,6 +182,7 @@ public class ConfigTest {
         Config config = configSupplier.get();
         BooleanConfigEntry.of(config, "example.boolean", "Example Boolean", false);
         Assertions.assertThrows(IllegalArgumentException.class, () -> BooleanConfigEntry.of(config, "example.boolean", "Example Boolean", false));
+        config.close();
     }
 
     /**
@@ -390,6 +391,8 @@ public class ConfigTest {
 
         Assertions.assertEquals("modified", stringConfigEntry2.getValue());
         Assertions.assertEquals(0, intConfigEntry2.getValue());
+
+        config2.close();
     }
 
     /**
@@ -438,6 +441,8 @@ public class ConfigTest {
 
         Assertions.assertEquals(map0New, mapConfigEntry0New.getValue());
         Assertions.assertEquals(map1, mapConfigEntry1New.getValue());
+
+        config2.close();
     }
 
     /**
@@ -496,6 +501,8 @@ public class ConfigTest {
         annotationConfig1.annotationTestString = null;
 
         Assertions.assertThrows(InvalidTypeException.class, config1::write);
+
+        config1.close();
     }
 
     public static void testAnnotationMap(Supplier<Config> configSupplier) throws IOException {
@@ -526,5 +533,7 @@ public class ConfigTest {
 
         Assertions.assertEquals("Hello World", annotationConfig1.test0.get(11).get(5));
         Assertions.assertEquals("Hello World", ((Map<?, ?>) annotationConfig1.test1.get(11)).get(5));
+
+        config1.close();
     }
 }
