@@ -32,7 +32,7 @@ public interface LongConfigEntry extends ConfigEntry<Long> {
         class LongConfigEntryImpl extends WritableConfigEntryImpl<Long> implements LongConfigEntry {
             LongConfigEntryImpl() {
                 super(Type.validated(Type.LONG, validators), path, description, defaultValue);
-                this.register(config);
+                config.registerEntry(this);
             }
         }
 

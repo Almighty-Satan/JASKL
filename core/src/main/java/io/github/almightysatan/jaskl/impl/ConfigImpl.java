@@ -36,6 +36,7 @@ public abstract class ConfigImpl implements Config {
         this.description = description;
     }
 
+    @Override
     public void registerEntry(@NotNull ConfigEntry<?> entry) {
         Objects.requireNonNull(entry);
         for (String path : this.getPaths())

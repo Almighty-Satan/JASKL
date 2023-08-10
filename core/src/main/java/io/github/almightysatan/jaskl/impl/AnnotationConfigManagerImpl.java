@@ -61,7 +61,7 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
 
             for (Property property : this.loadProperties(configClass, instance, true, true, Collections.emptySet())) {
                 WritableConfigEntry<?> entry = new WritableAnnotationConfigEntry<>(property.type, property.path, property.description, property.defaultValue, property.field, instance);
-                entry.register(config);
+                config.registerEntry(entry);
             }
 
             return instance;

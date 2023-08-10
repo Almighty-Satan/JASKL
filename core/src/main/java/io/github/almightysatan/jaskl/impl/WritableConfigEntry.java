@@ -20,10 +20,12 @@
 
 package io.github.almightysatan.jaskl.impl;
 
-import io.github.almightysatan.jaskl.*;
+import io.github.almightysatan.jaskl.ConfigEntry;
+import io.github.almightysatan.jaskl.InvalidTypeException;
+import io.github.almightysatan.jaskl.Type;
+import io.github.almightysatan.jaskl.ValidationException;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.function.Function;
 
 public interface WritableConfigEntry<T> extends ConfigEntry<T> {
@@ -39,10 +41,4 @@ public interface WritableConfigEntry<T> extends ConfigEntry<T> {
     }
 
     boolean isModified();
-
-    default WritableConfigEntry<T> register(@NotNull Config config) {
-        Objects.requireNonNull(config);
-        ((ConfigImpl) config).registerEntry(this);
-        return this;
-    }
 }

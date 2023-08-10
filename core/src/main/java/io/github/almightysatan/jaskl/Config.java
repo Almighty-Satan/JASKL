@@ -20,11 +20,19 @@
 
 package io.github.almightysatan.jaskl;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
 public interface Config {
+
+    /**
+     * Registers the given config entry
+     *
+     * @param entry the config entry
+     */
+    void registerEntry(@NotNull ConfigEntry<?> entry);
 
     /**
      * Loads the config from a storage location.
