@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.function.Function;
 
@@ -57,7 +58,7 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
         try {
             T instance = configClass.newInstance();
 
-            for (Property property : this.loadProperties(configClass, instance, true, true)) {
+            for (Property property : this.loadProperties(configClass, instance, true, true, Collections.emptySet())) {
                 WritableConfigEntry<?> entry = new WritableAnnotationConfigEntry<>(property.type, property.path, property.description, property.defaultValue, property.field, instance);
                 entry.register(config);
             }
@@ -135,17 +136,30 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T> @NotNull Type<T> createCustomObjectType(@NotNull Class<T> typeClass) throws InvalidAnnotationConfigException {
+        return this.createCustomObjectType(typeClass, Collections.emptySet());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> @NotNull Type<T> createCustomObjectType(@NotNull Class<T> typeClass, @NotNull Set<Class<?>> parentCustomTypes) throws InvalidAnnotationConfigException {
         Objects.requireNonNull(typeClass);
 
         Type<T> cachedType = (Type<T>) this.typeCache.get(typeClass);
         if (cachedType != null)
             return cachedType;
 
+        if (parentCustomTypes.contains(typeClass))
+            throw new InvalidAnnotationConfigException("Circular type references are not allowed");
+
+        parentCustomTypes = new HashSet<>(parentCustomTypes);
+        parentCustomTypes.add(typeClass);
+
         try {
-            Property[] properties = this.loadProperties(typeClass, typeClass.newInstance(), false, false);
+            Property[] properties = this.loadProperties(typeClass, typeClass.newInstance(), false, false, parentCustomTypes);
+
+            if (properties.length == 0)
+                throw new InvalidAnnotationConfigException("No annotated fields found");
 
             Type<T> type = new Type<T>() {
                 @SuppressWarnings("unchecked")
@@ -194,7 +208,8 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
     }
 
     private <T> @NotNull Property[] loadProperties(@NotNull Class<T> clazz, @NotNull T instance, boolean loadDescription,
-                                                   boolean loadDefaultValue) throws IllegalAccessException, InvalidAnnotationConfigException {
+                                                   boolean loadDefaultValue, @NotNull Set<Class<?>> parentCustomTypes)
+            throws IllegalAccessException, InvalidAnnotationConfigException {
         List<Property> properties = new ArrayList<>();
 
         for (Field field : clazz.getFields()) {
@@ -213,7 +228,7 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
 
                 TypeHint typeHintAnnotation = field.getAnnotation(TypeHint.class);
                 @SuppressWarnings("unchecked")
-                Type<Object> type = (Type<Object>) (typeHintAnnotation != null ? Type.of(typeHintAnnotation.value()) : Type.of(field));
+                Type<Object> type = (Type<Object>) (typeHintAnnotation != null ? this.resolveType(typeHintAnnotation.value(), parentCustomTypes) : this.resolveType(field, parentCustomTypes));
                 if (type == null)
                     throw new InvalidAnnotationConfigException(String.format("Unknown type for field %s", field.getName()));
 
@@ -256,6 +271,102 @@ public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
             this.type = type;
             this.defaultValue = defaultValue;
         }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private @Nullable Type<?> resolveType(@Nullable Class<?> typeClass, @NotNull Set<Class<?>> parentTypes) {
+        if (typeClass == null)
+            return null;
+        if (typeClass == boolean.class || typeClass == Boolean.class)
+            return Type.BOOLEAN;
+        if (typeClass == double.class || typeClass == Double.class)
+            return Type.DOUBLE;
+        if (typeClass == float.class || typeClass == Float.class)
+            return Type.FLOAT;
+        if (typeClass == int.class || typeClass == Integer.class)
+            return Type.INTEGER;
+        if (typeClass == long.class || typeClass == Long.class)
+            return Type.LONG;
+        if (typeClass == String.class)
+            return Type.STRING;
+        if (typeClass.isEnum())
+            return Type.enumType((Class<? extends Enum>) typeClass);
+        if (this.typeCache.containsKey(typeClass) | Arrays.stream(typeClass.getFields()).anyMatch(field -> field.getAnnotation(Entry.class) != null))
+            return this.createCustomObjectType(typeClass, parentTypes);
+        return null;
+    }
+
+    private @Nullable Type<?> resolveType(@Nullable Iterator<Class<?>> typeClasses, @NotNull Set<Class<?>> parentCustomTypes) {
+        if (typeClasses == null || !typeClasses.hasNext())
+            return null;
+
+        Class<?> typeClass = typeClasses.next();
+        if (typeClass == null)
+            return null;
+
+        if (List.class.isAssignableFrom(typeClass)) {
+            Type<?> type = this.resolveType(typeClasses, parentCustomTypes);
+            if (type == null)
+                return null;
+            return Type.list(type);
+        }
+        if (Map.class.isAssignableFrom(typeClass)) {
+            Type<?> keyType = this.resolveType(typeClasses, parentCustomTypes);
+            Type<?> valueType = this.resolveType(typeClasses, parentCustomTypes);
+            if (keyType == null)
+                return null;
+            if (valueType == null)
+                return null;
+            return Type.map(keyType, valueType);
+        }
+
+        return this.resolveType(typeClass, parentCustomTypes);
+    }
+
+    private @Nullable Type<?> resolveType(@Nullable Class<?>[] typeClasses, @NotNull Set<Class<?>> parentCustomTypes) {
+        return this.resolveType(Arrays.asList(typeClasses).iterator(), parentCustomTypes);
+    }
+
+    private @Nullable Type<?> resolveType(@Nullable ParameterizedType generics, @NotNull Set<Class<?>> parentCustomTypes) {
+        if (generics == null)
+            return null;
+
+        Class<?> typeClass = (Class<?>) generics.getRawType();
+
+        if (List.class.isAssignableFrom(typeClass)) {
+            java.lang.reflect.Type[] typeArgs = generics.getActualTypeArguments();
+            if (typeArgs.length != 1)
+                return null;
+            java.lang.reflect.Type typeArg = typeArgs[0];
+            Type<?> type = typeArg instanceof ParameterizedType ? this.resolveType((ParameterizedType) typeArg, parentCustomTypes) : this.resolveType((Class<?>) typeArg, parentCustomTypes);
+            if (type == null)
+                return null;
+            return Type.list(type);
+        }
+        if (Map.class.isAssignableFrom(typeClass)) {
+            java.lang.reflect.Type[] typeArgs = generics.getActualTypeArguments();
+            if (typeArgs.length != 2)
+                return null;
+            java.lang.reflect.Type keyTypeArg = typeArgs[0];
+            Type<?> keyType = keyTypeArg instanceof ParameterizedType ? this.resolveType((ParameterizedType) keyTypeArg, parentCustomTypes) : this.resolveType((Class<?>) keyTypeArg, parentCustomTypes);
+            if (keyType == null)
+                return null;
+            java.lang.reflect.Type valueTypeArg = typeArgs[1];
+            Type<?> valueType = valueTypeArg instanceof ParameterizedType ? this.resolveType((ParameterizedType) valueTypeArg, parentCustomTypes) : this.resolveType((Class<?>) valueTypeArg, parentCustomTypes);
+            if (valueType == null)
+                return null;
+            return Type.map(keyType, valueType);
+        }
+
+        return this.resolveType(typeClass, parentCustomTypes);
+    }
+
+    private @Nullable Type<?> resolveType(@Nullable Field field, @NotNull Set<Class<?>> parentCustomTypes) {
+        if (field == null)
+            return null;
+        if (field.getGenericType() instanceof ParameterizedType)
+            return this.resolveType((ParameterizedType) field.getGenericType(), parentCustomTypes);
+        return this.resolveType(field.getType(), parentCustomTypes);
     }
 
     private void registerDefaultAnnotations() {
