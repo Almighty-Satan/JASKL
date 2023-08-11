@@ -143,7 +143,7 @@ public class AnnotationManagerImpl implements AnnotationManager {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> @NotNull Type<T> createCustomObjectType(@NotNull Class<T> typeClass, @NotNull Set<Class<?>> parentCustomClasses) throws InvalidAnnotationConfigException {
+    private <T> @NotNull Type<T> createCustomObjectType(@NotNull Class<T> typeClass, @NotNull Set<Class<?>> parentCustomClasses) throws InvalidAnnotationConfigException {
         Objects.requireNonNull(typeClass);
 
         Type<T> cachedType = (Type<T>) this.typeCache.get(typeClass);
