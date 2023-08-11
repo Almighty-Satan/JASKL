@@ -450,8 +450,8 @@ public class ConfigTest {
         config0.close();
 
         Config config1 = configSupplier.get();
-        ConfigEntry<ExampleCustomObject> entry2 = CustomConfigEntry.of(config1, "example.custom", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE), ExampleCustomObject.class);
-        ConfigEntry<ExampleNestedCustomObject> entry3 = CustomConfigEntry.of(config1, "example.nestedCustom", "Hello World", new ExampleNestedCustomObject(new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE)), ExampleNestedCustomObject.class);
+        ConfigEntry<ExampleCustomObject> entry2 = CustomConfigEntry.of(config1, "example.custom", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE));
+        ConfigEntry<ExampleNestedCustomObject> entry3 = CustomConfigEntry.of(config1, "example.nestedCustom", "Hello World", new ExampleNestedCustomObject(new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE)));
 
         Assertions.assertThrows(InvalidAnnotationConfigException.class, () -> CustomConfigEntry.of(config1, "example.nestedCustom", new ExampleCircularCustomObject(), ExampleCircularCustomObject.class));
 

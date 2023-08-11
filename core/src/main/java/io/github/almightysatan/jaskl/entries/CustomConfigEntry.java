@@ -43,4 +43,16 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
     static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull T defaultValue, @NotNull Class<T> clazz, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, clazz, validators);
     }
+
+    @SuppressWarnings("unchecked")
+    @SafeVarargs
+    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+        return of(config, path, description, defaultValue, (Class<T>) defaultValue.getClass(), validators);
+    }
+
+    @SuppressWarnings("unchecked")
+    @SafeVarargs
+    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull T defaultValue, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+        return of(config, path, defaultValue, (Class<T>) defaultValue.getClass(), validators);
+    }
 }
