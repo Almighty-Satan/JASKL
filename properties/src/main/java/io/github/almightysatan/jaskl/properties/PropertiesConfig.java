@@ -117,27 +117,6 @@ public class PropertiesConfig extends ConfigImpl {
     }
 
     /**
-     * Creates a new {@link PropertiesConfig} instance.
-     *
-     * @param file The properties file. The file will be created automatically if it does not already exist.
-     * @param description The description (comment) of this config file.
-     * @return A new {@link PropertiesConfig} instance.
-     */
-    public static Config of(@NotNull File file, @Nullable String description) {
-        return new PropertiesConfig(file, description);
-    }
-
-    /**
-     * Creates a new {@link PropertiesConfig} instance.
-     *
-     * @param file The properties file. The file will be created automatically if it does not already exist.
-     * @return A new {@link PropertiesConfig} instance.
-     */
-    public static Config of(@NotNull File file) {
-        return new PropertiesConfig(file, null);
-    }
-
-    /**
      * Takes the current property instance and saves it to the file
      * @throws IOException If an I/O exception occurs.
      */
@@ -168,5 +147,26 @@ public class PropertiesConfig extends ConfigImpl {
             if (value != null)
                 configEntry.putValue(value);
         }
+    }
+
+    /**
+     * Creates a new {@link PropertiesConfig} instance.
+     *
+     * @param file The properties file. The file will be created automatically if it does not already exist.
+     * @param description The description (comment) of this config file.
+     * @return A new {@link PropertiesConfig} instance.
+     */
+    public static Config of(@NotNull File file, @Nullable String description) {
+        return new PropertiesConfig(file, description);
+    }
+
+    /**
+     * Creates a new {@link PropertiesConfig} instance.
+     *
+     * @param file The properties file. The file will be created automatically if it does not already exist.
+     * @return A new {@link PropertiesConfig} instance.
+     */
+    public static Config of(@NotNull File file) {
+        return new PropertiesConfig(file, null);
     }
 }

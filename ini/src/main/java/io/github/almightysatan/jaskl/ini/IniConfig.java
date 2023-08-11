@@ -118,27 +118,6 @@ public class IniConfig extends ConfigImpl {
     }
 
     /**
-     * Creates a new {@link IniConfig} instance.
-     *
-     * @param file The ini file. The file will be created automatically if it does not already exist.
-     * @param description The description (comment) of this config file.
-     * @return A new {@link IniConfig} instance.
-     */
-    public static Config of(@NotNull File file, @Nullable String description) {
-        return new IniConfig(file, description);
-    }
-
-    /**
-     * Creates a new {@link IniConfig} instance.
-     *
-     * @param file The ini file. The file will be created automatically if it does not already exist.
-     * @return A new {@link IniConfig} instance.
-     */
-    public static Config of(@NotNull File file) {
-        return new IniConfig(file, null);
-    }
-
-    /**
      * Takes the current property instance and saves it to the file
      * @throws IOException if an IO error occurs
      */
@@ -177,5 +156,26 @@ public class IniConfig extends ConfigImpl {
         String section = path.contains(".") ? path.substring(0, path.lastIndexOf('.')) : "section";
         String key = !path.contains(".") ? path : path.substring(path.lastIndexOf('.') + 1);
         return new String[] { section, key };
+    }
+
+    /**
+     * Creates a new {@link IniConfig} instance.
+     *
+     * @param file The ini file. The file will be created automatically if it does not already exist.
+     * @param description The description (comment) of this config file.
+     * @return A new {@link IniConfig} instance.
+     */
+    public static Config of(@NotNull File file, @Nullable String description) {
+        return new IniConfig(file, description);
+    }
+
+    /**
+     * Creates a new {@link IniConfig} instance.
+     *
+     * @param file The ini file. The file will be created automatically if it does not already exist.
+     * @return A new {@link IniConfig} instance.
+     */
+    public static Config of(@NotNull File file) {
+        return new IniConfig(file, null);
     }
 }
