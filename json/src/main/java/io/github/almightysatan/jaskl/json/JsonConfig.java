@@ -39,6 +39,7 @@ public class JsonConfig extends JacksonConfigImpl {
      * @param file The json file. The file will be created automatically if it does not already exist.
      * @param description The description (comment) of this config file.
      * @return A new {@link JsonConfig} instance.
+     * @deprecated This config implementation does not support comments. Use {@link #of(File)} instead.
      */
     @Deprecated
     public static JsonConfig of(@NotNull File file, @Nullable String description) {

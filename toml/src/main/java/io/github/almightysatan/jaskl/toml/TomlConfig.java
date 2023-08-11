@@ -41,6 +41,7 @@ public class TomlConfig extends JacksonConfigImpl {
      * @param file The toml file. The file will be created automatically if it does not already exist.
      * @param description The description (comment) of this config file.
      * @return A new {@link TomlConfig} instance.
+     * @deprecated This config implementation does not support comments. Use {@link #of(File)} instead.
      */
     @Deprecated
     public static Config of(@NotNull File file, @Nullable String description) {
