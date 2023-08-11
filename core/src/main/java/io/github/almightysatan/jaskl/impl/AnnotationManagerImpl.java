@@ -32,14 +32,14 @@ import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.function.Function;
 
-public class AnnotationConfigManagerImpl implements AnnotationConfigManager {
+public class AnnotationManagerImpl implements AnnotationManager {
 
-    public static final AnnotationConfigManager INSTANCE = new AnnotationConfigManagerImpl();
+    public static final AnnotationManager INSTANCE = new AnnotationManagerImpl();
 
     private final Map<Class<?>, Function<Object, Validator<Object>>> validators = new HashMap<>();
     private final Map<Class<?>, Type<?>> typeCache = new HashMap<>();
 
-    public AnnotationConfigManagerImpl() {
+    public AnnotationManagerImpl() {
         this.registerDefaultAnnotations();
     }
 

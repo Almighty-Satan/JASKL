@@ -90,12 +90,12 @@ public class ExampleAnnotationConfig {
 }
 ```
 ```java
-AnnotationConfigManager annotationConfigManager = AnnotationConfigManager.create(); // Create an AnnotationConfigManager. This instance can be reused.
+AnnotationManager annotationManager = AnnotationManager.create(); // Create an AnnotationManager. This instance can be reused.
 
 Config yamlConfig = YamlConfig.of(file); // Create a config
 
 // Register our annotated class
-ExampleAnnotationConfig config = annotationConfigManager.registerEntries(yamlConfig, ExampleAnnotationConfig.class);
+ExampleAnnotationConfig config = annotationManager.registerEntries(yamlConfig, ExampleAnnotationConfig.class);
 
 yamlConfig.load(); // Load the config from storage
 

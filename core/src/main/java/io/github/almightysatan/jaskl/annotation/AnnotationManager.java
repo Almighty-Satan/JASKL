@@ -21,13 +21,13 @@
 package io.github.almightysatan.jaskl.annotation;
 
 import io.github.almightysatan.jaskl.*;
-import io.github.almightysatan.jaskl.impl.AnnotationConfigManagerImpl;
+import io.github.almightysatan.jaskl.impl.AnnotationManagerImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.function.Function;
 
-public interface AnnotationConfigManager {
+public interface AnnotationManager {
 
     <T> void addValidatorFunction(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction);
 
@@ -62,11 +62,11 @@ public interface AnnotationConfigManager {
     <T> @NotNull Type<T> createCustomObjectType(@NotNull Class<T> typeClass) throws InvalidAnnotationConfigException;
 
     /**
-     * Creates a new {@link AnnotationConfigManager}.
+     * Creates a new {@link AnnotationManager}.
      *
      * @return a new instance
      */
-    static @NotNull AnnotationConfigManager create() {
-        return new AnnotationConfigManagerImpl();
+    static @NotNull AnnotationManager create() {
+        return new AnnotationManagerImpl();
     }
 }

@@ -21,7 +21,7 @@
 package io.github.almightysatan.jaskl.test;
 
 import io.github.almightysatan.jaskl.*;
-import io.github.almightysatan.jaskl.annotation.AnnotationConfigManager;
+import io.github.almightysatan.jaskl.annotation.AnnotationManager;
 import io.github.almightysatan.jaskl.annotation.InvalidAnnotationConfigException;
 import io.github.almightysatan.jaskl.entries.*;
 import org.junit.jupiter.api.Assertions;
@@ -463,10 +463,10 @@ public class ConfigTest {
     }
 
     public static void testAnnotation(Supplier<Config> configSupplier) throws IOException {
-        AnnotationConfigManager annotationConfigManager = AnnotationConfigManager.create();
+        AnnotationManager annotationManager = AnnotationManager.create();
 
         Config config0 = configSupplier.get();
-        ExampleAnnotationConfig annotationConfig0 = annotationConfigManager.registerEntries(config0, ExampleAnnotationConfig.class);
+        ExampleAnnotationConfig annotationConfig0 = annotationManager.registerEntries(config0, ExampleAnnotationConfig.class);
 
         config0.load();
 
@@ -478,7 +478,7 @@ public class ConfigTest {
         config0.close();
 
         Config config1 = configSupplier.get();
-        ExampleAnnotationConfig annotationConfig1 = annotationConfigManager.registerEntries(config1, ExampleAnnotationConfig.class);
+        ExampleAnnotationConfig annotationConfig1 = annotationManager.registerEntries(config1, ExampleAnnotationConfig.class);
 
         config1.load();
 
@@ -496,10 +496,10 @@ public class ConfigTest {
     }
 
     public static void testAnnotationMap(Supplier<Config> configSupplier) throws IOException {
-        AnnotationConfigManager annotationConfigManager = AnnotationConfigManager.create();
+        AnnotationManager annotationManager = AnnotationManager.create();
 
         Config config0 = configSupplier.get();
-        ExampleAnnotationMapConfig annotationConfig0 = annotationConfigManager.registerEntries(config0, ExampleAnnotationMapConfig.class);
+        ExampleAnnotationMapConfig annotationConfig0 = annotationManager.registerEntries(config0, ExampleAnnotationMapConfig.class);
 
         config0.load();
 
@@ -517,7 +517,7 @@ public class ConfigTest {
         config0.close();
 
         Config config1 = configSupplier.get();
-        ExampleAnnotationMapConfig annotationConfig1 = annotationConfigManager.registerEntries(config1, ExampleAnnotationMapConfig.class);
+        ExampleAnnotationMapConfig annotationConfig1 = annotationManager.registerEntries(config1, ExampleAnnotationMapConfig.class);
 
         config1.load();
 
