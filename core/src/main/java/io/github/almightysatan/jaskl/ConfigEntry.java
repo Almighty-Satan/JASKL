@@ -67,23 +67,13 @@ public interface ConfigEntry<T> {
 
     @SafeVarargs
     static <T> @NotNull ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue, Type<T> type, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
-        ConfigEntry<T> entry = new WritableConfigEntryImpl<>(Type.validated(type, validators), path, description, defaultValue);
-        config.registerEntry(entry);
+        WritableConfigEntryImpl<T> entry = new WritableConfigEntryImpl<>(Type.validated(type, validators), path, description, defaultValue);
+        entry.register(config);
         return entry;
     }
 
     @SafeVarargs
     static <T> @NotNull ConfigEntry<T> of(@NotNull Config config, @NotNull String path, T defaultValue, Type<T> type, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, type, validators);
-    }
-
-    @SafeVarargs
-    static <T> @NotNull ConfigEntry<T> of(@NotNull String path, @Nullable String description, T defaultValue, Type<T> type, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
-        return new WritableConfigEntryImpl<>(Type.validated(type, validators), path, description, defaultValue);
-    }
-
-    @SafeVarargs
-    static <T> @NotNull ConfigEntry<T> of(@NotNull String path, T defaultValue, Type<T> type, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
-        return of(path, null, defaultValue, type, validators);
     }
 }
