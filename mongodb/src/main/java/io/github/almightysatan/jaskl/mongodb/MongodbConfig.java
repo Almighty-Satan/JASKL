@@ -20,14 +20,14 @@
 
 package io.github.almightysatan.jaskl.mongodb;
 
-import io.github.almightysatan.jaskl.impl.ConfigImpl;
-import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.*;
+import io.github.almightysatan.jaskl.impl.ConfigImpl;
+import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
@@ -145,8 +145,8 @@ public class MongodbConfig extends ConfigImpl {
     /**
      * Creates a new {@link MongodbConfig} instance.
      *
-     * @param address The address of the database. Example: {@code username:password@localhost:27017}
-     * @param database The name of the database
+     * @param address    The address of the database. Example: {@code username:password@localhost:27017}
+     * @param database   The name of the database
      * @param collection The name of the collection
      * @return A new {@link MongodbConfig} instance
      */

@@ -118,16 +118,18 @@ public class PropertiesConfig extends ConfigImpl {
 
     /**
      * Takes the current property instance and saves it to the file
+     *
      * @throws IOException If an I/O exception occurs.
      */
     private void writeToFile() throws IOException {
-        try (FileWriter writer = new FileWriter(file)){
+        try (FileWriter writer = new FileWriter(file)) {
             this.config.store(writer, this.getDescription());
         }
     }
 
     /**
      * Populates the property instance with the values from the file
+     *
      * @throws IOException If an I/O exception occurs.
      */
     private void readFromFile() throws IOException {
@@ -152,7 +154,7 @@ public class PropertiesConfig extends ConfigImpl {
     /**
      * Creates a new {@link PropertiesConfig} instance.
      *
-     * @param file The properties file. The file will be created automatically if it does not already exist.
+     * @param file        The properties file. The file will be created automatically if it does not already exist.
      * @param description The description (comment) of this config file.
      * @return A new {@link PropertiesConfig} instance.
      */

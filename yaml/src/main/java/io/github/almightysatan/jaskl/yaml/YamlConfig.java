@@ -231,7 +231,7 @@ public class YamlConfig extends ConfigImpl {
     /**
      * Creates a new {@link YamlConfig} instance.
      *
-     * @param file The yaml file. The file will be created automatically if it does not already exist.
+     * @param file        The yaml file. The file will be created automatically if it does not already exist.
      * @param description The description (comment) of this config file.
      * @return A new {@link YamlConfig} instance.
      */

@@ -33,10 +33,9 @@ import java.io.IOException;
 import java.util.*;
 
 import static io.github.almightysatan.jaskl.test.ConfigTest.*;
-import static io.github.almightysatan.jaskl.test.ConfigTest.testCustom;
 
 public class MongodbConfigTest {
-    
+
     private static final String DATABASE = "JASKL_Test";
     private static final String COLLECTION_EXAMPLE = "example";
     private static final String COLLECTION_0 = "test0";

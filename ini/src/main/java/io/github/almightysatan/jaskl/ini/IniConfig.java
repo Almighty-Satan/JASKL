@@ -20,6 +20,7 @@
 
 package io.github.almightysatan.jaskl.ini;
 
+import com.github.vincentrussell.ini.Ini;
 import io.github.almightysatan.jaskl.Config;
 import io.github.almightysatan.jaskl.ConfigEntry;
 import io.github.almightysatan.jaskl.entries.ListConfigEntry;
@@ -27,11 +28,13 @@ import io.github.almightysatan.jaskl.entries.MapConfigEntry;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
-import com.github.vincentrussell.ini.Ini;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -119,16 +122,18 @@ public class IniConfig extends ConfigImpl {
 
     /**
      * Takes the current property instance and saves it to the file
+     *
      * @throws IOException if an IO error occurs
      */
     private void writeToFile() throws IOException {
-        try (FileWriter writer = new FileWriter(file)){
+        try (FileWriter writer = new FileWriter(file)) {
             this.config.store(writer, this.getDescription());
         }
     }
 
     /**
      * Populates the property instance with the values from the file
+     *
      * @throws IOException if an IO error occurs
      */
     private void readFromFile() throws IOException {
@@ -155,13 +160,13 @@ public class IniConfig extends ConfigImpl {
         String path = entry.getPath();
         String section = path.contains(".") ? path.substring(0, path.lastIndexOf('.')) : "section";
         String key = !path.contains(".") ? path : path.substring(path.lastIndexOf('.') + 1);
-        return new String[] { section, key };
+        return new String[]{section, key};
     }
 
     /**
      * Creates a new {@link IniConfig} instance.
      *
-     * @param file The ini file. The file will be created automatically if it does not already exist.
+     * @param file        The ini file. The file will be created automatically if it does not already exist.
      * @param description The description (comment) of this config file.
      * @return A new {@link IniConfig} instance.
      */

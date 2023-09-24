@@ -29,10 +29,10 @@ public interface Config {
     /**
      * Loads the config from a storage location.
      *
-     * @throws IOException if an I/O exception occurs.
+     * @throws IOException           if an I/O exception occurs.
      * @throws IllegalStateException if called multiple times.
-     * @throws InvalidTypeException if a value does not match its expected {@link Type}
-     * @throws ValidationException if a value fails validation
+     * @throws InvalidTypeException  if a value does not match its expected {@link Type}
+     * @throws ValidationException   if a value fails validation
      */
     void load() throws IOException, IllegalStateException, InvalidTypeException, ValidationException;
 
@@ -41,19 +41,19 @@ public interface Config {
      * Assumes that {@link Config#load()} has been called already.
      * No files/data storage locations will be created or initialized.
      *
-     * @throws IOException if an I/O exception occurs.
+     * @throws IOException           if an I/O exception occurs.
      * @throws IllegalStateException if {@link Config#load()} hasn't been called.
-     * @throws InvalidTypeException if a value does not match its expected {@link Type}
-     * @throws ValidationException if a value fails validation
+     * @throws InvalidTypeException  if a value does not match its expected {@link Type}
+     * @throws ValidationException   if a value fails validation
      */
     void reload() throws IOException, IllegalStateException, InvalidTypeException, ValidationException;
 
     /**
      * Saves the configuration to it's corresponding data storage location.
      *
-     * @throws IOException if an I/O exception occurs.
+     * @throws IOException          if an I/O exception occurs.
      * @throws InvalidTypeException if a value does not match its expected {@link Type}
-     * @throws ValidationException if a value fails validation
+     * @throws ValidationException  if a value fails validation
      */
     void write() throws IOException, InvalidTypeException, ValidationException;
 

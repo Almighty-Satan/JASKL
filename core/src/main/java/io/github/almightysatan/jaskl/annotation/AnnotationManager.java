@@ -41,13 +41,13 @@ public interface AnnotationManager {
      * The returned instance can be used to read and modify the values of these config entries. Values are validated
      * when the config is loaded/written.
      *
-     * @param config a config instance
+     * @param config      a config instance
      * @param configClass a class containing annotated fields
+     * @param <T>         the type of the class
      * @return an instance of the given class
-     * @param <T> the type of the class
      * @throws InvalidAnnotationConfigException if the config class is misconfigured
-     * @throws InvalidTypeException if a default value fails type checking
-     * @throws ValidationException if a default value fails validation
+     * @throws InvalidTypeException             if a default value fails type checking
+     * @throws ValidationException              if a default value fails validation
      */
     <T> @NotNull T registerEntries(@NotNull Config config, @NotNull Class<T> configClass) throws InvalidAnnotationConfigException, InvalidTypeException, ValidationException;
 
@@ -55,8 +55,8 @@ public interface AnnotationManager {
      * Returns a {@link Type} for the given annotated class.
      *
      * @param typeClass a class containing annotated fields
+     * @param <T>       the type of the class
      * @return the {@link Type}
-     * @param <T> the type of the class
      * @throws InvalidAnnotationConfigException if the type class is misconfigured
      */
     <T> @NotNull Type<T> createCustomObjectType(@NotNull Class<T> typeClass) throws InvalidAnnotationConfigException;
