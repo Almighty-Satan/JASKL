@@ -32,7 +32,7 @@ public interface IntegerConfigEntry extends ConfigEntry<Integer> {
         class IntegerConfigEntryImpl extends WritableConfigEntryImpl<Integer> implements IntegerConfigEntry {
             IntegerConfigEntryImpl() {
                 super(Type.validated(Type.INTEGER, validators), path, description, defaultValue);
-                config.registerEntry(this);
+                this.register(config);
             }
         }
 

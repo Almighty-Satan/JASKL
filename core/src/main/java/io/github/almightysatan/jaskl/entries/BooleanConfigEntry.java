@@ -32,7 +32,7 @@ public interface BooleanConfigEntry extends ConfigEntry<Boolean> {
         class BooleanConfigEntryImpl extends WritableConfigEntryImpl<Boolean> implements BooleanConfigEntry {
             BooleanConfigEntryImpl() {
                 super(Type.validated(Type.BOOLEAN, validators), path, description, defaultValue);
-                config.registerEntry(this);
+                this.register(config);
             }
         }
 

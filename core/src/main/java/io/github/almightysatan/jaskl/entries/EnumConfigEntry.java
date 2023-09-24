@@ -33,7 +33,7 @@ public interface EnumConfigEntry<T extends Enum<T>> extends ConfigEntry<T> {
             @SuppressWarnings({"unchecked", "rawtypes"})
             EnumConfigEntryImpl() {
                 super(Type.validated(Type.enumType((Class) defaultValue.getClass()), validators), path, description, defaultValue);
-                config.registerEntry(this);
+                this.register(config);
             }
         }
 

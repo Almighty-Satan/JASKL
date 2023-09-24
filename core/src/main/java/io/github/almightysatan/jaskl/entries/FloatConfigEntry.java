@@ -32,7 +32,7 @@ public interface FloatConfigEntry extends ConfigEntry<Float> {
         class FloatConfigEntryImpl extends WritableConfigEntryImpl<Float> implements FloatConfigEntry {
             FloatConfigEntryImpl() {
                 super(Type.validated(Type.FLOAT, validators), path, description, defaultValue);
-                config.registerEntry(this);
+                this.register(config);
             }
         }
 

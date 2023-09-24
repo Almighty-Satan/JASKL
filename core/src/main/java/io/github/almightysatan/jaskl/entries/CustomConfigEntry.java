@@ -32,7 +32,7 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
         class CustomConfigEntryImpl extends WritableConfigEntryImpl<T> implements CustomConfigEntry<T> {
             CustomConfigEntryImpl() {
                 super(Type.validated(Type.custom(clazz), validators), path, description, defaultValue);
-                config.registerEntry(this);
+                this.register(config);
             }
         }
 

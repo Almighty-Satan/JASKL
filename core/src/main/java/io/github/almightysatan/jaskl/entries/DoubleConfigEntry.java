@@ -32,7 +32,7 @@ public interface DoubleConfigEntry extends ConfigEntry<Double> {
         class DoubleConfigEntryImpl extends WritableConfigEntryImpl<Double> implements DoubleConfigEntry {
             DoubleConfigEntryImpl() {
                 super(Type.validated(Type.DOUBLE, validators), path, description, defaultValue);
-                config.registerEntry(this);
+                this.register(config);
             }
         }
 

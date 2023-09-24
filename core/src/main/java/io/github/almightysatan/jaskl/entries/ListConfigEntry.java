@@ -34,7 +34,7 @@ public interface ListConfigEntry<T> extends ConfigEntry<List<T>> {
         class ListConfigEntryImpl extends WritableConfigEntryImpl<List<T>> implements ListConfigEntry<T> {
             ListConfigEntryImpl() {
                 super(Type.validated(Type.list(type), validators), path, description, defaultValue);
-                config.registerEntry(this);
+                this.register(config);
             }
         }
 

@@ -32,7 +32,7 @@ public interface StringConfigEntry extends ConfigEntry<String> {
         class StringConfigEntryImpl extends WritableConfigEntryImpl<String> implements StringConfigEntry {
             StringConfigEntryImpl() {
                 super(Type.validated(Type.STRING, validators), path, description, defaultValue);
-                config.registerEntry(this);
+                this.register(config);
             }
         }
 

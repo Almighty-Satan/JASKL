@@ -34,7 +34,7 @@ public interface MapConfigEntry<K, V> extends ConfigEntry<Map<K, V>> {
         class MapConfigEntryImpl extends WritableConfigEntryImpl<Map<K, V>> implements MapConfigEntry<K, V> {
             MapConfigEntryImpl() {
                 super(Type.validated(Type.map(keyType, valueType), validators), path, description, defaultValue);
-                config.registerEntry(this);
+                this.register(config);
             }
         }
 
