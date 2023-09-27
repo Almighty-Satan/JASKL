@@ -89,6 +89,8 @@ public class ConfigTest {
         ConfigEntry<Integer> integerConfigEntry = IntegerConfigEntry.of(config, "example.integer", "Example Integer", 0);
         ConfigEntry<Long> longConfigEntry = LongConfigEntry.of(config, "example.long", "Example Long", 0L);
         ConfigEntry<String> stringConfigEntry = StringConfigEntry.of(config, "example.string", "Example String", "default");
+        
+        ConfigEntry<String> specialCharEntry = StringConfigEntry.of(config, "example.special-char_entry", "Example String with special chars in the path", "de-fau_lt");
 
         config.load();
 
@@ -98,6 +100,7 @@ public class ConfigTest {
         Assertions.assertEquals(1, integerConfigEntry.getValue());
         Assertions.assertEquals(1L, longConfigEntry.getValue());
         Assertions.assertEquals("modified", stringConfigEntry.getValue());
+        Assertions.assertEquals("spe-ci_al", specialCharEntry.getValue());
 
         config.close();
     }
