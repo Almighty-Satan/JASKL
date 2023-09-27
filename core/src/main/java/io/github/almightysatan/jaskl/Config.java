@@ -1,6 +1,6 @@
 /*
  * JASKL - Just Another Simple Konfig Library
- * Copyright (C) 2023 UeberallGebannt, Almighty-Satan
+ * Copyright (C) 2023 LeStegii, Almighty-Satan
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

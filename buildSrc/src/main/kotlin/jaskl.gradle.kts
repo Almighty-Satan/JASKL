@@ -63,8 +63,8 @@ publishing {
                         url.set("https://github.com/Almighty-Satan")
                     }
                     developer {
-                        name.set("UeberallGebannt")
-                        url.set("https://github.com/UeberallGebannt")
+                        name.set("LeStegii")
+                        url.set("https://github.com/LeStegii")
                     }
                 }
                 scm {
