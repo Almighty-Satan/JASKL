@@ -72,6 +72,7 @@ public class MongodbConfigTest {
             documents.add(new Document().append("_id", "example.integer").append("value", 1));
             documents.add(new Document().append("_id", "example.long").append("value", 1L));
             documents.add(new Document().append("_id", "example.string").append("value", "modified"));
+            documents.add(new Document().append("_id", "example.special-char_entry").append("value", "spe-ci_al"));
             documents.add(new Document().append("_id", "example.enum").append("value", "ANOTHER_EXAMPLE"));
             documents.add(new Document().append("_id", "example.list").append("value", Arrays.asList("Example3", "Example4")));
             documents.add(new Document().append("_id", "example.map").append("value", map));
