@@ -32,6 +32,8 @@ import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 public class MongodbConfig extends ConfigImpl {
@@ -97,7 +99,12 @@ public class MongodbConfig extends ConfigImpl {
         for (WritableConfigEntry<?> configEntry : this.getCastedValues())
             if (configEntry.isModified()) {
                 Document document = new Document();
-                document.put("value", configEntry.getValueToWrite(Object::toString));
+                Object value = configEntry.getValueToWrite(Object::toString);
+                if (value instanceof BigInteger)
+                    value = value.toString();
+                if (value instanceof BigDecimal)
+                    value = value.toString();
+                document.put("value", value);
 
                 Document updateDocument = new Document();
                 updateDocument.put("$set", document);
