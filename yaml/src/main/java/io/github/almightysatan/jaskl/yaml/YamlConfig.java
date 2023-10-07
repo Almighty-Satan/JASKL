@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 public class YamlConfig extends ConfigImpl {
@@ -148,7 +149,11 @@ public class YamlConfig extends ConfigImpl {
         WritableConfigEntry<?> entry = (WritableConfigEntry<?>) this.getEntries().get(path);
         if (entry == null)
             return false;
-        Object value = CONSTRUCTOR.constructObject(node);
+        Object value;
+        if (node.getTag() == Tag.FLOAT && node instanceof ScalarNode)
+            value = new BigDecimal(((ScalarNode) node).getValue());
+        else
+            value = CONSTRUCTOR.constructObject(node);
         if (value != null)
             entry.putValue(value);
         return true;

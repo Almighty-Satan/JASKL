@@ -20,6 +20,7 @@
 
 package io.github.almightysatan.jaskl.hocon;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -82,6 +83,12 @@ public class HoconConfigTest {
     @Test
     public void testWriteAndLoadHocon() throws IOException {
         testWriteAndLoad(() -> HoconConfig.of(file1), file1);
+    }
+
+    @Disabled
+    @Test
+    public void testWriteAndLoadBigHocon() throws IOException {
+        testWriteAndLoadBig(() -> HoconConfig.of(file1), file1);
     }
 
     @Test

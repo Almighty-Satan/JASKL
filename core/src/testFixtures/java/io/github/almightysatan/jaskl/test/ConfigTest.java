@@ -28,6 +28,8 @@ import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -89,7 +91,7 @@ public class ConfigTest {
         ConfigEntry<Integer> integerConfigEntry = IntegerConfigEntry.of(config, "example.integer", "Example Integer", 0);
         ConfigEntry<Long> longConfigEntry = LongConfigEntry.of(config, "example.long", "Example Long", 0L);
         ConfigEntry<String> stringConfigEntry = StringConfigEntry.of(config, "example.string", "Example String", "default");
-        
+
         ConfigEntry<String> specialCharEntry = StringConfigEntry.of(config, "example.special-char_entry", "Example String with special chars in the path", "de-fau_lt");
 
         config.load();
@@ -214,6 +216,32 @@ public class ConfigTest {
         Assertions.assertEquals(1, intConfigEntry1.getValue());
 
         config1.close();
+    }
+
+    public static void testWriteAndLoadBig(Supplier<Config> configSupplier, File file) throws IOException {
+        if (file != null && file.exists() && !file.delete())
+            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
+
+        Config config0 = configSupplier.get();
+
+        ConfigEntry<BigDecimal> bigDecimalConfigEntry0 = BigDecimalConfigEntry.of(config0, "example.bigdecimal", "Example BigDecimal", new BigDecimal("99.000000000000000001"));
+        ConfigEntry<BigInteger> bigIntegerConfigEntry0 = BigIntegerConfigEntry.of(config0, "example.biginteger", "Example BigInteger", new BigInteger("9923372036854775807"));
+
+        config0.load();
+        config0.write();
+        config0.close();
+
+        if (file != null)
+            Assertions.assertTrue(file.exists());
+
+        Config config1 = configSupplier.get();
+        ConfigEntry<BigDecimal> bigDecimalConfigEntry1 = BigDecimalConfigEntry.of(config1, "example.bigdecimal", "Example BigDecimal", new BigDecimal("0"));
+        ConfigEntry<BigInteger> bigIntegerConfigEntry1 = BigIntegerConfigEntry.of(config1, "example.biginteger", "Example BigInteger", BigInteger.valueOf(0L));
+
+        config1.load();
+
+        Assertions.assertEquals(bigDecimalConfigEntry0.getValue(), bigDecimalConfigEntry1.getValue());
+        Assertions.assertEquals(bigIntegerConfigEntry0.getValue(), bigIntegerConfigEntry1.getValue());
     }
 
     /**

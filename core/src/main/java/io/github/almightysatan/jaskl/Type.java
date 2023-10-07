@@ -197,6 +197,47 @@ public interface Type<T> {
         throw new InvalidTypeException(String.class, value.getClass());
     };
 
+    Type<BigInteger> BIG_INTEGER = (SimpleType<BigInteger>) value -> {
+        if (value instanceof BigInteger)
+            return (BigInteger) value;
+
+        if (value instanceof Integer)
+            return BigInteger.valueOf((Integer)value);
+
+        if (value instanceof Long)
+            return BigInteger.valueOf((Long) value);
+
+        if (value instanceof String) {
+            try {
+                return new BigInteger((String) value);
+            } catch (NumberFormatException ignored) {}
+        }
+
+        throw new InvalidTypeException(BigInteger.class, value.getClass());
+    };
+
+    Type<BigDecimal> BIG_DECIMAL = (SimpleType<BigDecimal>) value -> {
+        if (value instanceof BigDecimal)
+            return (BigDecimal) value;
+
+        if (value instanceof Double)
+            return BigDecimal.valueOf((Double) value);
+
+        if (value instanceof Integer)
+            return BigDecimal.valueOf((Integer) value);
+
+        if (value instanceof Long)
+            return BigDecimal.valueOf((Long) value);
+
+        if (value instanceof String) {
+            try {
+                return new BigDecimal((String) value);
+            } catch (NumberFormatException ignored) {}
+        }
+
+        throw new InvalidTypeException(BigDecimal.class, value.getClass());
+    };
+
     @SuppressWarnings("unchecked")
     static <T extends Enum<T>> @NotNull Type<T> enumType(@NotNull Class<T> clazz) {
         Objects.requireNonNull(clazz);

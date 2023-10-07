@@ -85,6 +85,11 @@ public class TomlConfigTest {
     }
 
     @Test
+    public void testWriteAndLoadBigToml() throws IOException {
+        testWriteAndLoadBig(() -> TomlConfig.of(file1), file1);
+    }
+
+    @Test
     public void testWriteAndLoadListToml() throws IOException {
         testWriteAndLoadList(() -> TomlConfig.of(file1), file1);
     }
