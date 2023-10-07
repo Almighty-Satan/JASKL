@@ -85,7 +85,6 @@ public class HoconConfigTest {
         testWriteAndLoad(() -> HoconConfig.of(file1), file1);
     }
 
-    @Disabled
     @Test
     public void testWriteAndLoadBigHocon() throws IOException {
         testWriteAndLoadBig(() -> HoconConfig.of(file1), file1);

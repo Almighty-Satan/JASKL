@@ -58,7 +58,7 @@ config.write(); // Save the config
 | Long                    | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
 | Float                   | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
 | Double                  | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| BigInteger / BigDecimal | ✅    | ❌     | ✅    | ✅    | ✅          | ❌   | ✅       |
+| BigInteger / BigDecimal | ✅    | ✅     | ✅    | ✅    | ✅          | ❌   | ✅       |
 | Enum                    | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
 | List                    | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
 | Map                     | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
