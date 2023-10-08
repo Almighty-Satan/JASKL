@@ -46,26 +46,25 @@ config.write(); // Save the config
 | JSON       | JavaScript Object Notation                                                          | [Jackson](https://github.com/FasterXML/jackson)                                             |
 | TOML       | A very easy to read config supporting sub categories and many different data types. | [Jackson](https://github.com/FasterXML/jackson)                                             |
 | Properties | A very simple implementation for minimalistic config systems.                       | [java.util.Properties](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html) |
-| Ini        | A simple text-based configuration format                                            | [java-ini-parser](https://github.com/vincentrussell/java-ini-parser)                        |
 | MongoDB    | A NoSQL database based implementation for complex configs with remote saves.        | [mongodb-driver](https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync)        |
 
 ### Config Entry Types
-| Type                    | YAML | Hocon | JSON | TOML | Properties | Ini | MongoDB |
-|-------------------------|------|-------|------|------|------------|-----|---------|
-| String                  | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| Boolean                 | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| Integer                 | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| Long                    | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| Float                   | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| Double                  | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| BigInteger / BigDecimal | ✅    | ✅     | ✅    | ✅    | ✅          | ❌   | ✅       |
-| Enum                    | ✅    | ✅     | ✅    | ✅    | ✅          | ✅   | ✅       |
-| List                    | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
-| Map                     | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
-| Custom Objects          | ✅    | ✅     | ✅    | ✅    | ❌          | ❌   | ✅       |
-| Comments                | ✅    | ✅     | ❌    | ❌    | ✅*¹        | ✅*¹ | ❌       |  
+| Type                    | YAML | Hocon | JSON | TOML | Properties | MongoDB |
+|-------------------------|------|-------|------|------|------------|---------|
+| String                  | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Boolean                 | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Integer                 | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Long                    | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Float                   | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Double                  | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| BigInteger / BigDecimal | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Enum                    | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| List                    | ✅    | ✅     | ✅    | ✅    | ❌          | ✅       |
+| Map                     | ✅    | ✅     | ✅    | ✅    | ❌          | ✅       |
+| Custom Objects          | ✅    | ✅     | ✅    | ✅    | ❌          | ✅       |
+| Comments                | ✅    | ✅     | ❌    | ❌    | ✅*¹        | ❌       |  
 
-*¹ Properties and Ini only allow for a single comment at the beginning of the file
+*¹ Properties only allows for a single comment at the beginning of the file
 
 ### Config Entry Validation
 JASKL can automatically validate config entries (e.g. ensure that a number is always greater than zero) and throws a
