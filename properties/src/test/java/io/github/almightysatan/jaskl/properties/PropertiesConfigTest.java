@@ -90,6 +90,11 @@ public class PropertiesConfigTest {
     }
 
     @Test
+    public void testWriteAndLoadBigProperties() throws IOException {
+        testWriteAndLoadBig(() -> PropertiesConfig.of(file1), file1);
+    }
+
+    @Test
     public void testWriteAndLoadListProperties() {
         Assertions.assertThrows(
                 UnsupportedOperationException.class,

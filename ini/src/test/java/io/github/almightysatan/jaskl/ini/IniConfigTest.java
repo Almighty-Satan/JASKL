@@ -21,6 +21,7 @@
 package io.github.almightysatan.jaskl.ini;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -87,6 +88,12 @@ public class IniConfigTest {
     @Test
     public void testWriteAndLoadIni() throws IOException {
         testWriteAndLoad(() -> IniConfig.of(file1), file1);
+    }
+
+    @Disabled
+    @Test
+    public void testWriteAndLoadBigIni() throws IOException {
+        testWriteAndLoadBig(() -> IniConfig.of(file1), file1);
     }
 
     @Test

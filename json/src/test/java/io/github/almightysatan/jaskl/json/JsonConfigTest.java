@@ -85,6 +85,11 @@ public class JsonConfigTest {
     }
 
     @Test
+    public void testWriteAndLoadBigJson() throws IOException {
+        testWriteAndLoadBig(() -> JsonConfig.of(file1), file1);
+    }
+
+    @Test
     public void testWriteAndLoadListJson() throws IOException {
         testWriteAndLoadList(() -> JsonConfig.of(file1), file1);
     }

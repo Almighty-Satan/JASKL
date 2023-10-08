@@ -30,7 +30,10 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.comments.CommentLine;
 import org.yaml.snakeyaml.comments.CommentType;
+import org.yaml.snakeyaml.constructor.AbstractConstruct;
+import org.yaml.snakeyaml.constructor.ConstructorException;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.error.Mark;
 import org.yaml.snakeyaml.nodes.*;
 import org.yaml.snakeyaml.representer.Representer;
 
@@ -38,6 +41,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 public class YamlConfig extends ConfigImpl {
@@ -275,11 +279,40 @@ public class YamlConfig extends ConfigImpl {
 
         public CustomConstructor() {
             super(new LoaderOptions().setProcessComments(true));
+            this.yamlConstructors.put(Tag.FLOAT, new ConstructYamlFloat());
         }
 
         @Override
         protected Object constructObject(Node node) {
             return super.constructObject(node);
+        }
+
+        private class ConstructYamlFloat extends AbstractConstruct {
+
+            @Override
+            public Object construct(Node node) {
+                String value = constructScalar((ScalarNode) node).replace("_", "").toLowerCase();
+                if (value.isEmpty())
+                    throw new JasklConstructorException("while constructing a BigDecimal", node.getStartMark(), "found empty value", node.getStartMark());
+                switch (value) {
+                    case ".inf":
+                    case "+.inf":
+                        return Double.POSITIVE_INFINITY;
+                    case "-.inf":
+                        return Double.NEGATIVE_INFINITY;
+                    case ".nan":
+                    case "+.nan":
+                    case "-.nan":
+                        return Double.NaN;
+                }
+                return new BigDecimal(value);
+            }
+        }
+
+        private static class JasklConstructorException extends ConstructorException {
+            protected JasklConstructorException(String context, Mark contextMark, String problem, Mark problemMark) {
+                super(context, contextMark, problem, problemMark);
+            }
         }
     }
 }

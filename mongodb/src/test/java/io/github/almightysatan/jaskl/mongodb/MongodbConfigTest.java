@@ -48,6 +48,8 @@ public class MongodbConfigTest {
     private static final String COLLECTION_7 = "test7";
     private static final String COLLECTION_8 = "test8";
     private static final String COLLECTION_9 = "test9";
+    private static final String COLLECTION_10 = "test10";
+    private static final String COLLECTION_11 = "test11";
 
     private static String mongoAddress;
 
@@ -132,47 +134,52 @@ public class MongodbConfigTest {
     }
 
     @Test
+    public void testWriteAndLoadBigMongo() throws IOException {
+        testWriteAndLoadBig(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_2), null);
+    }
+
+    @Test
     public void testWriteAndLoadListMongo() throws IOException {
-        testWriteAndLoadList(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_2), null);
+        testWriteAndLoadList(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_3), null);
     }
 
     @Test
     public void testWriteAndLoadList2Mongo() throws IOException {
-        testWriteAndLoadList2(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_3), null);
+        testWriteAndLoadList2(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_4), null);
     }
 
     @Test
     public void testWriteAndLoadListEnumMongo() throws IOException {
-        testWriteAndLoadListEnum(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_4), null);
+        testWriteAndLoadListEnum(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_5), null);
     }
 
     @Test
     public void testWriteAndLoadMapMongo() throws IOException {
-        testWriteAndLoadMap(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_5), null);
+        testWriteAndLoadMap(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_6), null);
     }
 
     @Test
     public void testStripMongo() throws IOException {
-        testStrip(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_6), null);
+        testStrip(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_7), null);
     }
 
     @Test
     public void testStripMapMongo() throws IOException {
-        testStripMap(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_7), null);
+        testStripMap(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_8), null);
     }
 
     @Test
     public void testCustomMongo() throws IOException {
-        testCustom(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_8));
+        testCustom(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_9));
     }
 
     @Test
     public void testAnnotationMongo() throws IOException {
-        testAnnotation(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_9));
+        testAnnotation(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_10));
     }
 
     @Test
     public void testAnnotationMapMongo() throws IOException {
-        testAnnotationMap(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_9));
+        testAnnotationMap(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_11));
     }
 }

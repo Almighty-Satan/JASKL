@@ -31,6 +31,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -85,7 +87,12 @@ public class HoconConfig extends ConfigImpl {
 
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             if (configEntry.isModified()) {
-                ConfigValue value = ConfigValueFactory.fromAnyRef(configEntry.getValueToWrite(Object::toString));
+                Object entryValue = configEntry.getValueToWrite(Object::toString);
+                if (entryValue instanceof BigInteger)
+                    entryValue = entryValue.toString();
+                if (entryValue instanceof BigDecimal)
+                    entryValue = entryValue.toString();
+                ConfigValue value = ConfigValueFactory.fromAnyRef(entryValue);
                 if (configEntry.getDescription() != null)
                     value = value.withOrigin(value.origin().withComments(Collections.singletonList(configEntry.getDescription())));
                 config = config.withValue(configEntry.getPath(), value);
