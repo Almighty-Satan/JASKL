@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     api(project(":core"))
-    implementation("org.yaml:snakeyaml:2.1")
+    implementation("org.yaml:snakeyaml:2.2")
 }
