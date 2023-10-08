@@ -202,7 +202,7 @@ public interface Type<T> {
             return (BigInteger) value;
 
         if (value instanceof Integer)
-            return BigInteger.valueOf((Integer)value);
+            return BigInteger.valueOf((Integer) value);
 
         if (value instanceof Long)
             return BigInteger.valueOf((Long) value);
