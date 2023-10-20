@@ -91,10 +91,10 @@ public class YamlConfig extends ConfigImpl {
             throw new IllegalStateException();
         Util.createFileAndPath(this.file);
 
-        this.setComment(this.root, this.getDescription());
+        this.setComment(this.root, this.description());
 
         boolean shouldWrite = false;
-        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
+        for (WritableConfigEntry<?> configEntry : this.castedValues()) {
             if (configEntry.isModified()) {
                 this.putNode(configEntry);
                 shouldWrite = true;
@@ -113,7 +113,7 @@ public class YamlConfig extends ConfigImpl {
             throw new IllegalStateException();
         Util.createFileAndPath(this.file);
 
-        if (this.stripNodes("", this.root, this.getPaths()))
+        if (this.stripNodes("", this.root, this.paths()))
             try (FileWriter fileWriter = new FileWriter(this.file)) {
                 this.yaml.serialize(this.root, fileWriter);
             }
@@ -149,7 +149,7 @@ public class YamlConfig extends ConfigImpl {
      * @return true if the entry exists
      */
     protected boolean loadValueIfEntryExists(String path, Node node) {
-        WritableConfigEntry<?> entry = (WritableConfigEntry<?>) this.getEntries().get(path);
+        WritableConfigEntry<?> entry = (WritableConfigEntry<?>) this.entries().get(path);
         if (entry == null)
             return false;
         Object value = CONSTRUCTOR.constructObject(node);
@@ -159,7 +159,7 @@ public class YamlConfig extends ConfigImpl {
     }
 
     protected void putNode(@NotNull WritableConfigEntry<?> entry) {
-        String[] pathSplit = entry.getPath().split("\\.");
+        String[] pathSplit = entry.path().split("\\.");
         MappingNode node = this.root;
         pathLoop: for (int i = 0; i < pathSplit.length; i++) {
             for (NodeTuple tuple : node.getValue()) {
@@ -172,7 +172,7 @@ public class YamlConfig extends ConfigImpl {
                         node.getValue().replaceAll(nodeTuple -> {
                             if (nodeTuple != tuple)
                                 return nodeTuple;
-                            return this.newNodeTuple(pathSplit[pathSplit.length - 1], entry.getDescription(), entry.getValueToWrite());
+                            return this.newNodeTuple(pathSplit[pathSplit.length - 1], entry.description(), entry.valueToWrite());
                         });
                         return;
                     }
@@ -185,7 +185,7 @@ public class YamlConfig extends ConfigImpl {
                 node.getValue().add(new NodeTuple(this.yaml.represent(pathSplit[i]), newNode));
                 node = newNode;
             } else {
-                node.getValue().add(this.newNodeTuple(pathSplit[pathSplit.length - 1], entry.getDescription(), entry.getValueToWrite()));
+                node.getValue().add(this.newNodeTuple(pathSplit[pathSplit.length - 1], entry.description(), entry.valueToWrite()));
                 return;
             }
         }

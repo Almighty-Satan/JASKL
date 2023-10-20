@@ -39,20 +39,20 @@ public abstract class ConfigImpl implements Config {
     public void registerEntry(@NotNull ConfigEntry<?> entry) {
         Objects.requireNonNull(entry);
 
-        String entryPathDot = entry.getPath() + ".";
-        for (String path : this.getPaths()) {
-            if (path.equals(entry.getPath()))
-                throw new IllegalArgumentException(String.format("Duplicate path %s", entry.getPath()));
+        String entryPathDot = entry.path() + ".";
+        for (String path : this.paths()) {
+            if (path.equals(entry.path()))
+                throw new IllegalArgumentException(String.format("Duplicate path %s", entry.path()));
 
-            if (path.startsWith(entryPathDot) || entry.getPath().startsWith(path + "."))
-                throw new IllegalArgumentException(String.format("Paths have to be prefix-free! %s", entry.getPath()));
+            if (path.startsWith(entryPathDot) || entry.path().startsWith(path + "."))
+                throw new IllegalArgumentException(String.format("Paths have to be prefix-free! %s", entry.path()));
         }
 
-        this.entries.put(entry.getPath(), entry);
+        this.entries.put(entry.path(), entry);
     }
 
     @Override
-    public @Nullable String getDescription() {
+    public @Nullable String description() {
         return description;
     }
 
@@ -61,7 +61,7 @@ public abstract class ConfigImpl implements Config {
      *
      * @return a map of all paths with their config entries
      */
-    public @NotNull Map<String, ConfigEntry<?>> getEntries() {
+    public @NotNull Map<String, ConfigEntry<?>> entries() {
         return entries;
     }
 
@@ -70,8 +70,8 @@ public abstract class ConfigImpl implements Config {
      *
      * @return a set of all the paths of the config entries
      */
-    public @NotNull Set<String> getPaths() {
-        return this.getEntries().keySet();
+    public @NotNull Set<String> paths() {
+        return this.entries().keySet();
     }
 
     /**
@@ -79,12 +79,12 @@ public abstract class ConfigImpl implements Config {
      *
      * @return a collection of all config entries
      */
-    public @NotNull Collection<ConfigEntry<?>> getValues() {
-        return this.getEntries().values();
+    public @NotNull Collection<ConfigEntry<?>> values() {
+        return this.entries().values();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected @NotNull Collection<WritableConfigEntry<?>> getCastedValues() {
-        return (Collection<WritableConfigEntry<?>>) (Collection) getEntries().values();
+    protected @NotNull Collection<WritableConfigEntry<?>> castedValues() {
+        return (Collection<WritableConfigEntry<?>>) (Collection) entries().values();
     }
 }

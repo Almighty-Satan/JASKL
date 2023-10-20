@@ -85,27 +85,27 @@ public class AnnotationManagerImpl implements AnnotationManager {
         }
 
         @Override
-        public @NotNull T getValue() {
+        public @NotNull T value() {
             this.checkField();
-            return super.getValue();
+            return super.value();
         }
 
         @Override
-        public @NotNull Object getValueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException, ValidationException {
+        public @NotNull Object valueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException, ValidationException {
             this.checkField();
-            return super.getValueToWrite(keyPreprocessor);
+            return super.valueToWrite(keyPreprocessor);
         }
 
         @Override
         public void setValue(@NotNull T value) throws InvalidTypeException, ValidationException {
             super.setValue(value);
-            this.setField(super.getValue());
+            this.setField(super.value());
         }
 
         @Override
         public void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException {
             super.putValue(value);
-            this.setField(super.getValue());
+            this.setField(super.value());
         }
 
         @Override

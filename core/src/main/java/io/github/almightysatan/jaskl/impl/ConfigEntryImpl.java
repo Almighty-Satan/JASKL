@@ -67,17 +67,17 @@ public abstract class ConfigEntryImpl<T> implements ConfigEntry<T> {
     }
 
     @Override
-    public @NotNull String getPath() {
+    public @NotNull String path() {
         return this.path;
     }
 
     @Override
-    public @Nullable String getDescription() {
+    public @Nullable String description() {
         return this.description;
     }
 
     @Override
-    public @NotNull T getDefaultValue() {
+    public @NotNull T defaultValue() {
         return this.defaultValue;
     }
 }

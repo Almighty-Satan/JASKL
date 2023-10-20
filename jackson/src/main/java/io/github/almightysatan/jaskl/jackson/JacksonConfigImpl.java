@@ -73,8 +73,8 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
             throw new IOException(e);
         }
 
-        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
-            JsonNode node = this.resolveNode(configEntry.getPath());
+        for (WritableConfigEntry<?> configEntry : this.castedValues()) {
+            JsonNode node = this.resolveNode(configEntry.path());
             if (node == null)
                 continue;
 
@@ -90,9 +90,9 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
         Util.createFileAndPath(this.file);
 
         boolean shouldWrite = false;
-        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
+        for (WritableConfigEntry<?> configEntry : this.castedValues()) {
             if (configEntry.isModified()) {
-                this.putNode(configEntry.getPath(), this.mapper.valueToTree(configEntry.getValueToWrite()));
+                this.putNode(configEntry.path(), this.mapper.valueToTree(configEntry.valueToWrite()));
                 shouldWrite = true;
             }
         }
@@ -107,7 +107,7 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
             throw new IllegalStateException();
         Util.createFileAndPath(this.file);
 
-        if (stripNodes("", this.root, this.getPaths()))
+        if (stripNodes("", this.root, this.paths()))
             this.mapper.writerWithDefaultPrettyPrinter().writeValue(this.file, this.root);
     }
 

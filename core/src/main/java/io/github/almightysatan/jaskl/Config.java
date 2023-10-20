@@ -75,5 +75,5 @@ public interface Config {
      *
      * @return the description of this config
      */
-    @Nullable String getDescription();
+    @Nullable String description();
 }

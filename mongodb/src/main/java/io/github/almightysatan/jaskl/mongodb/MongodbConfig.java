@@ -79,8 +79,8 @@ public class MongodbConfig extends ConfigImpl {
             throw new IOException(e);
         }
 
-        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
-            Document document = entries.get(configEntry.getPath());
+        for (WritableConfigEntry<?> configEntry : this.castedValues()) {
+            Document document = entries.get(configEntry.path());
 
             if (document != null) {
                 Object value = document.get("value");
@@ -96,10 +96,10 @@ public class MongodbConfig extends ConfigImpl {
             throw new IllegalStateException();
 
         List<WriteModel<? extends Document>> writeModels = new ArrayList<>();
-        for (WritableConfigEntry<?> configEntry : this.getCastedValues())
+        for (WritableConfigEntry<?> configEntry : this.castedValues())
             if (configEntry.isModified()) {
                 Document document = new Document();
-                Object value = configEntry.getValueToWrite(Object::toString);
+                Object value = configEntry.valueToWrite(Object::toString);
                 if (value instanceof BigInteger)
                     value = value.toString();
                 if (value instanceof BigDecimal)
@@ -109,7 +109,7 @@ public class MongodbConfig extends ConfigImpl {
                 Document updateDocument = new Document();
                 updateDocument.put("$set", document);
 
-                writeModels.add(new UpdateOneModel<>(Filters.eq("_id", configEntry.getPath()), updateDocument, UPDATE_OPTIONS));
+                writeModels.add(new UpdateOneModel<>(Filters.eq("_id", configEntry.path()), updateDocument, UPDATE_OPTIONS));
             }
         if (!writeModels.isEmpty())
             try {
@@ -125,7 +125,7 @@ public class MongodbConfig extends ConfigImpl {
             throw new IllegalStateException();
 
         try {
-            Set<String> paths = this.getPaths();
+            Set<String> paths = this.paths();
             List<WriteModel<? extends Document>> writeModels = new ArrayList<>();
             FindIterable<Document> documents = this.mongoCollection.find();
             for (Document document : documents) {

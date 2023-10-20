@@ -75,9 +75,9 @@ public class PropertiesConfig extends ConfigImpl {
         Util.createFileAndPath(this.file);
 
         boolean shouldWrite = false;
-        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
+        for (WritableConfigEntry<?> configEntry : this.castedValues()) {
             if (configEntry.isModified()) {
-                this.config.setProperty(configEntry.getPath(), configEntry.getValueToWrite().toString());
+                this.config.setProperty(configEntry.path(), configEntry.valueToWrite().toString());
                 shouldWrite = true;
             }
         }
@@ -94,7 +94,7 @@ public class PropertiesConfig extends ConfigImpl {
 
         boolean shouldWrite = false;
         Properties stripped = new Properties();
-        Set<String> paths = this.getPaths();
+        Set<String> paths = this.paths();
         for (Entry<Object, Object> entry : this.config.entrySet()) {
             String key = (String) entry.getKey();
             if (!paths.contains(key)) {
@@ -123,7 +123,7 @@ public class PropertiesConfig extends ConfigImpl {
      */
     private void writeToFile() throws IOException {
         try (FileWriter writer = new FileWriter(file)) {
-            this.config.store(writer, this.getDescription());
+            this.config.store(writer, this.description());
         }
     }
 
@@ -142,10 +142,10 @@ public class PropertiesConfig extends ConfigImpl {
      * Initializes all config entries by setting the value based on the property instance
      */
     private void populateEntries() {
-        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
+        for (WritableConfigEntry<?> configEntry : this.castedValues()) {
             if (configEntry instanceof ListConfigEntry || configEntry instanceof MapConfigEntry)
                 throw new UnsupportedOperationException("Lists are not supported in Property Configs.");
-            Object value = this.config.get(configEntry.getPath());
+            Object value = this.config.get(configEntry.path());
             if (value != null)
                 configEntry.putValue(value);
         }
