@@ -29,6 +29,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Function;
 
@@ -288,6 +290,10 @@ public class AnnotationManagerImpl implements AnnotationManager {
             return Type.INTEGER;
         if (typeClass == long.class || typeClass == Long.class)
             return Type.LONG;
+        if (typeClass == BigInteger.class)
+            return Type.BIG_INTEGER;
+        if (typeClass == BigDecimal.class)
+            return Type.BIG_DECIMAL;
         if (typeClass == String.class)
             return Type.STRING;
         if (typeClass.isEnum())
