@@ -32,8 +32,27 @@ public interface WritableConfigEntry<T> extends ConfigEntry<T> {
 
     void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException;
 
+    /**
+     * Returns the value that should be written to a persistent config. This also sets modified to false.
+     *
+     * @param keyPreprocessor a {@link Function} that will be invoked on all map keys
+     * @return a value that can be written to a config
+     * @throws InvalidTypeException if the type of this ConfigEntry's value is incorrect. This shouldn't happen under
+     *                              normal circumstances.
+     * @throws ValidationException  if the value fails validation. This could for example happen when using an
+     *                              {@link io.github.almightysatan.jaskl.annotation.AnnotationManager}.
+     */
     @NotNull Object getValueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException, ValidationException;
 
+    /**
+     * Returns the value that should be written to a persistent config. This also sets modified to false.
+     *
+     * @return a value that can be written to a config
+     * @throws InvalidTypeException if the type of this ConfigEntry's value is incorrect. This shouldn't happen under
+     *                              normal circumstances.
+     * @throws ValidationException  if the value fails validation. This could for example happen when using an
+     *                              {@link io.github.almightysatan.jaskl.annotation.AnnotationManager}.
+     */
     default @NotNull Object getValueToWrite() throws InvalidTypeException, ValidationException {
         return this.getValueToWrite(Function.identity());
     }
