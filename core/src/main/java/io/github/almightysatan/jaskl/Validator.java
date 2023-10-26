@@ -164,6 +164,24 @@ public interface Validator<T> {
 
     Validator<String> STRING_NOT_EMPTY = value -> { if (value.isEmpty()) throw new ValidationException("should not be empty"); };
 
+    Validator<String> STRING_ALPHABETIC = value -> {
+        for (char c : value.toCharArray())
+            if ((c < 0x41 || c > 0x5A) && (c < 0x61 || c > 0x7A))
+                throw new ValidationException("should only contain alphabetic characters");
+    };
+
+    Validator<String> STRING_NUMERIC = value -> {
+        for (char c : value.toCharArray())
+            if (c < 0x30 || c > 0x39)
+                throw new ValidationException("should only contain numbers");
+    };
+
+    Validator<String> STRING_ALPHANUMERIC = value -> {
+        for (char c : value.toCharArray())
+            if ((c < 0x41 || c > 0x5A) && (c < 0x61 || c > 0x7A) && (c < 0x30 || c > 0x39))
+                throw new ValidationException("should only contain alphanumeric characters");
+    };
+
     static @NotNull Validator<String> stringMinLength(int size) { return value -> { if (value.length() < size) throw new ValidationException("should be at least " + size + " characters long"); };}
 
     static @NotNull Validator<String> stringMaxLength(int size) { return value -> { if (value.length() > size) throw new ValidationException("should not be longer than " + size + " characters"); };}
