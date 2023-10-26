@@ -50,6 +50,8 @@ public class AnnotationManagerImpl implements AnnotationManager {
     public <T> void addValidatorFunction(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction) {
         Objects.requireNonNull(annotationClass);
         Objects.requireNonNull(validatorFunction);
+        if (!annotationClass.isAnnotation())
+            throw new IllegalArgumentException("Class is not an annotation");
         this.validators.put(annotationClass, (Function) validatorFunction);
         this.typeCache.clear();
     }
