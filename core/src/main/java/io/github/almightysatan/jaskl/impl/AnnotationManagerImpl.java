@@ -210,8 +210,8 @@ public class AnnotationManagerImpl implements AnnotationManager {
         }
     }
 
-    private <T> @NotNull Property[] loadProperties(@NotNull Class<T> clazz, @NotNull T instance, boolean loadDescription,
-                                                   boolean loadDefaultValue, @NotNull Set<Class<?>> parentCustomClasses)
+    private <T> @NotNull Property @NotNull [] loadProperties(@NotNull Class<T> clazz, @NotNull T instance, boolean loadDescription,
+                                                             boolean loadDefaultValue, @NotNull Set<Class<?>> parentCustomClasses)
             throws IllegalAccessException, InvalidAnnotationConfigException {
         List<Property> properties = new ArrayList<>();
 
