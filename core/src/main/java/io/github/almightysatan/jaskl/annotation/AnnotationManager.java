@@ -29,9 +29,9 @@ import java.util.function.Function;
 
 public interface AnnotationManager {
 
-    <T> void addValidatorFunction(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction);
+    <A, T> void addValidatorFunction(@NotNull Class<A> annotationClass, @NotNull Function<A, Validator<T>> validatorFunction);
 
-    default void addValidator(@NotNull Class<?> annotationClass, @NotNull Validator<?> validator) {
+    default <A, T> void addValidator(@NotNull Class<A> annotationClass, @NotNull Validator<T> validator) {
         Objects.requireNonNull(validator);
         this.addValidatorFunction(annotationClass, annotation -> validator);
     }

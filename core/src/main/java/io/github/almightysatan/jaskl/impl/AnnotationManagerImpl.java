@@ -47,7 +47,7 @@ public class AnnotationManagerImpl implements AnnotationManager {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public <T> void addValidatorFunction(@NotNull Class<T> annotationClass, @NotNull Function<T, Validator<?>> validatorFunction) {
+    public <A, T> void addValidatorFunction(@NotNull Class<A> annotationClass, @NotNull Function<A, Validator<T>> validatorFunction) {
         Objects.requireNonNull(annotationClass);
         Objects.requireNonNull(validatorFunction);
         if (!annotationClass.isAnnotation())
