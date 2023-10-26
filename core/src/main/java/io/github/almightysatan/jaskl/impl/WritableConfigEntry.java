@@ -28,14 +28,14 @@ import java.util.function.Function;
 
 public interface WritableConfigEntry<T> extends ConfigEntry<T> {
 
-    @NotNull Type<T> getType();
+    @NotNull Type<T> type();
 
     void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException;
 
-    @NotNull Object getValueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException, ValidationException;
+    @NotNull Object valueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException, ValidationException;
 
-    default @NotNull Object getValueToWrite() throws InvalidTypeException, ValidationException {
-        return this.getValueToWrite(Function.identity());
+    default @NotNull Object valueToWrite() throws InvalidTypeException, ValidationException {
+        return this.valueToWrite(Function.identity());
     }
 
     boolean isModified();

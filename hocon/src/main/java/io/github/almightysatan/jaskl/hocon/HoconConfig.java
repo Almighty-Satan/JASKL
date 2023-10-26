@@ -68,10 +68,10 @@ public class HoconConfig extends ConfigImpl {
     public void reload() throws IllegalStateException {
         if (this.config == null)
             throw new IllegalStateException();
-        for (ConfigEntry<?> uncastedConfigEntry : this.getValues()) {
+        for (ConfigEntry<?> uncastedConfigEntry : this.values()) {
             WritableConfigEntry<?> configEntry = (WritableConfigEntry<?>) uncastedConfigEntry;
             try {
-                Object value = this.config.getValue(configEntry.getPath()).unwrapped();
+                Object value = this.config.getValue(configEntry.path()).unwrapped();
                 configEntry.putValue(value);
             } catch (ConfigException.Missing ignored) {
             }
@@ -85,17 +85,17 @@ public class HoconConfig extends ConfigImpl {
             throw new IllegalStateException();
         Util.createFileAndPath(this.file);
 
-        for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
+        for (WritableConfigEntry<?> configEntry : this.castedValues()) {
             if (configEntry.isModified()) {
-                Object entryValue = configEntry.getValueToWrite(Object::toString);
+                Object entryValue = configEntry.valueToWrite(Object::toString);
                 if (entryValue instanceof BigInteger)
                     entryValue = entryValue.toString();
                 if (entryValue instanceof BigDecimal)
                     entryValue = entryValue.toString();
                 ConfigValue value = ConfigValueFactory.fromAnyRef(entryValue);
-                if (configEntry.getDescription() != null)
-                    value = value.withOrigin(value.origin().withComments(Collections.singletonList(configEntry.getDescription())));
-                config = config.withValue(configEntry.getPath(), value);
+                if (configEntry.description() != null)
+                    value = value.withOrigin(value.origin().withComments(Collections.singletonList(configEntry.description())));
+                config = config.withValue(configEntry.path(), value);
             }
         }
 
@@ -110,7 +110,7 @@ public class HoconConfig extends ConfigImpl {
         Util.createFileAndPath(this.file);
 
         List<String> pathsToRemove = new ArrayList<>();
-        this.resolvePathsToStrip("", config.root(), this.getPaths(), pathsToRemove);
+        this.resolvePathsToStrip("", config.root(), this.paths(), pathsToRemove);
         for (String path : pathsToRemove)
             config = config.withoutPath(path);
 
@@ -125,7 +125,7 @@ public class HoconConfig extends ConfigImpl {
 
     protected void writeIfNecessary(@NotNull Config config, boolean setDescription) throws IOException {
         if (config != this.config) {
-            ConfigObject root = setDescription ? config.root().withOrigin(this.config.root().origin().withComments(this.getDescription() == null ? null : Collections.singletonList(this.getDescription()))) : config.root();
+            ConfigObject root = setDescription ? config.root().withOrigin(this.config.root().origin().withComments(this.description() == null ? null : Collections.singletonList(this.description()))) : config.root();
             String output = root.render(RENDER_OPTIONS);
             try (FileWriter fileWriter = new FileWriter(this.file)) {
                 fileWriter.write(output);

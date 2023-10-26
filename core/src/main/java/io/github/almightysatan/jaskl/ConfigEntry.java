@@ -31,14 +31,14 @@ public interface ConfigEntry<T> {
      *
      * @return the path of this ConfigEntry
      */
-    @NotNull String getPath();
+    @NotNull String path();
 
     /**
      * Returns the description of this ConfigEntry.
      *
      * @return the description of this ConfigEntry
      */
-    @Nullable String getDescription();
+    @Nullable String description();
 
     /**
      * Returns the value of this ConfigEntry.
@@ -47,14 +47,14 @@ public interface ConfigEntry<T> {
      * @throws InvalidTypeException if the value does not match its expected {@link Type}
      * @throws ValidationException  if the value fails validation
      */
-    @NotNull T getValue() throws InvalidTypeException, ValidationException;
+    @NotNull T value() throws InvalidTypeException, ValidationException;
 
     /**
      * Returns the value of this ConfigEntry.
      *
      * @return the value of this ConfigEntry
      */
-    @NotNull T getDefaultValue();
+    @NotNull T defaultValue();
 
     /**
      * Updates the value of this ConfigEntry.

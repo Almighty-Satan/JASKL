@@ -96,13 +96,13 @@ public class ConfigTest {
 
         config.load();
 
-        Assertions.assertEquals(true, booleanConfigEntry.getValue());
-        Assertions.assertEquals(1.0D, doubleConfigEntry.getValue());
-        Assertions.assertEquals(1.0F, floatConfigEntry.getValue());
-        Assertions.assertEquals(1, integerConfigEntry.getValue());
-        Assertions.assertEquals(1L, longConfigEntry.getValue());
-        Assertions.assertEquals("modified", stringConfigEntry.getValue());
-        Assertions.assertEquals("spe-ci_al", specialCharEntry.getValue());
+        Assertions.assertEquals(true, booleanConfigEntry.value());
+        Assertions.assertEquals(1.0D, doubleConfigEntry.value());
+        Assertions.assertEquals(1.0F, floatConfigEntry.value());
+        Assertions.assertEquals(1, integerConfigEntry.value());
+        Assertions.assertEquals(1L, longConfigEntry.value());
+        Assertions.assertEquals("modified", stringConfigEntry.value());
+        Assertions.assertEquals("spe-ci_al", specialCharEntry.value());
 
         config.close();
     }
@@ -137,7 +137,7 @@ public class ConfigTest {
 
         config.load();
 
-        Assertions.assertEquals(ExampleEnum.ANOTHER_EXAMPLE, enumConfigEntry.getValue());
+        Assertions.assertEquals(ExampleEnum.ANOTHER_EXAMPLE, enumConfigEntry.value());
 
         config.close();
     }
@@ -155,7 +155,7 @@ public class ConfigTest {
         config.load();
 
         List<String> example1 = Arrays.asList("Example3", "Example4");
-        Assertions.assertEquals(example1, listConfigEntry.getValue());
+        Assertions.assertEquals(example1, listConfigEntry.value());
 
         config.close();
     }
@@ -178,7 +178,7 @@ public class ConfigTest {
         example1.put("Hello", "there");
         example1.put("abc", "xyz");
         example1.put("x", "y");
-        Assertions.assertEquals(example1, mapConfigEntry.getValue());
+        Assertions.assertEquals(example1, mapConfigEntry.value());
 
         config.close();
     }
@@ -212,8 +212,8 @@ public class ConfigTest {
 
         config1.load();
 
-        Assertions.assertEquals("modified", stringConfigEntry1.getValue());
-        Assertions.assertEquals(1, intConfigEntry1.getValue());
+        Assertions.assertEquals("modified", stringConfigEntry1.value());
+        Assertions.assertEquals(1, intConfigEntry1.value());
 
         config1.close();
     }
@@ -240,8 +240,8 @@ public class ConfigTest {
 
         config1.load();
 
-        Assertions.assertEquals(bigDecimalConfigEntry0.getValue(), bigDecimalConfigEntry1.getValue());
-        Assertions.assertEquals(bigIntegerConfigEntry0.getValue(), bigIntegerConfigEntry1.getValue());
+        Assertions.assertEquals(bigDecimalConfigEntry0.value(), bigDecimalConfigEntry1.value());
+        Assertions.assertEquals(bigIntegerConfigEntry0.value(), bigIntegerConfigEntry1.value());
     }
 
     /**
@@ -272,7 +272,7 @@ public class ConfigTest {
 
         config1.load();
 
-        Assertions.assertArrayEquals(list1.toArray(new Double[0]), listConfigEntry1.getValue().toArray(new Double[0]));
+        Assertions.assertArrayEquals(list1.toArray(new Double[0]), listConfigEntry1.value().toArray(new Double[0]));
 
         config1.close();
     }
@@ -306,7 +306,7 @@ public class ConfigTest {
         config1.load();
 
         Assertions.assertArrayEquals(list1.stream().map(list -> list.toArray(new Integer[0])).toArray(Integer[][]::new),
-                listConfigEntry1.getValue().stream().map(list -> list.toArray(new Integer[0])).toArray(Integer[][]::new));
+                listConfigEntry1.value().stream().map(list -> list.toArray(new Integer[0])).toArray(Integer[][]::new));
 
         config1.close();
     }
@@ -339,7 +339,7 @@ public class ConfigTest {
 
         config1.load();
 
-        Assertions.assertArrayEquals(list1.toArray(new ExampleEnum[0]), listConfigEntry1.getValue().toArray(new ExampleEnum[0]));
+        Assertions.assertArrayEquals(list1.toArray(new ExampleEnum[0]), listConfigEntry1.value().toArray(new ExampleEnum[0]));
 
         config1.close();
     }
@@ -376,7 +376,7 @@ public class ConfigTest {
 
         config1.load();
 
-        Assertions.assertEquals(map1, mapConfigEntry1.getValue());
+        Assertions.assertEquals(map1, mapConfigEntry1.value());
 
         config1.close();
     }
@@ -413,8 +413,8 @@ public class ConfigTest {
 
         config2.load();
 
-        Assertions.assertEquals("modified", stringConfigEntry2.getValue());
-        Assertions.assertEquals(0, intConfigEntry2.getValue());
+        Assertions.assertEquals("modified", stringConfigEntry2.value());
+        Assertions.assertEquals(0, intConfigEntry2.value());
 
         config2.close();
     }
@@ -463,8 +463,8 @@ public class ConfigTest {
 
         config2.load();
 
-        Assertions.assertEquals(map0New, mapConfigEntry0New.getValue());
-        Assertions.assertEquals(map1, mapConfigEntry1New.getValue());
+        Assertions.assertEquals(map0New, mapConfigEntry0New.value());
+        Assertions.assertEquals(map1, mapConfigEntry1New.value());
 
         config2.close();
     }
@@ -492,8 +492,8 @@ public class ConfigTest {
         config1.load();
         config1.close();
 
-        Assertions.assertEquals(value, entry2.getValue());
-        Assertions.assertEquals(nestedValue, entry3.getValue());
+        Assertions.assertEquals(value, entry2.value());
+        Assertions.assertEquals(nestedValue, entry3.value());
     }
 
     public static void testAnnotation(Supplier<Config> configSupplier) throws IOException {

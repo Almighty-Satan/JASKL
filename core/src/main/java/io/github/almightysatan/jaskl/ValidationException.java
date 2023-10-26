@@ -54,7 +54,7 @@ public class ValidationException extends RuntimeException {
      *
      * @return The path of the config entry
      */
-    public @Nullable String getPath() {
+    public @Nullable String path() {
         return this.path;
     }
 
@@ -63,7 +63,7 @@ public class ValidationException extends RuntimeException {
      *
      * @return The error message
      */
-    public @NotNull String getErrorMessage() {
+    public @NotNull String errorMessage() {
         return this.errorMessage;
     }
 }
