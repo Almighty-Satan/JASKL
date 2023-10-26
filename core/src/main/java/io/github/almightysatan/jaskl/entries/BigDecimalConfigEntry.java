@@ -30,7 +30,7 @@ import java.math.BigDecimal;
 public interface BigDecimalConfigEntry extends ConfigEntry<BigDecimal> {
 
     @SafeVarargs
-    static @NotNull BigDecimalConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, BigDecimal defaultValue, @NotNull Validator<BigDecimal>... validators) throws InvalidTypeException, ValidationException {
+    static @NotNull BigDecimalConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, BigDecimal defaultValue, @NotNull Validator<? super BigDecimal>... validators) throws InvalidTypeException, ValidationException {
         class BigDecimalConfigEntryImpl extends WritableConfigEntryImpl<BigDecimal> implements BigDecimalConfigEntry {
             BigDecimalConfigEntryImpl() {
                 super(Type.validated(Type.BIG_DECIMAL, validators), path, description, defaultValue);
@@ -42,7 +42,7 @@ public interface BigDecimalConfigEntry extends ConfigEntry<BigDecimal> {
     }
 
     @SafeVarargs
-    static @NotNull BigDecimalConfigEntry of(@NotNull Config config, @NotNull String path, BigDecimal defaultValue, @NotNull Validator<BigDecimal>... validators) throws InvalidTypeException, ValidationException {
+    static @NotNull BigDecimalConfigEntry of(@NotNull Config config, @NotNull String path, BigDecimal defaultValue, @NotNull Validator<? super BigDecimal>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);
     }
 }

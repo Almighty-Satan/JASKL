@@ -30,7 +30,7 @@ import java.math.BigInteger;
 public interface BigIntegerConfigEntry extends ConfigEntry<BigInteger> {
 
     @SafeVarargs
-    static @NotNull BigIntegerConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, BigInteger defaultValue, @NotNull Validator<BigInteger>... validators) throws InvalidTypeException, ValidationException {
+    static @NotNull BigIntegerConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, BigInteger defaultValue, @NotNull Validator<? super BigInteger>... validators) throws InvalidTypeException, ValidationException {
         class BigIntegerConfigEntryImpl extends WritableConfigEntryImpl<BigInteger> implements BigIntegerConfigEntry {
             BigIntegerConfigEntryImpl() {
                 super(Type.validated(Type.BIG_INTEGER, validators), path, description, defaultValue);
@@ -42,7 +42,7 @@ public interface BigIntegerConfigEntry extends ConfigEntry<BigInteger> {
     }
 
     @SafeVarargs
-    static @NotNull BigIntegerConfigEntry of(@NotNull Config config, @NotNull String path, BigInteger defaultValue, @NotNull Validator<BigInteger>... validators) throws InvalidTypeException, ValidationException {
+    static @NotNull BigIntegerConfigEntry of(@NotNull Config config, @NotNull String path, BigInteger defaultValue, @NotNull Validator<? super BigInteger>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);
     }
 }

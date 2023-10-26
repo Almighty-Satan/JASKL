@@ -36,7 +36,7 @@ public interface Type<T> {
 
     @NotNull Object toWritable(@NotNull T value, @NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException;
 
-    static <T> @NotNull Type<T> validated(@NotNull Type<T> type, @NotNull Validator<T> validator) {
+    static <T> @NotNull Type<T> validated(@NotNull Type<T> type, @NotNull Validator<? super T> validator) {
         Objects.requireNonNull(type);
         Objects.requireNonNull(validator);
         return new Type<T>() {
@@ -61,7 +61,7 @@ public interface Type<T> {
         };
     }
 
-    static <T> @NotNull Type<T> validated(@NotNull Type<T> type, @NotNull Validator<T>[] validators) {
+    static <T> @NotNull Type<T> validated(@NotNull Type<T> type, @NotNull Validator<? super T>[] validators) {
         Objects.requireNonNull(type);
         Objects.requireNonNull(validators);
         return validated(type, Validator.of(validators));

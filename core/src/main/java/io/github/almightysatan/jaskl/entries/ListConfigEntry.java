@@ -30,7 +30,7 @@ import java.util.List;
 public interface ListConfigEntry<T> extends ConfigEntry<List<T>> {
 
     @SafeVarargs
-    static <T> @NotNull ListConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<T> type, @NotNull Validator<List<T>>... validators) throws InvalidTypeException, ValidationException {
+    static <T> @NotNull ListConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<T> type, @NotNull Validator<List<? super T>>... validators) throws InvalidTypeException, ValidationException {
         class ListConfigEntryImpl extends WritableConfigEntryImpl<List<T>> implements ListConfigEntry<T> {
             ListConfigEntryImpl() {
                 super(Type.validated(Type.list(type), validators), path, description, defaultValue);
@@ -42,7 +42,7 @@ public interface ListConfigEntry<T> extends ConfigEntry<List<T>> {
     }
 
     @SafeVarargs
-    static <T> @NotNull ListConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull List<T> defaultValue, @NotNull Type<T> type, @NotNull Validator<List<T>>... validators) throws InvalidTypeException, ValidationException {
+    static <T> @NotNull ListConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull List<T> defaultValue, @NotNull Type<T> type, @NotNull Validator<List<? super T>>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, type, validators);
     }
 }

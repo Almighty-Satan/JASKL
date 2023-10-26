@@ -30,7 +30,7 @@ import java.util.Map;
 public interface MapConfigEntry<K, V> extends ConfigEntry<Map<K, V>> {
 
     @SafeVarargs
-    static <K, V> @NotNull MapConfigEntry<K, V> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Map<K, V> defaultValue, @NotNull Type<K> keyType, @NotNull Type<V> valueType, @NotNull Validator<Map<K, V>>... validators) throws InvalidTypeException, ValidationException {
+    static <K, V> @NotNull MapConfigEntry<K, V> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Map<K, V> defaultValue, @NotNull Type<K> keyType, @NotNull Type<V> valueType, @NotNull Validator<Map<? super K, ? super V>>... validators) throws InvalidTypeException, ValidationException {
         class MapConfigEntryImpl extends WritableConfigEntryImpl<Map<K, V>> implements MapConfigEntry<K, V> {
             MapConfigEntryImpl() {
                 super(Type.validated(Type.map(keyType, valueType), validators), path, description, defaultValue);
@@ -42,7 +42,7 @@ public interface MapConfigEntry<K, V> extends ConfigEntry<Map<K, V>> {
     }
 
     @SafeVarargs
-    static <K, V> @NotNull MapConfigEntry<K, V> of(@NotNull Config config, @NotNull String path, @NotNull Map<K, V> defaultValue, @NotNull Type<K> keyType, @NotNull Type<V> valueType, @NotNull Validator<Map<K, V>>... validators) throws InvalidTypeException, ValidationException {
+    static <K, V> @NotNull MapConfigEntry<K, V> of(@NotNull Config config, @NotNull String path, @NotNull Map<K, V> defaultValue, @NotNull Type<K> keyType, @NotNull Type<V> valueType, @NotNull Validator<Map<? super K, ? super V>>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, keyType, valueType, validators);
     }
 }

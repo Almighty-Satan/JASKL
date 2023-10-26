@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 public interface EnumConfigEntry<T extends Enum<T>> extends ConfigEntry<T> {
 
     @SafeVarargs
-    static <T extends Enum<T>> @NotNull EnumConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+    static <T extends Enum<T>> @NotNull EnumConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue, @NotNull Validator<? super T>... validators) throws InvalidTypeException, ValidationException {
         class EnumConfigEntryImpl extends WritableConfigEntryImpl<T> implements EnumConfigEntry<T> {
             @SuppressWarnings({"unchecked", "rawtypes"})
             EnumConfigEntryImpl() {
@@ -41,7 +41,7 @@ public interface EnumConfigEntry<T extends Enum<T>> extends ConfigEntry<T> {
     }
 
     @SafeVarargs
-    static <T extends Enum<T>> @NotNull EnumConfigEntry<T> of(@NotNull Config config, @NotNull String path, T defaultValue, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+    static <T extends Enum<T>> @NotNull EnumConfigEntry<T> of(@NotNull Config config, @NotNull String path, T defaultValue, @NotNull Validator<? super T>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);
     }
 }

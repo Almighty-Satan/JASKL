@@ -44,12 +44,12 @@ public interface Validator<T> {
     }
 
     @SafeVarargs
-    static <T> @NotNull Validator<T> of(@NotNull Validator<T>... validators) {
+    static <T> @NotNull Validator<T> of(@NotNull Validator<? super T>... validators) {
         Objects.requireNonNull(validators);
         if (validators.length == 0)
             return nop();
         return value -> {
-            for (Validator<T> validator : validators)
+            for (Validator<? super T> validator : validators)
                 validator.validate(value);
         };
     }
@@ -192,7 +192,7 @@ public interface Validator<T> {
 
     static <T> @NotNull Validator<List<T>> listMaxSize(int size) { return value -> { if (value.size() > size) throw new ValidationException("should not have more than " + size + " entries"); };}
 
-    static <T> @NotNull Validator<List<T>> listForEach(Validator<T> validator) { return value -> value.forEach(validator::validate);}
+    static <T> @NotNull Validator<List<T>> listForEach(Validator<? super T> validator) { return value -> value.forEach(validator::validate);}
 
     static <K, V> @NotNull Validator<Map<K, V>> mapNotEmpty() { return value -> { if (value.isEmpty()) throw new ValidationException("should not be empty"); };}
 
@@ -200,7 +200,7 @@ public interface Validator<T> {
 
     static <K, V> @NotNull Validator<Map<K, V>> mapMaxSize(int size) { return value -> { if (value.size() > size) throw new ValidationException("should not have more than " + size + " entries"); };}
 
-    static <K, V> @NotNull Validator<Map<K, V>> mapForEachKey(Validator<K> validator) { return value -> value.keySet().forEach(validator::validate);}
+    static <K, V> @NotNull Validator<Map<K, V>> mapForEachKey(Validator<? super K> validator) { return value -> value.keySet().forEach(validator::validate);}
 
-    static <K, V> @NotNull Validator<Map<K, V>> mapForEachValue(Validator<V> validator) { return value -> value.values().forEach(validator::validate);}
+    static <K, V> @NotNull Validator<Map<K, V>> mapForEachValue(Validator<? super V> validator) { return value -> value.values().forEach(validator::validate);}
 }
