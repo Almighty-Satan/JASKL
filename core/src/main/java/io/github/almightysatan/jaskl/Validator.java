@@ -22,6 +22,8 @@ package io.github.almightysatan.jaskl;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -91,6 +93,26 @@ public interface Validator<T> {
     Validator<Long> LONG_POSITIVE = value -> { if (value <= 0) throw new ValidationException("should be positive"); };
 
     Validator<Long> LONG_NEGATIVE = value -> { if (value >= 0) throw new ValidationException("should be negative"); };
+
+    Validator<BigInteger> BIGINTEGER_NOT_ZERO = value -> { if (value.signum() == 0) throw new ValidationException("should not be 0"); };
+
+    Validator<BigInteger> BIGINTEGER_NOT_POSITIVE = value -> { if (value.signum() == 1) throw new ValidationException("should not be positive"); };
+
+    Validator<BigInteger> BIGINTEGER_NOT_NEGATIVE = value -> { if (value.signum() == -1) throw new ValidationException("should not be negative"); };
+
+    Validator<BigInteger> BIGINTEGER_POSITIVE = value -> { if (value.signum() != 1) throw new ValidationException("should be positive"); };
+
+    Validator<BigInteger> BIGINTEGER_NEGATIVE = value -> { if (value.signum() != -1) throw new ValidationException("should be negative"); };
+
+    Validator<BigDecimal> BIGDECIMAL_NOT_ZERO = value -> { if (value.signum() == 0) throw new ValidationException("should not be 0"); };
+
+    Validator<BigDecimal> BIGDECIMAL_NOT_POSITIVE = value -> { if (value.signum() == 1) throw new ValidationException("should not be positive"); };
+
+    Validator<BigDecimal> BIGDECIMAL_NOT_NEGATIVE = value -> { if (value.signum() == -1) throw new ValidationException("should not be negative"); };
+
+    Validator<BigDecimal> BIGDECIMAL_POSITIVE = value -> { if (value.signum() != 1) throw new ValidationException("should be positive"); };
+
+    Validator<BigDecimal> BIGDECIMAL_NEGATIVE = value -> { if (value.signum() != -1) throw new ValidationException("should be negative"); };
 
     Validator<String> STRING_NOT_EMPTY = value -> { if (value.isEmpty()) throw new ValidationException("should not be empty"); };
 
