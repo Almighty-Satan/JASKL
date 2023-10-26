@@ -79,9 +79,11 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     }
 
     @Override
-    public @NotNull Object getValueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException, ValidationException {
+    public @NotNull Object getValueToWrite(@NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException {
         try {
-            return this.getType().toWritable(this.getValue(), keyPreprocessor);
+            Object o = this.getType().toWritable(this.getValue(), keyPreprocessor);
+            this.modified = false;
+            return o;
         } catch (InvalidTypeException e) {
             throw new InvalidTypeException(this.getPath(), e);
         }
