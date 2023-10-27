@@ -34,7 +34,8 @@ public interface AnnotationManager {
      * Some annotations are registered by default (see {@link Validate}).
      *
      * @param annotationClass   the class of the annotation
-     * @param validatorFunction a function (annotation) -> {@link Validator}
+     * @param validatorFunction a function that maps an instance of the annotation (and it's values) to a
+     *                          {@link Validator}
      * @param <A>               the annotation
      * @param <T>               the type of the validator
      * @throws IllegalArgumentException if the given class is not an annotation
