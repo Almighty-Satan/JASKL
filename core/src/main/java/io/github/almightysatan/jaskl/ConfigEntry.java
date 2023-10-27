@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 public interface ConfigEntry<T> {
 
     /**
-     * Returns the path leading to this ConfigEntry's value.
+     * Returns the case-sensitive dotted path of this ConfigEntry.
      *
      * @return the path of this ConfigEntry
      */
@@ -65,6 +65,20 @@ public interface ConfigEntry<T> {
      */
     void setValue(@NotNull T value) throws InvalidTypeException, ValidationException;
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param defaultValue the default value
+     * @param type         the type
+     * @param validators   the {@link Validator Validators}
+     * @param <T>          the type of the entry's value
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static <T> @NotNull ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue, Type<T> type, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
         WritableConfigEntryImpl<T> entry = new WritableConfigEntryImpl<>(Type.validated(type, validators), path, description, defaultValue);
@@ -72,6 +86,19 @@ public interface ConfigEntry<T> {
         return entry;
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param defaultValue the default value
+     * @param type         the type
+     * @param validators   the {@link Validator Validators}
+     * @param <T>          the type of the entry's value
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static <T> @NotNull ConfigEntry<T> of(@NotNull Config config, @NotNull String path, T defaultValue, Type<T> type, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, type, validators);

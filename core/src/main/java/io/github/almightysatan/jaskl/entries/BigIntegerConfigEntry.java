@@ -29,6 +29,18 @@ import java.math.BigInteger;
 
 public interface BigIntegerConfigEntry extends ConfigEntry<BigInteger> {
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull BigIntegerConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, BigInteger defaultValue, @NotNull Validator<BigInteger>... validators) throws InvalidTypeException, ValidationException {
         class BigIntegerConfigEntryImpl extends WritableConfigEntryImpl<BigInteger> implements BigIntegerConfigEntry {
@@ -41,6 +53,17 @@ public interface BigIntegerConfigEntry extends ConfigEntry<BigInteger> {
         return new BigIntegerConfigEntryImpl();
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull BigIntegerConfigEntry of(@NotNull Config config, @NotNull String path, BigInteger defaultValue, @NotNull Validator<BigInteger>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);

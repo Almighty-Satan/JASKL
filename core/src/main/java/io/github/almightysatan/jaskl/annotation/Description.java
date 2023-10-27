@@ -27,9 +27,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * An annotation used to set the description of a config entry.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Description {
 
+    /**
+     * Returns the entry's description.
+     *
+     * @return the entry's description
+     */
     @NotNull String value();
 }

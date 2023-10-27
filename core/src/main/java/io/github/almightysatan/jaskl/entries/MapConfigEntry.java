@@ -29,6 +29,22 @@ import java.util.Map;
 
 public interface MapConfigEntry<K, V> extends ConfigEntry<Map<K, V>> {
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param keyType      the {@link Type} of the elements in the key
+     * @param valueType    the {@link Type} of the elements in the value
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @param <K>          the key elements
+     * @param <V>          the value elements
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static <K, V> @NotNull MapConfigEntry<K, V> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull Map<K, V> defaultValue, @NotNull Type<K> keyType, @NotNull Type<V> valueType, @NotNull Validator<Map<K, V>>... validators) throws InvalidTypeException, ValidationException {
         class MapConfigEntryImpl extends WritableConfigEntryImpl<Map<K, V>> implements MapConfigEntry<K, V> {
@@ -41,6 +57,21 @@ public interface MapConfigEntry<K, V> extends ConfigEntry<Map<K, V>> {
         return new MapConfigEntryImpl();
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param keyType      the {@link Type} of the elements in the key
+     * @param valueType    the {@link Type} of the elements in the value
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @param <K>          the key elements
+     * @param <V>          the value elements
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static <K, V> @NotNull MapConfigEntry<K, V> of(@NotNull Config config, @NotNull String path, @NotNull Map<K, V> defaultValue, @NotNull Type<K> keyType, @NotNull Type<V> valueType, @NotNull Validator<Map<K, V>>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, keyType, valueType, validators);

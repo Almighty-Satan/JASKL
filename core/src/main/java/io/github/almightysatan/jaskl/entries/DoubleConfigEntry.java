@@ -27,6 +27,18 @@ import org.jetbrains.annotations.Nullable;
 
 public interface DoubleConfigEntry extends ConfigEntry<Double> {
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull DoubleConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, double defaultValue, @NotNull Validator<Double>... validators) throws InvalidTypeException, ValidationException {
         class DoubleConfigEntryImpl extends WritableConfigEntryImpl<Double> implements DoubleConfigEntry {
@@ -39,6 +51,17 @@ public interface DoubleConfigEntry extends ConfigEntry<Double> {
         return new DoubleConfigEntryImpl();
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull DoubleConfigEntry of(@NotNull Config config, @NotNull String path, double defaultValue, @NotNull Validator<Double>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);

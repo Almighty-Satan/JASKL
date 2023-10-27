@@ -27,6 +27,18 @@ import org.jetbrains.annotations.Nullable;
 
 public interface FloatConfigEntry extends ConfigEntry<Float> {
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull FloatConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, float defaultValue, @NotNull Validator<Float>... validators) throws InvalidTypeException, ValidationException {
         class FloatConfigEntryImpl extends WritableConfigEntryImpl<Float> implements FloatConfigEntry {
@@ -39,6 +51,17 @@ public interface FloatConfigEntry extends ConfigEntry<Float> {
         return new FloatConfigEntryImpl();
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull FloatConfigEntry of(@NotNull Config config, @NotNull String path, float defaultValue, @NotNull Validator<Float>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);

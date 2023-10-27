@@ -27,6 +27,20 @@ import org.jetbrains.annotations.Nullable;
 
 public interface CustomConfigEntry<T> extends ConfigEntry<T> {
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param clazz        the class of the custom object
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @param <T>          the custom object
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue, @NotNull Class<T> clazz, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
         class CustomConfigEntryImpl extends WritableConfigEntryImpl<T> implements CustomConfigEntry<T> {
@@ -39,17 +53,56 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
         return new CustomConfigEntryImpl();
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param clazz        the class of the custom object
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @param <T>          the custom object
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull T defaultValue, @NotNull Class<T> clazz, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, clazz, validators);
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @param <T>          the custom object
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SuppressWarnings("unchecked")
     @SafeVarargs
     static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, description, defaultValue, (Class<T>) defaultValue.getClass(), validators);
     }
 
+
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @param <T>          the custom object
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SuppressWarnings("unchecked")
     @SafeVarargs
     static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull T defaultValue, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {

@@ -20,6 +20,9 @@
 
 package io.github.almightysatan.jaskl.annotation;
 
+/**
+ * Thrown if a annotated config is somehow invalid.
+ */
 public class InvalidAnnotationConfigException extends RuntimeException {
 
     public InvalidAnnotationConfigException(String message) {

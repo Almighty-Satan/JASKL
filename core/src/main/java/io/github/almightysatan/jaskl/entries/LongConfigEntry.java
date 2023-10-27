@@ -27,6 +27,18 @@ import org.jetbrains.annotations.Nullable;
 
 public interface LongConfigEntry extends ConfigEntry<Long> {
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull LongConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, long defaultValue, @NotNull Validator<Long>... validators) throws InvalidTypeException, ValidationException {
         class LongConfigEntryImpl extends WritableConfigEntryImpl<Long> implements LongConfigEntry {
@@ -39,6 +51,17 @@ public interface LongConfigEntry extends ConfigEntry<Long> {
         return new LongConfigEntryImpl();
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull LongConfigEntry of(@NotNull Config config, @NotNull String path, long defaultValue, @NotNull Validator<Long>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);

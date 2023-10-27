@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
 public @interface Entry {
 
     /**
-     * The path of this entry. Uses the name of the field if empty.
+     * The case-sensitive dotted path of this entry. Uses the name of the field if empty.
      *
      * @return the path
      */

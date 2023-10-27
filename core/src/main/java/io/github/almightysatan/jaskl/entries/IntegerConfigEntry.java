@@ -27,6 +27,18 @@ import org.jetbrains.annotations.Nullable;
 
 public interface IntegerConfigEntry extends ConfigEntry<Integer> {
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull IntegerConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, int defaultValue, @NotNull Validator<Integer>... validators) throws InvalidTypeException, ValidationException {
         class IntegerConfigEntryImpl extends WritableConfigEntryImpl<Integer> implements IntegerConfigEntry {
@@ -39,6 +51,17 @@ public interface IntegerConfigEntry extends ConfigEntry<Integer> {
         return new IntegerConfigEntryImpl();
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull IntegerConfigEntry of(@NotNull Config config, @NotNull String path, int defaultValue, @NotNull Validator<Integer>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);

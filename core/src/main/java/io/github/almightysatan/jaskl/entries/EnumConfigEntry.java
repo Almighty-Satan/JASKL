@@ -27,6 +27,19 @@ import org.jetbrains.annotations.Nullable;
 
 public interface EnumConfigEntry<T extends Enum<T>> extends ConfigEntry<T> {
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @param <T>          the enum
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static <T extends Enum<T>> @NotNull EnumConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
         class EnumConfigEntryImpl extends WritableConfigEntryImpl<T> implements EnumConfigEntry<T> {
@@ -40,6 +53,18 @@ public interface EnumConfigEntry<T extends Enum<T>> extends ConfigEntry<T> {
         return new EnumConfigEntryImpl();
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @param <T>          the enum
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static <T extends Enum<T>> @NotNull EnumConfigEntry<T> of(@NotNull Config config, @NotNull String path, T defaultValue, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);

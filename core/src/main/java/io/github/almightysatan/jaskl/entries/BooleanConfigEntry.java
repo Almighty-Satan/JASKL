@@ -27,6 +27,18 @@ import org.jetbrains.annotations.Nullable;
 
 public interface BooleanConfigEntry extends ConfigEntry<Boolean> {
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull BooleanConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, boolean defaultValue, @NotNull Validator<Boolean>... validators) throws InvalidTypeException, ValidationException {
         class BooleanConfigEntryImpl extends WritableConfigEntryImpl<Boolean> implements BooleanConfigEntry {
@@ -39,6 +51,17 @@ public interface BooleanConfigEntry extends ConfigEntry<Boolean> {
         return new BooleanConfigEntryImpl();
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull BooleanConfigEntry of(@NotNull Config config, @NotNull String path, boolean defaultValue, @NotNull Validator<Boolean>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);

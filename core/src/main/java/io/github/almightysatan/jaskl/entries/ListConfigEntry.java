@@ -29,6 +29,20 @@ import java.util.List;
 
 public interface ListConfigEntry<T> extends ConfigEntry<List<T>> {
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param type         the {@link Type} of the elements in the list
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @param <T>          the elements in the list
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static <T> @NotNull ListConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull List<T> defaultValue, @NotNull Type<T> type, @NotNull Validator<List<T>>... validators) throws InvalidTypeException, ValidationException {
         class ListConfigEntryImpl extends WritableConfigEntryImpl<List<T>> implements ListConfigEntry<T> {
@@ -41,6 +55,19 @@ public interface ListConfigEntry<T> extends ConfigEntry<List<T>> {
         return new ListConfigEntryImpl();
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param type         the {@link Type} of the elements in the list
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @param <T>          the elements in the list
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static <T> @NotNull ListConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull List<T> defaultValue, @NotNull Type<T> type, @NotNull Validator<List<T>>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, type, validators);

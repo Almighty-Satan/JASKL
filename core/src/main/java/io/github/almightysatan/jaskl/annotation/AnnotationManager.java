@@ -31,24 +31,24 @@ public interface AnnotationManager {
 
     /**
      * Adds an annotation that can than be used to validate config entries.
-     * Some annotations are registered by default (see {@link Validate})
+     * Some annotations are registered by default (see {@link Validate}).
      *
-     * @param annotationClass the class of the annotation
+     * @param annotationClass   the class of the annotation
      * @param validatorFunction a function (annotation) -> {@link Validator}
-     * @param <A> the annotation
-     * @param <T> the type of the validator
+     * @param <A>               the annotation
+     * @param <T>               the type of the validator
      * @throws IllegalArgumentException if the given class is not an annotation
      */
     <A, T> void addValidatorFunction(@NotNull Class<A> annotationClass, @NotNull Function<A, Validator<T>> validatorFunction);
 
     /**
      * Adds an annotation that can than be used to validate config entries.
-     * Some annotations are registered by default (see {@link Validate})
+     * Some annotations are registered by default (see {@link Validate}).
      *
      * @param annotationClass the class of the annotation
-     * @param validator the {@link Validator}
-     * @param <A> the annotation
-     * @param <T> the type of the validator
+     * @param validator       the {@link Validator}
+     * @param <A>             the annotation
+     * @param <T>             the type of the validator
      * @throws IllegalArgumentException if the given class is not an annotation
      */
     default <A, T> void addValidator(@NotNull Class<A> annotationClass, @NotNull Validator<T> validator) {

@@ -29,6 +29,18 @@ import java.math.BigDecimal;
 
 public interface BigDecimalConfigEntry extends ConfigEntry<BigDecimal> {
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param description  the possibly-null description
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull BigDecimalConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, BigDecimal defaultValue, @NotNull Validator<BigDecimal>... validators) throws InvalidTypeException, ValidationException {
         class BigDecimalConfigEntryImpl extends WritableConfigEntryImpl<BigDecimal> implements BigDecimalConfigEntry {
@@ -41,6 +53,17 @@ public interface BigDecimalConfigEntry extends ConfigEntry<BigDecimal> {
         return new BigDecimalConfigEntryImpl();
     }
 
+    /**
+     * Creates a new config entry.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
     @SafeVarargs
     static @NotNull BigDecimalConfigEntry of(@NotNull Config config, @NotNull String path, BigDecimal defaultValue, @NotNull Validator<BigDecimal>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);
