@@ -22,6 +22,9 @@ package io.github.almightysatan.jaskl;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.Set;
+
 public class InvalidTypeException extends RuntimeException {
 
     public InvalidTypeException(@NotNull Class<?> expected, @NotNull Class<?> actual) {
@@ -30,6 +33,10 @@ public class InvalidTypeException extends RuntimeException {
 
     public InvalidTypeException(@NotNull Class<?> enumClass, @NotNull String enumName) {
         super(String.format("Invalid type: enumClass=%s enumName=%s", enumClass.getName(), enumName));
+    }
+
+    public InvalidTypeException(@NotNull String key, @NotNull Set<String> properties) {
+        super(String.format("Invalid type: key=%s properties=%s", key, Arrays.toString(properties.toArray())));
     }
 
     public InvalidTypeException(@NotNull String path, @NotNull Class<?> type) {

@@ -324,4 +324,47 @@ public interface Type<T> {
     static <T> @NotNull Type<T> custom(@NotNull Class<T> clazz) throws InvalidAnnotationConfigException {
         return AnnotationManagerImpl.INSTANCE.createCustomObjectType(clazz);
     }
+
+    @SuppressWarnings("unchecked")
+    static <T> @NotNull Type<T> custom(@NotNull ObjectMapper<T> objectMapper) {
+        Objects.requireNonNull(objectMapper);
+        @NotNull Map<@NotNull String, @NotNull Type<?>> properties = objectMapper.getProperties();
+        Objects.requireNonNull(properties);
+        if (properties.isEmpty())
+            throw new IllegalArgumentException("properties should not be empty");
+        return new Type<T>() {
+            @Override
+            public @NotNull T toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException {
+                if (objectMapper.getObjectClass().isAssignableFrom(value.getClass()))
+                    return (T) value;
+                if (!(value instanceof Map))
+                    throw new InvalidTypeException(Map.class, value.getClass());
+                Map<?, ?> mapValue = (Map<String, ?>) value;
+                Map<String, Object> newMap = new HashMap<>();
+                for (Map.Entry<?, ?> entry : mapValue.entrySet()) {
+                    String key = STRING.toEntryType(entry.getKey());
+                    Type<?> type = this.getType(key);
+                    newMap.put(key, type.toEntryType(entry.getValue()));
+                }
+
+                return objectMapper.createInstance(Collections.unmodifiableMap(newMap));
+            }
+
+            @Override
+            public @NotNull Object toWritable(@NotNull T value, @NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException {
+                Map<Object, Object> newMap = new HashMap<>();
+                for (Map.Entry<String, Object> entry : objectMapper.readValues(value).entrySet())
+                    newMap.put(keyPreprocessor.apply(STRING.toWritable(entry.getKey(), keyPreprocessor)), this.getType(entry.getKey()).toWritable(entry.getValue(), keyPreprocessor));
+
+                return Collections.unmodifiableMap(newMap);
+            }
+
+            private <U> Type<U> getType(String key) {
+                Type<U> type = (Type<U>) properties.get(key);
+                if (type == null)
+                    throw new InvalidTypeException(key, properties.keySet());
+                return type;
+            }
+        };
+    }
 }
