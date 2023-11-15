@@ -40,7 +40,7 @@ public interface LongConfigEntry extends ConfigEntry<Long> {
      * @throws ValidationException  if the default value fails validation
      */
     @SafeVarargs
-    static @NotNull LongConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, long defaultValue, @NotNull Validator<Long>... validators) throws InvalidTypeException, ValidationException {
+    static @NotNull LongConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, long defaultValue, @NotNull Validator<? super Long>... validators) throws InvalidTypeException, ValidationException {
         class LongConfigEntryImpl extends WritableConfigEntryImpl<Long> implements LongConfigEntry {
             LongConfigEntryImpl() {
                 super(Type.validated(Type.LONG, validators), path, description, defaultValue);
@@ -63,7 +63,7 @@ public interface LongConfigEntry extends ConfigEntry<Long> {
      * @throws ValidationException  if the default value fails validation
      */
     @SafeVarargs
-    static @NotNull LongConfigEntry of(@NotNull Config config, @NotNull String path, long defaultValue, @NotNull Validator<Long>... validators) throws InvalidTypeException, ValidationException {
+    static @NotNull LongConfigEntry of(@NotNull Config config, @NotNull String path, long defaultValue, @NotNull Validator<? super Long>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);
     }
 }

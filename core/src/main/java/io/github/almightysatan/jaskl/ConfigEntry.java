@@ -80,7 +80,7 @@ public interface ConfigEntry<T> {
      * @throws ValidationException  if the default value fails validation
      */
     @SafeVarargs
-    static <T> @NotNull ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue, Type<T> type, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+    static <T> @NotNull ConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, T defaultValue, Type<T> type, @NotNull Validator<? super T>... validators) throws InvalidTypeException, ValidationException {
         WritableConfigEntryImpl<T> entry = new WritableConfigEntryImpl<>(Type.validated(type, validators), path, description, defaultValue);
         entry.register(config);
         return entry;
@@ -100,7 +100,7 @@ public interface ConfigEntry<T> {
      * @throws ValidationException  if the default value fails validation
      */
     @SafeVarargs
-    static <T> @NotNull ConfigEntry<T> of(@NotNull Config config, @NotNull String path, T defaultValue, Type<T> type, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+    static <T> @NotNull ConfigEntry<T> of(@NotNull Config config, @NotNull String path, T defaultValue, Type<T> type, @NotNull Validator<? super T>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, type, validators);
     }
 }

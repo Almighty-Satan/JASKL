@@ -42,7 +42,7 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
      * @throws ValidationException  if the default value fails validation
      */
     @SafeVarargs
-    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue, @NotNull Class<T> clazz, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue, @NotNull Class<T> clazz, @NotNull Validator<? super T>... validators) throws InvalidTypeException, ValidationException {
         class CustomConfigEntryImpl extends WritableConfigEntryImpl<T> implements CustomConfigEntry<T> {
             CustomConfigEntryImpl() {
                 super(Type.validated(Type.custom(clazz), validators), path, description, defaultValue);
@@ -67,7 +67,7 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
      * @throws ValidationException  if the default value fails validation
      */
     @SafeVarargs
-    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull T defaultValue, @NotNull Class<T> clazz, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull T defaultValue, @NotNull Class<T> clazz, @NotNull Validator<? super T>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, clazz, validators);
     }
 
@@ -86,7 +86,7 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
      */
     @SuppressWarnings("unchecked")
     @SafeVarargs
-    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull T defaultValue, @NotNull Validator<? super T>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, description, defaultValue, (Class<T>) defaultValue.getClass(), validators);
     }
 
@@ -105,7 +105,7 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
      */
     @SuppressWarnings("unchecked")
     @SafeVarargs
-    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull T defaultValue, @NotNull Validator<T>... validators) throws InvalidTypeException, ValidationException {
+    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull T defaultValue, @NotNull Validator<? super T>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, defaultValue, (Class<T>) defaultValue.getClass(), validators);
     }
 }

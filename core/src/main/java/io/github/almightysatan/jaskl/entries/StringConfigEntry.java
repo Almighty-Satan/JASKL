@@ -40,7 +40,7 @@ public interface StringConfigEntry extends ConfigEntry<String> {
      * @throws ValidationException  if the default value fails validation
      */
     @SafeVarargs
-    static @NotNull StringConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull String defaultValue, @NotNull Validator<String>... validators) throws InvalidTypeException, ValidationException {
+    static @NotNull StringConfigEntry of(@NotNull Config config, @NotNull String path, @Nullable String description, @NotNull String defaultValue, @NotNull Validator<? super String>... validators) throws InvalidTypeException, ValidationException {
         class StringConfigEntryImpl extends WritableConfigEntryImpl<String> implements StringConfigEntry {
             StringConfigEntryImpl() {
                 super(Type.validated(Type.STRING, validators), path, description, defaultValue);
@@ -63,7 +63,7 @@ public interface StringConfigEntry extends ConfigEntry<String> {
      * @throws ValidationException  if the default value fails validation
      */
     @SafeVarargs
-    static @NotNull StringConfigEntry of(@NotNull Config config, @NotNull String path, String defaultValue, @NotNull Validator<String>... validators) throws InvalidTypeException, ValidationException {
+    static @NotNull StringConfigEntry of(@NotNull Config config, @NotNull String path, String defaultValue, @NotNull Validator<? super String>... validators) throws InvalidTypeException, ValidationException {
         return of(config, path, null, defaultValue, validators);
     }
 }
