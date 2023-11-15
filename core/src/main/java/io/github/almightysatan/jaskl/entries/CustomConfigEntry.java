@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 public interface CustomConfigEntry<T> extends ConfigEntry<T> {
 
     /**
-     * Creates a new config entry.
+     * Creates a new config entry using an annotated class.
      *
      * @param config       the config
      * @param path         the case-sensitive dotted path
@@ -54,7 +54,7 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
     }
 
     /**
-     * Creates a new config entry.
+     * Creates a new config entry using an annotated class.
      *
      * @param config       the config
      * @param path         the case-sensitive dotted path
@@ -72,7 +72,7 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
     }
 
     /**
-     * Creates a new config entry.
+     * Creates a new config entry using an annotated class.
      *
      * @param config       the config
      * @param path         the case-sensitive dotted path
@@ -92,7 +92,7 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
 
 
     /**
-     * Creates a new config entry.
+     * Creates a new config entry using an annotated class.
      *
      * @param config       the config
      * @param path         the case-sensitive dotted path
@@ -110,12 +110,12 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
     }
 
     /**
-     * Creates a new config entry.
+     * Creates a new config entry using an {@link ObjectMapper}.
      *
      * @param config       the config
      * @param path         the case-sensitive dotted path
      * @param description  the possibly-null description
-     * @param objectMapper an {@link io.github.almightysatan.jaskl.ObjectMapper} instance
+     * @param objectMapper an {@link ObjectMapper} instance
      * @param defaultValue the default value
      * @param validators   the {@link Validator Validators}
      * @param <T>          the custom object
@@ -135,5 +135,25 @@ public interface CustomConfigEntry<T> extends ConfigEntry<T> {
         }
 
         return new CustomConfigEntryImpl();
+    }
+
+    /**
+     * Creates a new config entry using an {@link ObjectMapper}.
+     *
+     * @param config       the config
+     * @param path         the case-sensitive dotted path
+     * @param objectMapper an {@link ObjectMapper} instance
+     * @param defaultValue the default value
+     * @param validators   the {@link Validator Validators}
+     * @param <T>          the custom object
+     * @return a new entry
+     * @throws InvalidTypeException if the default value's type is invalid
+     * @throws ValidationException  if the default value fails validation
+     */
+    @SafeVarargs
+    static <T> @NotNull CustomConfigEntry<T> of(@NotNull Config config, @NotNull String path, @NotNull T defaultValue,
+                                                @NotNull ObjectMapper<T> objectMapper, @NotNull Validator<? super T>... validators)
+            throws InvalidTypeException, ValidationException {
+        return of(config, path, null, defaultValue, objectMapper, validators);
     }
 }
