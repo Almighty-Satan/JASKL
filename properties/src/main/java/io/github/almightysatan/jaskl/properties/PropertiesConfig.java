@@ -86,7 +86,7 @@ public class PropertiesConfig extends ConfigImpl {
     }
 
     @Override
-    public @Unmodifiable @NotNull Set<@NotNull String> strip0() throws IOException {
+    public @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException {
         if (this.config == null)
             throw new IllegalStateException();
         Util.createFileAndPath(this.file);

@@ -103,7 +103,7 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
     }
 
     @Override
-    public @Unmodifiable @NotNull Set<@NotNull String> strip0() throws IOException {
+    public @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException {
         if (this.root == null)
             throw new IllegalStateException();
         Util.createFileAndPath(this.file);

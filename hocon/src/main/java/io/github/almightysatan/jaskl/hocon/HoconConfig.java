@@ -104,7 +104,7 @@ public class HoconConfig extends ConfigImpl {
     }
 
     @Override
-    public @Unmodifiable @NotNull Set<@NotNull String> strip0() throws IOException {
+    public @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException {
         Config config = this.config;
         if (config == null)
             throw new IllegalStateException();

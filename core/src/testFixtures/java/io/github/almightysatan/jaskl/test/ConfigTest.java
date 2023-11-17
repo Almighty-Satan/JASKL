@@ -407,7 +407,7 @@ public abstract class ConfigTest {
         ConfigEntry<String> stringConfigEntry1 = StringConfigEntry.of(config1, "example.string", "Example String", "default");
 
         config1.load();
-        Set<String> paths = config1.strip0();
+        Set<String> paths = config1.prune();
         config1.close();
 
         Config config2 = this.createTestConfig();
@@ -458,7 +458,7 @@ public abstract class ConfigTest {
         MapConfigEntry.of(config1, "example.1.map1", null, map1New, Type.STRING, Type.STRING);
 
         config1.load();
-        Set<String> paths = config1.strip0();
+        Set<String> paths = config1.prune();
         config1.close();
 
         Config config2 = this.createTestConfig();

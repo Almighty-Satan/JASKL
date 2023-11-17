@@ -46,7 +46,7 @@ public class NopConfigImpl extends ConfigImpl {
     }
 
     @Override
-    public @Unmodifiable @NotNull Set<@NotNull String> strip0() {
+    public @Unmodifiable @NotNull Set<@NotNull String> prune() {
         return Collections.emptySet();
     }
 
