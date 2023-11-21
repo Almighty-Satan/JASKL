@@ -20,117 +20,39 @@
 
 package io.github.almightysatan.jaskl.json;
 
-import org.junit.jupiter.api.Test;
+import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.test.ConfigTest;
 
 import java.io.File;
-import java.io.IOException;
 
-import static io.github.almightysatan.jaskl.test.ConfigTest.*;
+public class JsonConfigTest extends ConfigTest {
 
-public class JsonConfigTest {
+    private static final File FILE_EMPTY = new File("src/test/resources/empty.json");
+    private static final File FILE_EXAMPLE = new File("src/test/resources/example.json");
+    private static final File FILE_TEST = new File("build/tmp/test/test.json");
 
-    File fileEmpty = new File("src/test/resources/empty.json");
-    File file0 = new File("src/test/resources/example.json");
-    File file1 = new File("build/tmp/test/write.json");
-    File file2 = new File("build/tmp/test/writeCustom.json");
-
-    @Test
-    public void testLoadJson() throws IOException {
-        testLoad(() -> JsonConfig.of(file0));
+    @Override
+    protected Config createEmptyConfig() {
+        return JsonConfig.of(FILE_EMPTY);
     }
 
-    @Test
-    public void testLoadAfterClosedJson() throws IOException {
-        testLoadAfterClosed(() -> JsonConfig.of(file0));
+    @Override
+    protected Config createExampleConfig() {
+        return JsonConfig.of(FILE_EXAMPLE);
     }
 
-    @Test
-    public void testAlreadyLoadedJson() throws IOException {
-        testAlreadyLoaded(() -> JsonConfig.of(file0));
+    @Override
+    protected Config createTestConfig() {
+        return JsonConfig.of(FILE_TEST);
     }
 
-    @Test
-    public void testEmptyConfigJson() throws IOException {
-        testEmptyConfig(() -> JsonConfig.of(fileEmpty));
+    @Override
+    protected void clearTestConfig() {
+        FILE_TEST.delete();
     }
 
-    @Test
-    public void testLoadValuesJson() throws IOException {
-        testLoadValues(() -> JsonConfig.of(file0));
-    }
-
-    @Test
-    public void testValidationJson() {
-        testValidation(() -> JsonConfig.of(file0));
-    }
-
-    @Test
-    public void testEnumValuesJson() throws IOException {
-        testEnumValues(() -> JsonConfig.of(file0));
-    }
-
-    @Test
-    public void testListValuesJson() throws IOException {
-        testListValues(() -> JsonConfig.of(file0));
-    }
-
-    @Test
-    public void testMapValuesJson() throws IOException {
-        testMapValues(() -> JsonConfig.of(file0));
-    }
-
-    @Test
-    public void testWriteAndLoadJson() throws IOException {
-        testWriteAndLoad(() -> JsonConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadBigJson() throws IOException {
-        testWriteAndLoadBig(() -> JsonConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadListJson() throws IOException {
-        testWriteAndLoadList(() -> JsonConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadList2Json() throws IOException {
-        testWriteAndLoadList2(() -> JsonConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadListEnumJson() throws IOException {
-        testWriteAndLoadListEnum(() -> JsonConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadMapJson() throws IOException {
-        testWriteAndLoadMap(() -> JsonConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testStripJson() throws IOException {
-        testStrip(() -> JsonConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testStripMapJson() throws IOException {
-        testStripMap(() -> JsonConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testCustomJson() throws IOException {
-        testCustom(() -> JsonConfig.of(file2));
-    }
-
-    @Test
-    public void testAnnotationJson() throws IOException {
-        testAnnotation(() -> JsonConfig.of(file1));
-    }
-
-    @Test
-    public void testAnnotationMapJson() throws IOException {
-        testAnnotationMap(() -> JsonConfig.of(file1));
+    @Override
+    protected boolean testConfigExists() {
+        return FILE_TEST.exists();
     }
 }

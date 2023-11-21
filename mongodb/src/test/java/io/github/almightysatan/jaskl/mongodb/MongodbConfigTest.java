@@ -24,32 +24,20 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.test.ConfigTest;
 import org.bson.Document;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.*;
 
-import static io.github.almightysatan.jaskl.test.ConfigTest.*;
-
-public class MongodbConfigTest {
+public class MongodbConfigTest extends ConfigTest {
 
     private static final String DATABASE = "JASKL_Test";
+    private static final String COLLECTION_EMPTY = "empty";
     private static final String COLLECTION_EXAMPLE = "example";
-    private static final String COLLECTION_0 = "test0";
-    private static final String COLLECTION_1 = "test1";
-    private static final String COLLECTION_2 = "test2";
-    private static final String COLLECTION_3 = "test3";
-    private static final String COLLECTION_4 = "test4";
-    private static final String COLLECTION_5 = "test5";
-    private static final String COLLECTION_6 = "test6";
-    private static final String COLLECTION_7 = "test7";
-    private static final String COLLECTION_8 = "test8";
-    private static final String COLLECTION_9 = "test9";
-    private static final String COLLECTION_10 = "test10";
-    private static final String COLLECTION_11 = "test11";
+    private static final String COLLECTION_TEST = "test";
 
     private static String mongoAddress;
 
@@ -83,103 +71,32 @@ public class MongodbConfigTest {
         }
     }
 
-    @Test
-    public void testLoadMongo() throws IOException {
-        testLoad(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
+    @Override
+    protected Config createEmptyConfig() {
+        return MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EMPTY);
     }
 
-    @Test
-    public void testLoadAfterClosedMongo() throws IOException {
-        testLoadAfterClosed(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
+    @Override
+    protected Config createExampleConfig() {
+        return MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE);
     }
 
-    @Test
-    public void testAlreadyLoadedMongo() throws IOException {
-        testAlreadyLoaded(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
+    @Override
+    protected Config createTestConfig() {
+        return MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_TEST);
     }
 
-    @Test
-    public void testEmptyConfigMongo() throws IOException {
-        testEmptyConfig(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_0));
+    @Override
+    protected void clearTestConfig() {
+        try (MongoClient mongoClient = MongoClients.create("mongodb://" + mongoAddress)) {
+            MongoDatabase database = mongoClient.getDatabase(DATABASE);
+            MongoCollection<Document> collection = database.getCollection(COLLECTION_TEST);
+            collection.drop();
+        }
     }
 
-    @Test
-    public void testLoadValuesMongo() throws IOException {
-        testLoadValues(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
-    }
-
-    @Test
-    public void testValidationMongo() {
-        testValidation(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
-    }
-
-    @Test
-    public void testEnumValuesMongo() throws IOException {
-        testEnumValues(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
-    }
-
-    @Test
-    public void testListValuesMongo() throws IOException {
-        testListValues(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
-    }
-
-    @Test
-    public void testMapValuesMongo() throws IOException {
-        testMapValues(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE));
-    }
-
-    @Test
-    public void testWriteAndLoadMongo() throws IOException {
-        testWriteAndLoad(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_1), null);
-    }
-
-    @Test
-    public void testWriteAndLoadBigMongo() throws IOException {
-        testWriteAndLoadBig(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_2), null);
-    }
-
-    @Test
-    public void testWriteAndLoadListMongo() throws IOException {
-        testWriteAndLoadList(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_3), null);
-    }
-
-    @Test
-    public void testWriteAndLoadList2Mongo() throws IOException {
-        testWriteAndLoadList2(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_4), null);
-    }
-
-    @Test
-    public void testWriteAndLoadListEnumMongo() throws IOException {
-        testWriteAndLoadListEnum(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_5), null);
-    }
-
-    @Test
-    public void testWriteAndLoadMapMongo() throws IOException {
-        testWriteAndLoadMap(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_6), null);
-    }
-
-    @Test
-    public void testStripMongo() throws IOException {
-        testStrip(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_7), null);
-    }
-
-    @Test
-    public void testStripMapMongo() throws IOException {
-        testStripMap(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_8), null);
-    }
-
-    @Test
-    public void testCustomMongo() throws IOException {
-        testCustom(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_9));
-    }
-
-    @Test
-    public void testAnnotationMongo() throws IOException {
-        testAnnotation(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_10));
-    }
-
-    @Test
-    public void testAnnotationMapMongo() throws IOException {
-        testAnnotationMap(() -> MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_11));
+    @Override
+    protected boolean testConfigExists() {
+        return true; // doesn't really matter
     }
 }

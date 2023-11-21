@@ -20,117 +20,39 @@
 
 package io.github.almightysatan.jaskl.hocon;
 
-import org.junit.jupiter.api.Test;
+import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.test.ConfigTest;
 
 import java.io.File;
-import java.io.IOException;
 
-import static io.github.almightysatan.jaskl.test.ConfigTest.*;
+public class HoconConfigTest extends ConfigTest {
 
-public class HoconConfigTest {
+    private static final File FILE_EMPTY = new File("src/test/resources/empty.hocon");
+    private static final File FILE_EXAMPLE = new File("src/test/resources/example.hocon");
+    private static final File FILE_TEST = new File("build/tmp/test/test.hocon");
 
-    File fileEmpty = new File("src/test/resources/empty.hocon");
-    File file0 = new File("src/test/resources/example.hocon");
-    File file1 = new File("build/tmp/test/write.hocon");
-    File file2 = new File("build/tmp/test/writeCustom.hocon");
-
-    @Test
-    public void testLoadHocon() throws IOException {
-        testLoad(() -> HoconConfig.of(file0));
+    @Override
+    protected Config createEmptyConfig() {
+        return HoconConfig.of(FILE_EMPTY);
     }
 
-    @Test
-    public void testLoadAfterClosedHocon() throws IOException {
-        testLoadAfterClosed(() -> HoconConfig.of(file0));
+    @Override
+    protected Config createExampleConfig() {
+        return HoconConfig.of(FILE_EXAMPLE);
     }
 
-    @Test
-    public void testAlreadyLoadedHocon() throws IOException {
-        testAlreadyLoaded(() -> HoconConfig.of(file0));
+    @Override
+    protected Config createTestConfig() {
+        return HoconConfig.of(FILE_TEST, "Test Hocon config");
     }
 
-    @Test
-    public void testEmptyConfigHocon() throws IOException {
-        testEmptyConfig(() -> HoconConfig.of(fileEmpty));
+    @Override
+    protected void clearTestConfig() {
+        FILE_TEST.delete();
     }
 
-    @Test
-    public void testLoadValuesHocon() throws IOException {
-        testLoadValues(() -> HoconConfig.of(file0));
-    }
-
-    @Test
-    public void testValidationHocon() {
-        testValidation(() -> HoconConfig.of(file0));
-    }
-
-    @Test
-    public void testEnumValuesHocon() throws IOException {
-        testEnumValues(() -> HoconConfig.of(file0));
-    }
-
-    @Test
-    public void testListValuesHocon() throws IOException {
-        testListValues(() -> HoconConfig.of(file0));
-    }
-
-    @Test
-    public void testMapValuesHocon() throws IOException {
-        testMapValues(() -> HoconConfig.of(file0));
-    }
-
-    @Test
-    public void testWriteAndLoadHocon() throws IOException {
-        testWriteAndLoad(() -> HoconConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadBigHocon() throws IOException {
-        testWriteAndLoadBig(() -> HoconConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadListHocon() throws IOException {
-        testWriteAndLoadList(() -> HoconConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadList2Hocon() throws IOException {
-        testWriteAndLoadList2(() -> HoconConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadListEnumHocon() throws IOException {
-        testWriteAndLoadListEnum(() -> HoconConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadMapHocon() throws IOException {
-        testWriteAndLoadMap(() -> HoconConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testStripHocon() throws IOException {
-        testStrip(() -> HoconConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testStripMapHocon() throws IOException {
-        testStripMap(() -> HoconConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testCustomHocon() throws IOException {
-        testCustom(() -> HoconConfig.of(file2));
-    }
-
-    @Test
-    public void testAnnotationHocon() throws IOException {
-        testAnnotation(() -> HoconConfig.of(file1));
-    }
-
-    @Test
-    public void testAnnotationMapHocon() throws IOException {
-        testAnnotationMap(() -> HoconConfig.of(file1));
+    @Override
+    protected boolean testConfigExists() {
+        return FILE_TEST.exists();
     }
 }

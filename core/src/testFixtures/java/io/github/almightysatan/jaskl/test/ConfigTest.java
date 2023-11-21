@@ -25,8 +25,9 @@ import io.github.almightysatan.jaskl.annotation.AnnotationManager;
 import io.github.almightysatan.jaskl.annotation.InvalidAnnotationConfigException;
 import io.github.almightysatan.jaskl.entries.*;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -34,15 +35,30 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
-public class ConfigTest {
+public abstract class ConfigTest {
+
+    protected abstract Config createEmptyConfig();
+
+    protected abstract Config createExampleConfig();
+
+    protected abstract Config createTestConfig();
+
+    protected abstract void clearTestConfig();
+
+    protected abstract boolean testConfigExists();
+
+    @BeforeEach
+    public final void setup() {
+        this.clearTestConfig();
+    }
 
     /**
      * Test if the config can be loaded successfully.
      */
-    public static void testLoad(Supplier<Config> configSupplier) throws IOException {
-        Config config = configSupplier.get();
+    @Test
+    public void testLoad() throws IOException {
+        Config config = this.createExampleConfig();
         config.load();
 
         config.close();
@@ -51,8 +67,9 @@ public class ConfigTest {
     /**
      * Test if the config can be loaded successfully after closing it.
      */
-    public static void testLoadAfterClosed(Supplier<Config> configSupplier) throws IOException {
-        Config config = configSupplier.get();
+    @Test
+    public void testLoadAfterClosed() throws IOException {
+        Config config = this.createExampleConfig();
         config.load();
         config.close();
         config.load();
@@ -63,16 +80,18 @@ public class ConfigTest {
     /**
      * Test if the config cannot be loaded when it has been loaded before.
      */
-    public static void testAlreadyLoaded(Supplier<Config> configSupplier) throws IOException {
-        Config config = configSupplier.get();
+    @Test
+    public void testAlreadyLoaded() throws IOException {
+        Config config = this.createExampleConfig();
         config.load();
         Assertions.assertThrows(IllegalStateException.class, config::load);
 
         config.close();
     }
 
-    public static void testEmptyConfig(Supplier<Config> configSupplier) throws IOException {
-        Config config = configSupplier.get();
+    @Test
+    public void testEmptyConfig() throws IOException {
+        Config config = this.createEmptyConfig();
         config.load();
         config.write();
         config.close();
@@ -82,8 +101,9 @@ public class ConfigTest {
      * Test if a config's values can be loaded successfully.
      * This test requires a predefined config file with inserted values.
      */
-    public static void testLoadValues(Supplier<Config> configSupplier) throws IOException {
-        Config config = configSupplier.get();
+    @Test
+    public void testLoadValues() throws IOException {
+        Config config = this.createExampleConfig();
 
         ConfigEntry<Boolean> booleanConfigEntry = BooleanConfigEntry.of(config, "example.boolean", "Example Boolean", false);
         ConfigEntry<Double> doubleConfigEntry = DoubleConfigEntry.of(config, "example.double", "Example Double", 0.0D);
@@ -111,14 +131,15 @@ public class ConfigTest {
      * Test if a config's values can be loaded successfully.
      * This test requires a predefined config file with inserted values.
      */
-    public static void testValidation(Supplier<Config> configSupplier) {
-        Config config0 = configSupplier.get();
+    @Test
+    public void testValidation() {
+        Config config0 = this.createExampleConfig();
 
         Assertions.assertThrows(ValidationException.class, () -> IntegerConfigEntry.of(config0, "example.integer", "Example Integer", 0, Validator.INTEGER_NOT_ZERO));
 
         config0.close();
 
-        Config config1 = configSupplier.get();
+        Config config1 = this.createExampleConfig();
         IntegerConfigEntry.of(config1, "example.integer", "Example Integer", -1, Validator.INTEGER_NEGATIVE);
 
         Assertions.assertThrows(ValidationException.class, config1::load);
@@ -130,8 +151,9 @@ public class ConfigTest {
      * Test if enum values can be loaded successfully.
      * This test requires a predefined config file with inserted values.
      */
-    public static void testEnumValues(Supplier<Config> configSupplier) throws IOException {
-        Config config = configSupplier.get();
+    @Test
+    public void testEnumValues() throws IOException {
+        Config config = this.createExampleConfig();
 
         ConfigEntry<ExampleEnum> enumConfigEntry = EnumConfigEntry.of(config, "example.enum", "Example Enum", ExampleEnum.EXAMPLE);
 
@@ -146,8 +168,9 @@ public class ConfigTest {
      * Test if list values can be loaded successfully.
      * This test requires a predefined config file with inserted values.
      */
-    public static void testListValues(Supplier<Config> configSupplier) throws IOException {
-        Config config = configSupplier.get();
+    @Test
+    public void testListValues() throws IOException {
+        Config config = this.createExampleConfig();
 
         List<String> example0 = Arrays.asList("Example1", "Example2");
         ConfigEntry<List<String>> listConfigEntry = ListConfigEntry.of(config, "example.list", "Example List", example0, Type.STRING);
@@ -164,8 +187,9 @@ public class ConfigTest {
      * Test if map values can be loaded successfully.
      * This test requires a predefined config file with inserted values.
      */
-    public static void testMapValues(Supplier<Config> configSupplier) throws IOException {
-        Config config = configSupplier.get();
+    @Test
+    public void testMapValues() throws IOException {
+        Config config = this.createExampleConfig();
 
         Map<String, String> example0 = new HashMap<>();
         example0.put("Hello", "World");
@@ -187,11 +211,9 @@ public class ConfigTest {
      * Test if a config can be created, saved and loaded again.
      * This test requires a valid file path.
      */
-    public static void testWriteAndLoad(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file != null && file.exists() && !file.delete())
-            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
-
-        Config config0 = configSupplier.get();
+    @Test
+    public void testWriteAndLoad() throws IOException {
+        Config config0 = this.createTestConfig();
         ConfigEntry<String> stringConfigEntry0 = StringConfigEntry.of(config0, "example.string", "Example String", "default");
         ConfigEntry<Integer> intConfigEntry0 = IntegerConfigEntry.of(config0, "example.integer", "Example Integer", 0);
 
@@ -203,10 +225,9 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        if (file != null)
-            Assertions.assertTrue(file.exists());
+        Assertions.assertTrue(this.testConfigExists());
 
-        Config config1 = configSupplier.get();
+        Config config1 = this.createTestConfig();
         ConfigEntry<String> stringConfigEntry1 = StringConfigEntry.of(config1, "example.string", "Example String", "default");
         ConfigEntry<Integer> intConfigEntry1 = IntegerConfigEntry.of(config1, "example.integer", "Example Integer", 0);
 
@@ -218,11 +239,9 @@ public class ConfigTest {
         config1.close();
     }
 
-    public static void testWriteAndLoadBig(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file != null && file.exists() && !file.delete())
-            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
-
-        Config config0 = configSupplier.get();
+    @Test
+    public void testWriteAndLoadBig() throws IOException {
+        Config config0 = this.createTestConfig();
 
         ConfigEntry<BigDecimal> bigDecimalConfigEntry0 = BigDecimalConfigEntry.of(config0, "example.bigdecimal", "Example BigDecimal", new BigDecimal("99.000000000000000001"));
         ConfigEntry<BigInteger> bigIntegerConfigEntry0 = BigIntegerConfigEntry.of(config0, "example.biginteger", "Example BigInteger", new BigInteger("9923372036854775807"));
@@ -231,10 +250,9 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        if (file != null)
-            Assertions.assertTrue(file.exists());
+        Assertions.assertTrue(this.testConfigExists());
 
-        Config config1 = configSupplier.get();
+        Config config1 = this.createTestConfig();
         ConfigEntry<BigDecimal> bigDecimalConfigEntry1 = BigDecimalConfigEntry.of(config1, "example.bigdecimal", "Example BigDecimal", new BigDecimal("0"));
         ConfigEntry<BigInteger> bigIntegerConfigEntry1 = BigIntegerConfigEntry.of(config1, "example.biginteger", "Example BigInteger", BigInteger.valueOf(0L));
 
@@ -250,11 +268,9 @@ public class ConfigTest {
      * Test if a config can be created, saved and loaded again.
      * This test requires a valid file path.
      */
-    public static void testWriteAndLoadList(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file != null && file.exists() && !file.delete())
-            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
-
-        Config config0 = configSupplier.get();
+    @Test
+    public void testWriteAndLoadList() throws IOException {
+        Config config0 = this.createTestConfig();
 
         List<Double> list0 = Arrays.asList(1.0, 2.0);
         ConfigEntry<List<Double>> listConfigEntry0 = ListConfigEntry.of(config0, "example.list", "Example Double List", list0, Type.DOUBLE);
@@ -266,10 +282,9 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        if (file != null)
-            Assertions.assertTrue(file.exists());
+        Assertions.assertTrue(this.testConfigExists());
 
-        Config config1 = configSupplier.get();
+        Config config1 = this.createTestConfig();
         ConfigEntry<List<Double>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example Double List", list0, Type.DOUBLE);
 
         config1.load();
@@ -283,11 +298,9 @@ public class ConfigTest {
      * Test if a list of lists can be written and loaded again.
      * This test requires a valid file path.
      */
-    public static void testWriteAndLoadList2(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file != null && file.exists() && !file.delete())
-            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
-
-        Config config0 = configSupplier.get();
+    @Test
+    public void testWriteAndLoadList2() throws IOException {
+        Config config0 = this.createTestConfig();
 
         List<List<Integer>> list0 = Arrays.asList(Arrays.asList(1, 2), Arrays.asList(3, 4));
         ConfigEntry<List<List<Integer>>> listConfigEntry0 = ListConfigEntry.of(config0, "example.list", "Example List", list0, Type.list(Type.INTEGER));
@@ -299,10 +312,9 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        if (file != null)
-            Assertions.assertTrue(file.exists());
+        Assertions.assertTrue(this.testConfigExists());
 
-        Config config1 = configSupplier.get();
+        Config config1 = this.createTestConfig();
         ConfigEntry<List<List<Integer>>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example List", list0, Type.list(Type.INTEGER));
 
         config1.load();
@@ -317,11 +329,9 @@ public class ConfigTest {
      * Test if a list of enums can be written and loaded again.
      * This test requires a valid file path.
      */
-    public static void testWriteAndLoadListEnum(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file != null && file.exists() && !file.delete())
-            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
-
-        Config config0 = configSupplier.get();
+    @Test
+    public void testWriteAndLoadListEnum() throws IOException {
+        Config config0 = this.createTestConfig();
 
         List<ExampleEnum> list0 = Arrays.asList(ExampleEnum.EXAMPLE, ExampleEnum.EXAMPLE);
         ConfigEntry<List<ExampleEnum>> listConfigEntry0 = ListConfigEntry.of(config0, "example.list", "Example Enum List", list0, Type.enumType(ExampleEnum.class));
@@ -333,10 +343,9 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        if (file != null)
-            Assertions.assertTrue(file.exists());
+        Assertions.assertTrue(this.testConfigExists());
 
-        Config config1 = configSupplier.get();
+        Config config1 = this.createTestConfig();
         ConfigEntry<List<ExampleEnum>> listConfigEntry1 = ListConfigEntry.of(config1, "example.list", "Example Enum List", list0, Type.enumType(ExampleEnum.class));
 
         config1.load();
@@ -350,11 +359,9 @@ public class ConfigTest {
      * Test if a map can be written and loaded again.
      * This test requires a valid file path.
      */
-    public static void testWriteAndLoadMap(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file != null && file.exists() && !file.delete())
-            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
-
-        Config config0 = configSupplier.get();
+    @Test
+    public void testWriteAndLoadMap() throws IOException {
+        Config config0 = this.createTestConfig();
 
         Map<Float, String> map0 = new HashMap<>();
         map0.put(10F, "Hello");
@@ -370,10 +377,9 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        if (file != null)
-            Assertions.assertTrue(file.exists());
+        Assertions.assertTrue(this.testConfigExists());
 
-        Config config1 = configSupplier.get();
+        Config config1 = this.createTestConfig();
         ConfigEntry<Map<Float, String>> mapConfigEntry1 = MapConfigEntry.of(config1, "example.map", "Example Map", map0, Type.FLOAT, Type.STRING);
 
         config1.load();
@@ -386,11 +392,9 @@ public class ConfigTest {
     /**
      * Test if strip works as intended
      */
-    public static void testStrip(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file != null && file.exists() && !file.delete())
-            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
-
-        Config config0 = configSupplier.get();
+    @Test
+    public void testStrip() throws IOException {
+        Config config0 = this.createTestConfig();
         ConfigEntry<String> stringConfigEntry0 = StringConfigEntry.of(config0, "example.string", "Example String", "default");
         ConfigEntry<Integer> intConfigEntry0 = IntegerConfigEntry.of(config0, "example.integer", "Example String", 0);
 
@@ -402,14 +406,14 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        Config config1 = configSupplier.get();
+        Config config1 = this.createTestConfig();
         ConfigEntry<String> stringConfigEntry1 = StringConfigEntry.of(config1, "example.string", "Example String", "default");
 
         config1.load();
         config1.strip();
         config1.close();
 
-        Config config2 = configSupplier.get();
+        Config config2 = this.createTestConfig();
         ConfigEntry<String> stringConfigEntry2 = StringConfigEntry.of(config2, "example.string", "Example String", "default");
         ConfigEntry<Integer> intConfigEntry2 = IntegerConfigEntry.of(config2, "example.integer", "Example String", 0);
 
@@ -424,10 +428,8 @@ public class ConfigTest {
     /**
      * Test if strip can be run with maps
      */
-    public static void testStripMap(Supplier<Config> configSupplier, File file) throws IOException {
-        if (file != null && file.exists() && !file.delete())
-            Assertions.fail(String.format("Couldn't delete file %s even though it exists.", file));
-
+    @Test
+    public void testStripMap() throws IOException {
         Map<String, String> map0 = new HashMap<>();
         map0.put("Hello", "World");
         map0.put("abc", "def");
@@ -444,7 +446,7 @@ public class ConfigTest {
         map1New.put("2", "2");
         map1New.put("3", "3");
 
-        Config config0 = configSupplier.get();
+        Config config0 = this.createTestConfig();
         MapConfigEntry<String, String> mapConfigEntry0 = MapConfigEntry.of(config0, "example.0.map0", null, map0, Type.STRING, Type.STRING);
         MapConfigEntry<String, String> mapConfigEntry1 = MapConfigEntry.of(config0, "example.1.map1", null, map1, Type.STRING, Type.STRING);
 
@@ -452,14 +454,14 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        Config config1 = configSupplier.get();
+        Config config1 = this.createTestConfig();
         MapConfigEntry.of(config1, "example.1.map1", null, map1New, Type.STRING, Type.STRING);
 
         config1.load();
         config1.strip();
         config1.close();
 
-        Config config2 = configSupplier.get();
+        Config config2 = this.createTestConfig();
         MapConfigEntry<String, String> mapConfigEntry0New = MapConfigEntry.of(config2, "example.0.map0", null, map0New, Type.STRING, Type.STRING);
         MapConfigEntry<String, String> mapConfigEntry1New = MapConfigEntry.of(config2, "example.1.map1", null, map1New, Type.STRING, Type.STRING);
 
@@ -474,10 +476,11 @@ public class ConfigTest {
     /**
      * Test if custom values can be written and loaded successfully.
      */
-    public static void testCustom(Supplier<Config> configSupplier) throws IOException {
+    @Test
+    public void testCustom() throws IOException {
         ExampleCustomObject value = new ExampleCustomObject("Default", 5, ExampleEnum.EXAMPLE);
         ExampleNestedCustomObject nestedValue = new ExampleNestedCustomObject(value);
-        Config config0 = configSupplier.get();
+        Config config0 = this.createTestConfig();
         ConfigEntry<ExampleCustomObject> entry0 = CustomConfigEntry.of(config0, "example.custom", "Hello World", value, ExampleCustomObject.class);
         ConfigEntry<ExampleNestedCustomObject> entry1 = CustomConfigEntry.of(config0, "example.nestedCustom", "Hello World", nestedValue, ExampleNestedCustomObject.class);
 
@@ -485,7 +488,7 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        Config config1 = configSupplier.get();
+        Config config1 = this.createTestConfig();
         ConfigEntry<ExampleCustomObject> entry2 = CustomConfigEntry.of(config1, "example.custom", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE));
         ConfigEntry<ExampleNestedCustomObject> entry3 = CustomConfigEntry.of(config1, "example.nestedCustom", "Hello World", new ExampleNestedCustomObject(new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE)));
 
@@ -498,10 +501,11 @@ public class ConfigTest {
         Assertions.assertEquals(nestedValue, entry3.getValue());
     }
 
-    public static void testAnnotation(Supplier<Config> configSupplier) throws IOException {
+    @Test
+    public void testAnnotation() throws IOException {
         AnnotationManager annotationManager = AnnotationManager.create();
 
-        Config config0 = configSupplier.get();
+        Config config0 = this.createTestConfig();
         ExampleAnnotationConfig annotationConfig0 = annotationManager.registerEntries(config0, ExampleAnnotationConfig.class);
 
         config0.load();
@@ -513,7 +517,7 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        Config config1 = configSupplier.get();
+        Config config1 = this.createTestConfig();
         ExampleAnnotationConfig annotationConfig1 = annotationManager.registerEntries(config1, ExampleAnnotationConfig.class);
 
         config1.load();
@@ -531,10 +535,11 @@ public class ConfigTest {
         config1.close();
     }
 
-    public static void testAnnotationMap(Supplier<Config> configSupplier) throws IOException {
+    @Test
+    public void testAnnotationMap() throws IOException {
         AnnotationManager annotationManager = AnnotationManager.create();
 
-        Config config0 = configSupplier.get();
+        Config config0 = this.createTestConfig();
         ExampleAnnotationMapConfig annotationConfig0 = annotationManager.registerEntries(config0, ExampleAnnotationMapConfig.class);
 
         config0.load();
@@ -552,7 +557,7 @@ public class ConfigTest {
         config0.write();
         config0.close();
 
-        Config config1 = configSupplier.get();
+        Config config1 = this.createTestConfig();
         ExampleAnnotationMapConfig annotationConfig1 = annotationManager.registerEntries(config1, ExampleAnnotationMapConfig.class);
 
         config1.load();

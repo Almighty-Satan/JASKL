@@ -20,117 +20,39 @@
 
 package io.github.almightysatan.jaskl.yaml;
 
-import org.junit.jupiter.api.Test;
+import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.test.ConfigTest;
 
 import java.io.File;
-import java.io.IOException;
 
-import static io.github.almightysatan.jaskl.test.ConfigTest.*;
+public class YamlConfigTest extends ConfigTest {
 
-public class YamlConfigTest {
+    private static final File FILE_EMPTY = new File("src/test/resources/empty.yaml");
+    private static final File FILE_EXAMPLE = new File("src/test/resources/example.yaml");
+    private static final File FILE_TEST = new File("build/tmp/test/test.yaml");
 
-    File fileEmpty = new File("src/test/resources/empty.yaml");
-    File file0 = new File("src/test/resources/example.yaml");
-    File file1 = new File("build/tmp/test/write.yaml");
-    File file2 = new File("build/tmp/test/writeCustom.yaml");
-
-    @Test
-    public void testLoadYaml() throws IOException {
-        testLoad(() -> YamlConfig.of(file0, "Example YAML Config"));
+    @Override
+    protected Config createEmptyConfig() {
+        return YamlConfig.of(FILE_EMPTY);
     }
 
-    @Test
-    public void testLoadAfterClosedYaml() throws IOException {
-        testLoadAfterClosed(() -> YamlConfig.of(file0, "Example YAML Config"));
+    @Override
+    protected Config createExampleConfig() {
+        return YamlConfig.of(FILE_EXAMPLE);
     }
 
-    @Test
-    public void testAlreadyLoadedYaml() throws IOException {
-        testAlreadyLoaded(() -> YamlConfig.of(file0, "Example YAML Config"));
+    @Override
+    protected Config createTestConfig() {
+        return YamlConfig.of(FILE_TEST, "Test YAML config");
     }
 
-    @Test
-    public void testEmptyConfigYaml() throws IOException {
-        testEmptyConfig(() -> YamlConfig.of(fileEmpty));
+    @Override
+    protected void clearTestConfig() {
+        FILE_TEST.delete();
     }
 
-    @Test
-    public void testLoadValuesYaml() throws IOException {
-        testLoadValues(() -> YamlConfig.of(file0, "Example YAML Config"));
-    }
-
-    @Test
-    public void testValidationYaml() {
-        testValidation(() -> YamlConfig.of(file0, "Example YAML Config"));
-    }
-
-    @Test
-    public void testEnumValuesYaml() throws IOException {
-        testEnumValues(() -> YamlConfig.of(file0, "Example YAML Config"));
-    }
-
-    @Test
-    public void testListValuesYaml() throws IOException {
-        testListValues(() -> YamlConfig.of(file0, "Example YAML Config"));
-    }
-
-    @Test
-    public void testMapValuesYaml() throws IOException {
-        testMapValues(() -> YamlConfig.of(file0, "Example YAML Config"));
-    }
-
-    @Test
-    public void testWriteAndLoadYaml() throws IOException {
-        testWriteAndLoad(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadBigYaml() throws IOException {
-        testWriteAndLoadBig(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadListYaml() throws IOException {
-        testWriteAndLoadList(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadList2Yaml() throws IOException {
-        testWriteAndLoadList2(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadListEnumYaml() throws IOException {
-        testWriteAndLoadListEnum(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadMapYaml() throws IOException {
-        testWriteAndLoadMap(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
-    }
-
-    @Test
-    public void testStripYaml() throws IOException {
-        testStrip(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
-    }
-
-    @Test
-    public void testStripMapYaml() throws IOException {
-        testStripMap(() -> YamlConfig.of(file1, "Example YAML Config"), file1);
-    }
-
-    @Test
-    public void testCustomYaml() throws IOException {
-        testCustom(() -> YamlConfig.of(file2, "Example YAML Config"));
-    }
-
-    @Test
-    public void testAnnotationYaml() throws IOException {
-        testAnnotation(() -> YamlConfig.of(file1, "Example YAML Config"));
-    }
-
-    @Test
-    public void testAnnotationMapYaml() throws IOException {
-        testAnnotationMap(() -> YamlConfig.of(file1, "Example YAML Config"));
+    @Override
+    protected boolean testConfigExists() {
+        return FILE_TEST.exists();
     }
 }

@@ -20,95 +20,97 @@
 
 package io.github.almightysatan.jaskl.properties;
 
+import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.InvalidTypeException;
+import io.github.almightysatan.jaskl.test.ConfigTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 
-import static io.github.almightysatan.jaskl.test.ConfigTest.*;
+public class PropertiesConfigTest extends ConfigTest {
 
-public class PropertiesConfigTest {
+    private static final File FILE_EMPTY = new File("src/test/resources/empty.properties");
+    private static final File FILE_EXAMPLE = new File("src/test/resources/example.properties");
+    private static final File FILE_TEST = new File("build/tmp/test/test.properties");
 
-    File fileEmpty = new File("src/test/resources/empty.properties");
-    File file0 = new File("src/test/resources/example.properties");
-    File file1 = new File("build/tmp/test/write.properties");
-    File file2 = new File("build/tmp/test/writeCustom.properties");
+    @Override
+    protected Config createEmptyConfig() {
+        return PropertiesConfig.of(FILE_EMPTY);
+    }
 
-    @Test
-    public void testLoadProperties() throws IOException {
-        testLoad(() -> PropertiesConfig.of(file0));
+    @Override
+    protected Config createExampleConfig() {
+        return PropertiesConfig.of(FILE_EXAMPLE);
+    }
+
+    @Override
+    protected Config createTestConfig() {
+        return PropertiesConfig.of(FILE_TEST, "Test Properties config");
+    }
+
+    @Override
+    protected void clearTestConfig() {
+        FILE_TEST.delete();
+    }
+
+    @Override
+    protected boolean testConfigExists() {
+        return FILE_TEST.exists();
     }
 
     @Test
-    public void testLoadAfterClosedProperties() throws IOException {
-        testLoadAfterClosed(() -> PropertiesConfig.of(file0));
+    @Override
+    public void testListValues() throws IOException {
+        Assertions.assertThrows(UnsupportedOperationException.class, super::testListValues);
     }
 
     @Test
-    public void testAlreadyLoadedProperties() throws IOException {
-        testAlreadyLoaded(() -> PropertiesConfig.of(file0));
+    @Override
+    public void testMapValues() throws IOException {
+        Assertions.assertThrows(UnsupportedOperationException.class, super::testMapValues);
     }
 
     @Test
-    public void testEmptyConfigProperties() throws IOException {
-        testEmptyConfig(() -> PropertiesConfig.of(fileEmpty));
+    @Override
+    public void testWriteAndLoadList() throws IOException {
+        Assertions.assertThrows(UnsupportedOperationException.class, super::testWriteAndLoadList);
     }
 
     @Test
-    public void testLoadValuesProperties() throws IOException {
-        testLoadValues(() -> PropertiesConfig.of(file0));
+    @Override
+    public void testWriteAndLoadList2() throws IOException {
+        Assertions.assertThrows(UnsupportedOperationException.class, super::testWriteAndLoadList2);
     }
 
     @Test
-    public void testValidationProperties() {
-        testValidation(() -> PropertiesConfig.of(file0));
+    @Override
+    public void testWriteAndLoadListEnum() throws IOException {
+        Assertions.assertThrows(UnsupportedOperationException.class, super::testWriteAndLoadListEnum);
     }
 
     @Test
-    public void testEnumValuesProperties() throws IOException {
-        testEnumValues(() -> PropertiesConfig.of(file0));
+    @Override
+    public void testWriteAndLoadMap() throws IOException {
+        Assertions.assertThrows(UnsupportedOperationException.class, super::testWriteAndLoadMap);
     }
 
     @Test
-    public void testListValuesProperties() {
-        Assertions.assertThrows(
-                UnsupportedOperationException.class,
-                () -> testListValues(() -> PropertiesConfig.of(file0))
-        );
+    @Override
+    public void testStripMap() throws IOException {
+        Assertions.assertThrows(UnsupportedOperationException.class, super::testStripMap);
     }
 
     @Test
-    public void testMapValuesProperties() {
-        Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> testMapValues(() -> PropertiesConfig.of(file0)));
+    @Override
+    public void testCustom() throws IOException {
+        Assertions.assertThrows(InvalidTypeException.class, super::testCustom);
     }
 
     @Test
-    public void testWriteAndLoadProperties() throws IOException {
-        testWriteAndLoad(() -> PropertiesConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadBigProperties() throws IOException {
-        testWriteAndLoadBig(() -> PropertiesConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadListProperties() {
-        Assertions.assertThrows(
-                UnsupportedOperationException.class,
-                () -> testWriteAndLoadList(() -> PropertiesConfig.of(file1), file1)
-        );
-    }
-
-    @Test
-    public void testStripProperties() throws IOException {
-        testStrip(() -> PropertiesConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testAnnotationProperties() throws IOException {
-        testAnnotation(() -> PropertiesConfig.of(file1));
+    @Override
+    public void testAnnotationMap() throws IOException {
+        Assertions.assertThrows(InvalidTypeException.class, super::testAnnotationMap);
     }
 }

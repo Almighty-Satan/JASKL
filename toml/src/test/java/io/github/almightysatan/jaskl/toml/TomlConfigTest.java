@@ -20,117 +20,39 @@
 
 package io.github.almightysatan.jaskl.toml;
 
-import org.junit.jupiter.api.Test;
+import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.test.ConfigTest;
 
 import java.io.File;
-import java.io.IOException;
 
-import static io.github.almightysatan.jaskl.test.ConfigTest.*;
+public class TomlConfigTest extends ConfigTest {
 
-public class TomlConfigTest {
+    private static final File FILE_EMPTY = new File("src/test/resources/empty.toml");
+    private static final File FILE_EXAMPLE = new File("src/test/resources/example.toml");
+    private static final File FILE_TEST = new File("build/tmp/test/test.toml");
 
-    File fileEmpty = new File("src/test/resources/empty.toml");
-    File file0 = new File("src/test/resources/example.toml");
-    File file1 = new File("build/tmp/test/write.toml");
-    File file2 = new File("build/tmp/test/writeCustom.toml");
-
-    @Test
-    public void testLoadToml() throws IOException {
-        testLoad(() -> TomlConfig.of(file0));
+    @Override
+    protected Config createEmptyConfig() {
+        return TomlConfig.of(FILE_EMPTY);
     }
 
-    @Test
-    public void testLoadAfterClosedToml() throws IOException {
-        testLoadAfterClosed(() -> TomlConfig.of(file0));
+    @Override
+    protected Config createExampleConfig() {
+        return TomlConfig.of(FILE_EXAMPLE);
     }
 
-    @Test
-    public void testAlreadyLoadedToml() throws IOException {
-        testAlreadyLoaded(() -> TomlConfig.of(file0));
+    @Override
+    protected Config createTestConfig() {
+        return TomlConfig.of(FILE_TEST);
     }
 
-    @Test
-    public void testEmptyConfigToml() throws IOException {
-        testEmptyConfig(() -> TomlConfig.of(fileEmpty));
+    @Override
+    protected void clearTestConfig() {
+        FILE_TEST.delete();
     }
 
-    @Test
-    public void testTomlValues0() throws IOException {
-        testLoadValues(() -> TomlConfig.of(file0));
-    }
-
-    @Test
-    public void testValidationToml() {
-        testValidation(() -> TomlConfig.of(file0));
-    }
-
-    @Test
-    public void testEnumValuesToml() throws IOException {
-        testEnumValues(() -> TomlConfig.of(file0));
-    }
-
-    @Test
-    public void testListValuesToml() throws IOException {
-        testListValues(() -> TomlConfig.of(file0));
-    }
-
-    @Test
-    public void testMapValuesToml() throws IOException {
-        testMapValues(() -> TomlConfig.of(file0));
-    }
-
-    @Test
-    public void testWriteAndLoadToml() throws IOException {
-        testWriteAndLoad(() -> TomlConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadBigToml() throws IOException {
-        testWriteAndLoadBig(() -> TomlConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadListToml() throws IOException {
-        testWriteAndLoadList(() -> TomlConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadList2Toml() throws IOException {
-        testWriteAndLoadList2(() -> TomlConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadListEnumToml() throws IOException {
-        testWriteAndLoadListEnum(() -> TomlConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testWriteAndLoadMapToml() throws IOException {
-        testWriteAndLoadMap(() -> TomlConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testStripToml() throws IOException {
-        testStrip(() -> TomlConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testStripMapToml() throws IOException {
-        testStripMap(() -> TomlConfig.of(file1), file1);
-    }
-
-    @Test
-    public void testCustomToml() throws IOException {
-        testCustom(() -> TomlConfig.of(file2));
-    }
-
-    @Test
-    public void testAnnotationToml() throws IOException {
-        testAnnotation(() -> TomlConfig.of(file1));
-    }
-
-    @Test
-    public void testAnnotationMapToml() throws IOException {
-        testAnnotationMap(() -> TomlConfig.of(file1));
+    @Override
+    protected boolean testConfigExists() {
+        return FILE_TEST.exists();
     }
 }
