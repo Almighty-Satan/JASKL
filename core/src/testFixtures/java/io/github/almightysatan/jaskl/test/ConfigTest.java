@@ -242,6 +242,8 @@ public class ConfigTest {
 
         Assertions.assertEquals(bigDecimalConfigEntry0.getValue(), bigDecimalConfigEntry1.getValue());
         Assertions.assertEquals(bigIntegerConfigEntry0.getValue(), bigIntegerConfigEntry1.getValue());
+
+        config1.close();
     }
 
     /**
