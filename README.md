@@ -73,6 +73,60 @@ JASKL can automatically validate config entries (e.g. ensure that a number is al
 IntegerConfigEntry positiveIntegerConfigEntry = IntegerConfigEntry.of(config, "example.integer", "Example Integer", 1, Validator.INTEGER_POSITIVE);
 ```
 
+### Custom Objects (Annotations)
+```java
+public class MyObject {
+
+    @Entry
+    @Validate.StringNotEmpty
+    public String myString = "Default String"; // Annotated fields must be public and default values should not be null
+
+    @Entry("some.other.path")
+    public int myInt = 5;
+
+    public MyObject() {} // An empty constructor is required
+}
+```
+You can than register a ConfigEntry:
+```java
+ConfigEntry<MyObject> entry = CustomConfigEntry.of(config, "example.myObject", "Some description", new MyObject());
+```
+
+### Custom Objects (ObjectMapper)
+If you don't want to use annotations, an ObjectMapper can be used instead.
+```java
+ObjectMapper<MyObject> mapper = new ObjectMapper<MyObject>() {
+    @Override
+    public @NotNull MyObject createInstance(@Unmodifiable @NotNull Map<@NotNull String, @NotNull Object> values) throws InvalidTypeException, ValidationException {
+        return new MyObject((String) values.get("myString"), (int) values.get("myInt"));
+    }
+
+    @Override
+    public @Unmodifiable @NotNull Map<@NotNull String, @NotNull Object> readValues(@NotNull MyObject instance) throws InvalidTypeException {
+        Map<String, Object> values = new HashMap<>();
+        values.put("myString", instance.getMyString());
+        values.put("myInt", instance.getMyInt());
+        return Collections.unmodifiableMap(values);
+    }
+
+    @Override
+    public @NotNull Class<MyObject> getObjectClass() {
+        return MyObject.class;
+    }
+
+    @Override
+    public @NotNull Map<@NotNull String, @NotNull Type<?>> getProperties() {
+        Map<String, Type<?>> properties = new HashMap<>();
+        properties.put("myString", Type.validated(Type.STRING, Validator.STRING_NOT_EMPTY));
+        properties.put("myInt", Type.INTEGER);
+        return Collections.unmodifiableMap(properties);
+    }
+};
+
+// register the entry
+ConfigEntry<MyObject> entry = CustomConfigEntry.of(config, "example.mapper.myObject", "Some description", new MyObject(), mapper);
+```
+
 ### Annotation-based Configs
 You can also use annotation-based configs:
 ```java
