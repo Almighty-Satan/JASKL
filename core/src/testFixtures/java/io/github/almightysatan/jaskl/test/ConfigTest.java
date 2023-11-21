@@ -500,12 +500,10 @@ public abstract class ConfigTest {
             }
 
             @Override
-            public @NotNull Map<@NotNull String, @NotNull Type<?>> getProperties() {
-                Map<String, Type<?>> properties = new HashMap<>();
-                properties.put("exampleString", Type.STRING);
-                properties.put("exampleInt", Type.INTEGER);
-                properties.put("exampleEnum", Type.enumType(ExampleEnum.class));
-                return Collections.unmodifiableMap(properties);
+            public @NotNull Property<?> @NotNull [] getProperties() {
+                return new Property[]{Property.of("exampleString", Type.STRING),
+                        Property.of("exampleInt", Type.INTEGER),
+                        Property.of("exampleEnum", Type.enumType(ExampleEnum.class))};
             }
         };
         Config config0 = this.createTestConfig();

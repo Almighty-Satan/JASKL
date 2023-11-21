@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Map;
+import java.util.Objects;
 
 public interface ObjectMapper<T> {
 
@@ -33,5 +34,41 @@ public interface ObjectMapper<T> {
 
     @NotNull Class<T> getObjectClass();
 
-    @Unmodifiable @NotNull Map<@NotNull String, @NotNull Type<?>> getProperties();
+    @NotNull Property<?> @NotNull [] getProperties();
+
+    interface Property<T> {
+
+        @NotNull String getKey();
+
+        @NotNull Type<T> getType();
+
+        boolean isOptional();
+
+        static <T> Property<T> of(@NotNull String key, @NotNull Type<T> type, boolean optional) {
+            Objects.requireNonNull(key);
+            Objects.requireNonNull(type);
+            if (key.isEmpty())
+                throw new IllegalArgumentException("Empty key");
+            return new Property<T>() {
+                @Override
+                public @NotNull String getKey() {
+                    return key;
+                }
+
+                @Override
+                public @NotNull Type<T> getType() {
+                    return type;
+                }
+
+                @Override
+                public boolean isOptional() {
+                    return optional;
+                }
+            };
+        }
+
+        static <T> Property<T> of(@NotNull String key, @NotNull Type<T> type) {
+            return of(key, type, false);
+        }
+    }
 }
