@@ -20,9 +20,12 @@
 
 package io.github.almightysatan.jaskl;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.IOException;
+import java.util.Set;
 
 public interface Config {
 
@@ -59,11 +62,25 @@ public interface Config {
 
     /**
      * Cleans up dead entries from the storage location.
-     * An entry is dead if no {@link ConfigEntry} references its path.
+     * An entry is considered dead if no {@link ConfigEntry} references its path.
      *
+     * @return a set containing all removed paths. Depending on the implementation map entries might be returned as
+     * separate paths.
      * @throws IOException if an I/O exception occurs.
      */
-    void strip() throws IOException;
+    @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException;
+
+    /**
+     * Cleans up dead entries from the storage location.
+     * An entry is considered dead if no {@link ConfigEntry} references its path.
+     *
+     * @throws IOException if an I/O exception occurs.
+     * @deprecated use {@link #prune()} instead
+     */
+    @Deprecated
+    default void strip() throws IOException {
+        this.prune();
+    }
 
     /**
      * Closes the corresponding data storage location.

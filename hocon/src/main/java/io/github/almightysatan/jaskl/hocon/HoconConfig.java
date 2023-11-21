@@ -27,6 +27,7 @@ import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -103,18 +104,20 @@ public class HoconConfig extends ConfigImpl {
     }
 
     @Override
-    public void strip() throws IOException {
+    public @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException {
         Config config = this.config;
         if (config == null)
             throw new IllegalStateException();
         Util.createFileAndPath(this.file);
 
-        List<String> pathsToRemove = new ArrayList<>();
-        this.resolvePathsToStrip("", config.root(), this.getPaths(), pathsToRemove);
+        Set<String> pathsToRemove = new HashSet<>();
+        Set<String> valuePathsRemoved = new HashSet<>();
+        this.resolvePathsToStrip("", config.root(), this.getPaths(), pathsToRemove, valuePathsRemoved);
         for (String path : pathsToRemove)
             config = config.withoutPath(path);
 
         this.writeIfNecessary(config, false);
+        return Collections.unmodifiableSet(valuePathsRemoved);
     }
 
     @Override
@@ -134,26 +137,23 @@ public class HoconConfig extends ConfigImpl {
         }
     }
 
-    protected int resolvePathsToStrip(@NotNull String path, @NotNull ConfigObject node, @NotNull Set<String> paths, @NotNull List<String> toRemove) {
-        int numRemoved = 0;
+    protected void resolvePathsToStrip(@NotNull String path, @NotNull ConfigObject node, @NotNull Set<String> paths, @NotNull Set<String> toRemove, @NotNull Set<String> valuePathsRemoved) {
         for (Map.Entry<String, ConfigValue> entry : node.entrySet()) {
             String fieldPath = (path.isEmpty() ? "" : path + ".") + entry.getKey();
             if (entry.getValue() instanceof ConfigObject) {
                 if (paths.contains(fieldPath))
                     continue;
                 ConfigObject child = (ConfigObject) entry.getValue();
-                int numChildrenRemoved = this.resolvePathsToStrip(fieldPath, child, paths, toRemove);
+                int numRemoved = toRemove.size();
+                this.resolvePathsToStrip(fieldPath, child, paths, toRemove, valuePathsRemoved);
                 int numChildren = child.entrySet().size();
-                if (numChildren == 0 || numChildren == numChildrenRemoved) {
+                if (numChildren == 0 || numChildren == (toRemove.size() - numRemoved))
                     toRemove.add(fieldPath);
-                    numRemoved++;
-                }
             } else if (!paths.contains(fieldPath)) {
                 toRemove.add(fieldPath);
-                numRemoved++;
+                valuePathsRemoved.add(fieldPath);
             }
         }
-        return numRemoved;
     }
 
     /**

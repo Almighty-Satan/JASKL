@@ -25,6 +25,7 @@ import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -108,15 +109,17 @@ public class YamlConfig extends ConfigImpl {
     }
 
     @Override
-    public void strip() throws IOException {
+    public @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException {
         if (this.yaml == null)
             throw new IllegalStateException();
         Util.createFileAndPath(this.file);
 
-        if (this.stripNodes("", this.root, this.getPaths()))
+        Set<String> removedPaths = new HashSet<>();
+        if (this.stripNodes("", this.root, this.getPaths(), removedPaths))
             try (FileWriter fileWriter = new FileWriter(this.file)) {
                 this.yaml.serialize(this.root, fileWriter);
             }
+        return Collections.unmodifiableSet(removedPaths);
     }
 
     @Override
@@ -205,7 +208,7 @@ public class YamlConfig extends ConfigImpl {
             node.setBlockComments(new ArrayList<>(0)); // Remove comment
     }
 
-    protected boolean stripNodes(@NotNull String path, @NotNull MappingNode node, @NotNull Set<String> paths) {
+    protected boolean stripNodes(@NotNull String path, @NotNull MappingNode node, @NotNull Set<String> paths, @NotNull Set<String> removedPaths) {
         boolean changed = false;
         List<NodeTuple> toRemove = new ArrayList<>();
         for (NodeTuple tuple : node.getValue()) {
@@ -215,12 +218,14 @@ public class YamlConfig extends ConfigImpl {
                 if (paths.contains(fieldPath))
                     continue;
                 MappingNode child = (MappingNode) valueNode;
-                changed |= this.stripNodes(fieldPath, child, paths);
+                changed |= this.stripNodes(fieldPath, child, paths, removedPaths);
                 if (child.getValue().isEmpty())
                     toRemove.add(tuple);
             } else if (valueNode instanceof ScalarNode || valueNode instanceof SequenceNode) {
-                if (!paths.contains(fieldPath))
+                if (!paths.contains(fieldPath)) {
                     toRemove.add(tuple);
+                    removedPaths.add(fieldPath);
+                }
             }
         }
         if (!toRemove.isEmpty()) {
