@@ -115,11 +115,11 @@ ObjectMapper<MyObject> mapper = new ObjectMapper<MyObject>() {
     }
 
     @Override
-    public @NotNull Map<@NotNull String, @NotNull Type<?>> getProperties() {
-        Map<String, Type<?>> properties = new HashMap<>();
-        properties.put("myString", Type.validated(Type.STRING, Validator.STRING_NOT_EMPTY));
-        properties.put("myInt", Type.INTEGER);
-        return Collections.unmodifiableMap(properties);
+    public @NotNull Property<?> @NotNull [] getProperties() {
+        return new Property[] {
+                Property.of("myString", Type.validated(Type.STRING, Validator.STRING_NOT_EMPTY)),
+                Property.of("myInt", Type.INTEGER)
+        };
     }
 };
 

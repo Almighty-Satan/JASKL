@@ -482,6 +482,7 @@ public abstract class ConfigTest {
         ObjectMapper<ExampleCustomObject> mapper = new ObjectMapper<ExampleCustomObject>() {
             @Override
             public @NotNull ExampleCustomObject createInstance(@Unmodifiable @NotNull Map<@NotNull String, @NotNull Object> values) throws InvalidTypeException, ValidationException {
+                Assertions.assertFalse(values.containsKey("exampleOptionalString"));
                 return new ExampleCustomObject((String) values.get("exampleString"), (int) values.get("exampleInt"), (ExampleEnum) values.get("exampleEnum"));
             }
 
@@ -491,6 +492,7 @@ public abstract class ConfigTest {
                 values.put("exampleString", instance.exampleString);
                 values.put("exampleInt", instance.exampleInt);
                 values.put("exampleEnum", instance.exampleEnum);
+                values.put("exampleOptionalString", null);
                 return Collections.unmodifiableMap(values);
             }
 
@@ -503,7 +505,9 @@ public abstract class ConfigTest {
             public @NotNull Property<?> @NotNull [] getProperties() {
                 return new Property[]{Property.of("exampleString", Type.STRING),
                         Property.of("exampleInt", Type.INTEGER),
-                        Property.of("exampleEnum", Type.enumType(ExampleEnum.class))};
+                        Property.of("exampleEnum", Type.enumType(ExampleEnum.class)),
+                        Property.of("exampleOptionalString", Type.STRING, true)
+                };
             }
         };
         Config config0 = this.createTestConfig();
