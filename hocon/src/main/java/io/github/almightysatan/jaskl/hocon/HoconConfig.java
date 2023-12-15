@@ -42,12 +42,12 @@ public class HoconConfig extends ConfigImpl {
 
     private static final ConfigParseOptions PARSE_OPTIONS = ConfigParseOptions.defaults().setSyntax(ConfigSyntax.CONF)
             .setAllowMissing(false).setIncluder(new NopIncluder());
-    private static final ConfigRenderOptions RENDER_OPTIONS = ConfigRenderOptions.defaults().setJson(false).setOriginComments(false);
+    protected static final ConfigRenderOptions RENDER_OPTIONS = ConfigRenderOptions.defaults().setJson(false).setOriginComments(false);
 
-    private final File file;
-    private Config config;
+    protected final File file;
+    protected Config config;
 
-    private HoconConfig(@NotNull File file, @Nullable String description) {
+    protected HoconConfig(@NotNull File file, @Nullable String description) {
         super(description);
         this.file = Objects.requireNonNull(file);
     }

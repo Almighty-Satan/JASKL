@@ -1,0 +1,21 @@
+{
+  example = {
+    boolean = true,
+    double = 1.0,
+    float = 1.0,
+    integer = 1,
+    long = 1,
+    string = modified,
+    special-char_entry = spe-ci_al,
+    enum = ANOTHER_EXAMPLE,
+    list = [
+      Example3,
+      Example4
+    ]
+    map = {
+      Hello = there,
+      abc = xyz,
+      x = y
+    }
+  }
+}
