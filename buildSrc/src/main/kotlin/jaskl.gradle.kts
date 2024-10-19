@@ -28,6 +28,7 @@ repositories {
 
 dependencies {
     compileOnly("org.jetbrains:annotations:24.0.1")
+    testFixturesCompileOnly("org.jetbrains:annotations:24.0.1")
 
     testCompileOnly("org.jetbrains:annotations:24.0.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
