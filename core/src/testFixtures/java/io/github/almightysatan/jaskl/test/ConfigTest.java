@@ -31,10 +31,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class ConfigTest {
 
@@ -410,7 +407,7 @@ public abstract class ConfigTest {
         ConfigEntry<String> stringConfigEntry1 = StringConfigEntry.of(config1, "example.string", "Example String", "default");
 
         config1.load();
-        config1.strip();
+        Set<String> paths = config1.prune();
         config1.close();
 
         Config config2 = this.createTestConfig();
@@ -421,6 +418,9 @@ public abstract class ConfigTest {
 
         Assertions.assertEquals("modified", stringConfigEntry2.getValue());
         Assertions.assertEquals(0, intConfigEntry2.getValue());
+        Assertions.assertEquals(1, paths.size());
+        Assertions.assertTrue(paths.contains("example.integer"));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> paths.add("test"));
 
         config2.close();
     }
@@ -458,7 +458,7 @@ public abstract class ConfigTest {
         MapConfigEntry.of(config1, "example.1.map1", null, map1New, Type.STRING, Type.STRING);
 
         config1.load();
-        config1.strip();
+        Set<String> paths = config1.prune();
         config1.close();
 
         Config config2 = this.createTestConfig();
@@ -469,6 +469,14 @@ public abstract class ConfigTest {
 
         Assertions.assertEquals(map0New, mapConfigEntry0New.getValue());
         Assertions.assertEquals(map1, mapConfigEntry1New.getValue());
+        Assertions.assertFalse(paths.isEmpty());
+        Assertions.assertTrue(paths.size() <= 2);
+        if (paths.size() == 1) {
+            Assertions.assertTrue(paths.contains("example.0.map0"));
+        } else {
+            Assertions.assertTrue(paths.contains("example.0.map0.Hello"));
+            Assertions.assertTrue(paths.contains("example.0.map0.abc"));
+        }
 
         config2.close();
     }

@@ -28,15 +28,14 @@ import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.Set;
 
 public class PropertiesConfig extends ConfigImpl {
 
@@ -87,27 +86,28 @@ public class PropertiesConfig extends ConfigImpl {
     }
 
     @Override
-    public void strip() throws IOException {
+    public @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException {
         if (this.config == null)
             throw new IllegalStateException();
         Util.createFileAndPath(this.file);
 
-        boolean shouldWrite = false;
         Properties stripped = new Properties();
         Set<String> paths = this.getPaths();
+        Set<String> pathsRemoved = new HashSet<>();
         for (Entry<Object, Object> entry : this.config.entrySet()) {
             String key = (String) entry.getKey();
             if (!paths.contains(key)) {
-                shouldWrite = true;
+                pathsRemoved.add(key);
                 continue;
             }
             stripped.setProperty(key, (String) entry.getValue());
         }
 
-        if (shouldWrite) {
+        if (!pathsRemoved.isEmpty()) {
             this.config = stripped;
             writeToFile();
         }
+        return Collections.unmodifiableSet(pathsRemoved);
     }
 
     @Override

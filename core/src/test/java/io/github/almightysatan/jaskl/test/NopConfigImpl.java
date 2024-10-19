@@ -21,6 +21,11 @@
 package io.github.almightysatan.jaskl.test;
 
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
+
+import java.util.Collections;
+import java.util.Set;
 
 public class NopConfigImpl extends ConfigImpl {
 
@@ -41,7 +46,8 @@ public class NopConfigImpl extends ConfigImpl {
     }
 
     @Override
-    public void strip() {
+    public @Unmodifiable @NotNull Set<@NotNull String> prune() {
+        return Collections.emptySet();
     }
 
     @Override
