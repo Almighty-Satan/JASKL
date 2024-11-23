@@ -147,7 +147,7 @@ public class HoconConfig extends ConfigImpl {
                 ConfigObject child = (ConfigObject) entry.getValue();
                 int numRemoved = toRemove.size();
                 this.resolvePathsToStrip(fieldPath, child, paths, toRemove, valuePathsRemoved);
-                int numChildren = child.entrySet().size();
+                int numChildren = child.size();
                 if (numChildren == 0 || numChildren == (toRemove.size() - numRemoved))
                     toRemove.add(fieldPath);
             } else if (!paths.contains(fieldPath)) {
