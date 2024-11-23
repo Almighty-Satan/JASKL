@@ -56,6 +56,11 @@ public abstract class ConfigImpl implements Config {
         return description;
     }
 
+    @Override
+    public boolean isReadOnly() {
+        return false;
+    }
+
     /**
      * Returns a map of all paths with their config entries.
      *

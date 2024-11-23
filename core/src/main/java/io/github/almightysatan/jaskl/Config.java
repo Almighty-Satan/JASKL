@@ -54,11 +54,12 @@ public interface Config {
     /**
      * Saves the configuration to it's corresponding data storage location.
      *
-     * @throws IOException          if an I/O exception occurs.
-     * @throws InvalidTypeException if a value does not match its expected {@link Type}
-     * @throws ValidationException  if a value fails validation
+     * @throws IOException                   if an I/O exception occurs.
+     * @throws InvalidTypeException          if a value does not match its expected {@link Type}
+     * @throws ValidationException           if a value fails validation
+     * @throws UnsupportedOperationException if {@link Config#isReadOnly} is {@code true}
      */
-    void write() throws IOException, InvalidTypeException, ValidationException;
+    void write() throws IOException, InvalidTypeException, ValidationException, UnsupportedOperationException;
 
     /**
      * Cleans up dead entries from the storage location.
@@ -66,19 +67,22 @@ public interface Config {
      *
      * @return a set containing all removed paths. Depending on the implementation map entries might be returned as
      * separate paths.
-     * @throws IOException if an I/O exception occurs.
+     * @throws IOException                   if an I/O exception occurs.
+     * @throws UnsupportedOperationException if {@link Config#isReadOnly} is {@code true}
      */
-    @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException;
+    @Unmodifiable
+    @NotNull Set<@NotNull String> prune() throws IOException, UnsupportedOperationException;
 
     /**
      * Cleans up dead entries from the storage location.
      * An entry is considered dead if no {@link ConfigEntry} references its path.
      *
-     * @throws IOException if an I/O exception occurs.
+     * @throws IOException                   if an I/O exception occurs.
+     * @throws UnsupportedOperationException if {@link Config#isReadOnly} is {@code true}
      * @deprecated use {@link #prune()} instead
      */
     @Deprecated
-    default void strip() throws IOException {
+    default void strip() throws IOException, UnsupportedOperationException {
         this.prune();
     }
 
@@ -93,4 +97,12 @@ public interface Config {
      * @return the description of this config
      */
     @Nullable String getDescription();
+
+    /**
+     * Returns {@code true} if this is a read-only config
+     *
+     * @return {@code true} if this is a read-only config
+     * @throws IOException if an I/O exception occurs
+     */
+    boolean isReadOnly() throws IOException;
 }
