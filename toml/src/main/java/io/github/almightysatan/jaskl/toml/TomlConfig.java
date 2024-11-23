@@ -23,6 +23,7 @@ package io.github.almightysatan.jaskl.toml;
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 import com.fasterxml.jackson.dataformat.toml.TomlWriteFeature;
 import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.jackson.JacksonConfigImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,8 +32,19 @@ import java.io.File;
 
 public class TomlConfig extends JacksonConfigImpl {
 
-    private TomlConfig(@NotNull File file, @Nullable String description) {
-        super(TomlMapper.builder().enable(TomlWriteFeature.FAIL_ON_NULL_WRITE).build(), file, description);
+    private TomlConfig(@NotNull Resource resource, @Nullable String description) {
+        super(TomlMapper.builder().enable(TomlWriteFeature.FAIL_ON_NULL_WRITE).build(), resource, description);
+    }
+
+    /**
+     * Creates a new {@link TomlConfig} instance.
+     *
+     * @param resource A resource containing a toml configuration. The resource will be created automatically if it does
+     *                 not already exist and {@link #isReadOnly()} is {@code false}.
+     * @return A new {@link TomlConfig} instance.
+     */
+    public static Config of(@NotNull Resource resource) {
+        return new TomlConfig(resource, null);
     }
 
     /**
@@ -45,7 +57,7 @@ public class TomlConfig extends JacksonConfigImpl {
      */
     @Deprecated
     public static Config of(@NotNull File file, @Nullable String description) {
-        return new TomlConfig(file, description);
+        return of(file);
     }
 
     /**
@@ -55,6 +67,6 @@ public class TomlConfig extends JacksonConfigImpl {
      * @return A new {@link TomlConfig} instance.
      */
     public static Config of(@NotNull File file) {
-        return new TomlConfig(file, null);
+        return of(Resource.of(file));
     }
 }

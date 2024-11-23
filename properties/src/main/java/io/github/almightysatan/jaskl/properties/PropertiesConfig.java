@@ -21,30 +21,27 @@
 package io.github.almightysatan.jaskl.properties;
 
 import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.entries.ListConfigEntry;
 import io.github.almightysatan.jaskl.entries.MapConfigEntry;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
-import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 
 public class PropertiesConfig extends ConfigImpl {
 
-    private final File file;
+    private final Resource resource;
     private Properties config;
 
-    private PropertiesConfig(@NotNull File file, @Nullable String description) {
+    private PropertiesConfig(@NotNull Resource resource, @Nullable String description) {
         super(description);
-        this.file = Objects.requireNonNull(file);
+        this.resource = Objects.requireNonNull(resource);
     }
 
     @Override
@@ -59,7 +56,7 @@ public class PropertiesConfig extends ConfigImpl {
     public void reload() throws IllegalStateException, IOException {
         if (this.config == null)
             throw new IllegalStateException();
-        if (!this.file.exists())
+        if (!this.resource.exists())
             return;
 
         readFromFile();
@@ -71,7 +68,7 @@ public class PropertiesConfig extends ConfigImpl {
     public void write() throws IOException {
         if (this.config == null)
             throw new IllegalStateException();
-        Util.createFileAndPath(this.file);
+        this.resource.createIfNotExists();
 
         boolean shouldWrite = false;
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
@@ -89,7 +86,8 @@ public class PropertiesConfig extends ConfigImpl {
     public @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException {
         if (this.config == null)
             throw new IllegalStateException();
-        Util.createFileAndPath(this.file);
+        if (!this.resource.exists())
+            return Collections.emptySet();
 
         Properties stripped = new Properties();
         Set<String> paths = this.getPaths();
@@ -122,7 +120,7 @@ public class PropertiesConfig extends ConfigImpl {
      * @throws IOException If an I/O exception occurs.
      */
     private void writeToFile() throws IOException {
-        try (FileWriter writer = new FileWriter(file)) {
+        try (Writer writer = this.resource.getWriter()) {
             this.config.store(writer, this.getDescription());
         }
     }
@@ -133,7 +131,7 @@ public class PropertiesConfig extends ConfigImpl {
      * @throws IOException If an I/O exception occurs.
      */
     private void readFromFile() throws IOException {
-        try (FileReader reader = new FileReader(file)) {
+        try (Reader reader = this.resource.getReader()) {
             config.load(reader);
         }
     }
@@ -154,12 +152,35 @@ public class PropertiesConfig extends ConfigImpl {
     /**
      * Creates a new {@link PropertiesConfig} instance.
      *
+     * @param resource    A resource containing a properties configuration. The resource will be created automatically
+     *                    if it does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @param description The description (comment) of this config file.
+     * @return A new {@link PropertiesConfig} instance.
+     */
+    public static Config of(@NotNull Resource resource, @Nullable String description) {
+        return new PropertiesConfig(resource, description);
+    }
+
+    /**
+     * Creates a new {@link PropertiesConfig} instance.
+     *
+     * @param resource A resource containing a properties configuration. The resource will be created automatically
+     *                 if it does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @return A new {@link PropertiesConfig} instance.
+     */
+    public static Config of(@NotNull Resource resource) {
+        return new PropertiesConfig(resource, null);
+    }
+
+    /**
+     * Creates a new {@link PropertiesConfig} instance.
+     *
      * @param file        The properties file. The file will be created automatically if it does not already exist.
      * @param description The description (comment) of this config file.
      * @return A new {@link PropertiesConfig} instance.
      */
     public static Config of(@NotNull File file, @Nullable String description) {
-        return new PropertiesConfig(file, description);
+        return of(Resource.of(file), description);
     }
 
     /**
@@ -169,6 +190,6 @@ public class PropertiesConfig extends ConfigImpl {
      * @return A new {@link PropertiesConfig} instance.
      */
     public static Config of(@NotNull File file) {
-        return new PropertiesConfig(file, null);
+        return of(file, null);
     }
 }
