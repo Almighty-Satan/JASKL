@@ -30,6 +30,7 @@ import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -120,24 +121,28 @@ public class MongodbConfig extends ConfigImpl {
     }
 
     @Override
-    public void strip() throws IOException {
+    public @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException {
         if (this.mongoCollection == null)
             throw new IllegalStateException();
 
+        Set<String> pathsRemoved = new HashSet<>();
         try {
             Set<String> paths = this.getPaths();
             List<WriteModel<? extends Document>> writeModels = new ArrayList<>();
             FindIterable<Document> documents = this.mongoCollection.find();
             for (Document document : documents) {
                 String path = document.getString("_id");
-                if (!paths.contains(path))
+                if (!paths.contains(path)) {
+                    pathsRemoved.add(path);
                     writeModels.add(new DeleteOneModel<>(Filters.eq("_id", path)));
+                }
             }
             if (!writeModels.isEmpty())
                 this.mongoCollection.bulkWrite(writeModels);
         } catch (MongoException e) {
             throw new IOException(e);
         }
+        return Collections.unmodifiableSet(pathsRemoved);
     }
 
     @Override

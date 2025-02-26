@@ -22,15 +22,16 @@ package io.github.almightysatan.jaskl.hocon;
 
 import com.typesafe.config.*;
 import io.github.almightysatan.jaskl.ConfigEntry;
+import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
-import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
@@ -44,23 +45,23 @@ public class HoconConfig extends ConfigImpl {
             .setAllowMissing(false).setIncluder(new NopIncluder());
     private static final ConfigRenderOptions RENDER_OPTIONS = ConfigRenderOptions.defaults().setJson(false).setOriginComments(false);
 
-    private final File file;
+    private final Resource resource;
     private Config config;
 
-    private HoconConfig(@NotNull File file, @Nullable String description) {
+    private HoconConfig(@NotNull Resource resource, @Nullable String description) {
         super(description);
-        this.file = Objects.requireNonNull(file);
+        this.resource = Objects.requireNonNull(resource);
     }
 
     @Override
-    public void load() throws IllegalStateException {
+    public void load() throws IllegalStateException, IOException {
         if (this.config != null)
             throw new IllegalStateException();
-        if (!file.exists()) {
+        if (!this.resource.exists()) {
             this.config = ConfigFactory.empty();
             return;
         }
-        this.config = ConfigFactory.parseFile(file, PARSE_OPTIONS);
+        this.config = ConfigFactory.parseReader(this.resource.getReader(), PARSE_OPTIONS);
         this.reload();
     }
 
@@ -83,7 +84,7 @@ public class HoconConfig extends ConfigImpl {
         Config config = this.config;
         if (config == null)
             throw new IllegalStateException();
-        Util.createFileAndPath(this.file);
+        resource.createIfNotExists();
 
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             if (configEntry.isModified()) {
@@ -103,18 +104,21 @@ public class HoconConfig extends ConfigImpl {
     }
 
     @Override
-    public void strip() throws IOException {
+    public @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException {
         Config config = this.config;
         if (config == null)
             throw new IllegalStateException();
-        Util.createFileAndPath(this.file);
+        if (!this.resource.exists())
+            return Collections.emptySet();
 
-        List<String> pathsToRemove = new ArrayList<>();
-        this.resolvePathsToStrip("", config.root(), this.getPaths(), pathsToRemove);
+        Set<String> pathsToRemove = new HashSet<>();
+        Set<String> valuePathsRemoved = new HashSet<>();
+        this.resolvePathsToStrip("", config.root(), this.getPaths(), pathsToRemove, valuePathsRemoved);
         for (String path : pathsToRemove)
             config = config.withoutPath(path);
 
         this.writeIfNecessary(config, false);
+        return Collections.unmodifiableSet(valuePathsRemoved);
     }
 
     @Override
@@ -127,33 +131,53 @@ public class HoconConfig extends ConfigImpl {
         if (config != this.config) {
             ConfigObject root = setDescription ? config.root().withOrigin(this.config.root().origin().withComments(this.getDescription() == null ? null : Collections.singletonList(this.getDescription()))) : config.root();
             String output = root.render(RENDER_OPTIONS);
-            try (FileWriter fileWriter = new FileWriter(this.file)) {
+            try (Writer fileWriter = this.resource.getWriter()) {
                 fileWriter.write(output);
             }
             this.config = config;
         }
     }
 
-    protected int resolvePathsToStrip(@NotNull String path, @NotNull ConfigObject node, @NotNull Set<String> paths, @NotNull List<String> toRemove) {
-        int numRemoved = 0;
+    protected void resolvePathsToStrip(@NotNull String path, @NotNull ConfigObject node, @NotNull Set<String> paths, @NotNull Set<String> toRemove, @NotNull Set<String> valuePathsRemoved) {
         for (Map.Entry<String, ConfigValue> entry : node.entrySet()) {
             String fieldPath = (path.isEmpty() ? "" : path + ".") + entry.getKey();
             if (entry.getValue() instanceof ConfigObject) {
                 if (paths.contains(fieldPath))
                     continue;
                 ConfigObject child = (ConfigObject) entry.getValue();
-                int numChildrenRemoved = this.resolvePathsToStrip(fieldPath, child, paths, toRemove);
-                int numChildren = child.entrySet().size();
-                if (numChildren == 0 || numChildren == numChildrenRemoved) {
+                int numRemoved = toRemove.size();
+                this.resolvePathsToStrip(fieldPath, child, paths, toRemove, valuePathsRemoved);
+                int numChildren = child.size();
+                if (numChildren == 0 || numChildren == (toRemove.size() - numRemoved))
                     toRemove.add(fieldPath);
-                    numRemoved++;
-                }
             } else if (!paths.contains(fieldPath)) {
                 toRemove.add(fieldPath);
-                numRemoved++;
+                valuePathsRemoved.add(fieldPath);
             }
         }
-        return numRemoved;
+    }
+
+    /**
+     * Creates a new {@link HoconConfig} instance.
+     *
+     * @param resource    A resource containing a hocon configuration. The resource will be created automatically if it
+     *                    does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @param description The description (comment) of this config file.
+     * @return A new {@link HoconConfig} instance.
+     */
+    public static io.github.almightysatan.jaskl.Config of(@NotNull Resource resource, @Nullable String description) {
+        return new HoconConfig(resource, description);
+    }
+
+    /**
+     * Creates a new {@link HoconConfig} instance.
+     *
+     * @param resource A resource containing a hocon configuration. The resource will be created automatically if it
+     *                 does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @return A new {@link HoconConfig} instance.
+     */
+    public static io.github.almightysatan.jaskl.Config of(@NotNull Resource resource) {
+        return of(resource, null);
     }
 
     /**
@@ -164,7 +188,7 @@ public class HoconConfig extends ConfigImpl {
      * @return A new {@link HoconConfig} instance.
      */
     public static io.github.almightysatan.jaskl.Config of(@NotNull File file, @Nullable String description) {
-        return new HoconConfig(file, description);
+        return of(Resource.of(file), description);
     }
 
     /**
@@ -174,6 +198,6 @@ public class HoconConfig extends ConfigImpl {
      * @return A new {@link HoconConfig} instance.
      */
     public static io.github.almightysatan.jaskl.Config of(@NotNull File file) {
-        return new HoconConfig(file, null);
+        return of(file, null);
     }
 }

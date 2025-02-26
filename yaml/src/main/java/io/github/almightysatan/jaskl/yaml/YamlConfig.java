@@ -20,11 +20,12 @@
 
 package io.github.almightysatan.jaskl.yaml;
 
+import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
-import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -37,10 +38,7 @@ import org.yaml.snakeyaml.error.Mark;
 import org.yaml.snakeyaml.nodes.*;
 import org.yaml.snakeyaml.representer.Representer;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -51,13 +49,13 @@ public class YamlConfig extends ConfigImpl {
     private static final Representer REPRESENTER;
     private static final Representer VALUE_REPRESENTER;
 
-    private final File file;
+    private final Resource resource;
     private Yaml yaml;
     private MappingNode root;
 
-    private YamlConfig(@NotNull File file, @Nullable String description) {
+    private YamlConfig(@NotNull Resource resource, @Nullable String description) {
         super(description);
-        this.file = Objects.requireNonNull(file);
+        this.resource = Objects.requireNonNull(resource);
     }
 
     @Override
@@ -72,13 +70,13 @@ public class YamlConfig extends ConfigImpl {
     public void reload() throws IOException, IllegalStateException {
         if (this.yaml == null)
             throw new IllegalStateException();
-        if (!this.file.exists()) {
+        if (!this.resource.exists()) {
             this.createRoot();
             return;
         }
 
-        try (FileReader fileReader = new FileReader(this.file)) {
-            this.root = (MappingNode) this.yaml.compose(fileReader);
+        try (Reader reader = this.resource.getReader()) {
+            this.root = (MappingNode) this.yaml.compose(reader);
             if (this.root == null)
                 this.createRoot();
             this.loadValues("", this.root);
@@ -89,7 +87,7 @@ public class YamlConfig extends ConfigImpl {
     public void write() throws IOException {
         if (this.yaml == null)
             throw new IllegalStateException();
-        Util.createFileAndPath(this.file);
+        this.resource.createIfNotExists();
 
         this.setComment(this.root, this.getDescription());
 
@@ -102,27 +100,35 @@ public class YamlConfig extends ConfigImpl {
         }
 
         if (shouldWrite)
-            try (FileWriter fileWriter = new FileWriter(this.file)) {
-                this.yaml.serialize(this.root, fileWriter);
+            try (Writer writer = this.resource.getWriter()) {
+                this.yaml.serialize(this.root, writer);
             }
     }
 
     @Override
-    public void strip() throws IOException {
+    public @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException {
         if (this.yaml == null)
             throw new IllegalStateException();
-        Util.createFileAndPath(this.file);
+        if (!this.resource.exists())
+            return Collections.emptySet();
 
-        if (this.stripNodes("", this.root, this.getPaths()))
-            try (FileWriter fileWriter = new FileWriter(this.file)) {
-                this.yaml.serialize(this.root, fileWriter);
+        Set<String> removedPaths = new HashSet<>();
+        if (this.stripNodes("", this.root, this.getPaths(), removedPaths))
+            try (Writer writer = this.resource.getWriter()) {
+                this.yaml.serialize(this.root, writer);
             }
+        return Collections.unmodifiableSet(removedPaths);
     }
 
     @Override
     public void close() {
         this.yaml = null;
         this.root = null;
+    }
+
+    @Override
+    public boolean isReadOnly() throws IOException {
+        return this.resource.isReadOnly();
     }
 
     protected void createRoot() {
@@ -161,7 +167,8 @@ public class YamlConfig extends ConfigImpl {
     protected void putNode(@NotNull WritableConfigEntry<?> entry) {
         String[] pathSplit = entry.getPath().split("\\.");
         MappingNode node = this.root;
-        pathLoop: for (int i = 0; i < pathSplit.length; i++) {
+        pathLoop:
+        for (int i = 0; i < pathSplit.length; i++) {
             for (NodeTuple tuple : node.getValue()) {
                 if (((ScalarNode) tuple.getKeyNode()).getValue().equals(pathSplit[i])) {
                     // Node exists
@@ -205,7 +212,7 @@ public class YamlConfig extends ConfigImpl {
             node.setBlockComments(new ArrayList<>(0)); // Remove comment
     }
 
-    protected boolean stripNodes(@NotNull String path, @NotNull MappingNode node, @NotNull Set<String> paths) {
+    protected boolean stripNodes(@NotNull String path, @NotNull MappingNode node, @NotNull Set<String> paths, @NotNull Set<String> removedPaths) {
         boolean changed = false;
         List<NodeTuple> toRemove = new ArrayList<>();
         for (NodeTuple tuple : node.getValue()) {
@@ -215,12 +222,14 @@ public class YamlConfig extends ConfigImpl {
                 if (paths.contains(fieldPath))
                     continue;
                 MappingNode child = (MappingNode) valueNode;
-                changed |= this.stripNodes(fieldPath, child, paths);
+                changed |= this.stripNodes(fieldPath, child, paths, removedPaths);
                 if (child.getValue().isEmpty())
                     toRemove.add(tuple);
             } else if (valueNode instanceof ScalarNode || valueNode instanceof SequenceNode) {
-                if (!paths.contains(fieldPath))
+                if (!paths.contains(fieldPath)) {
                     toRemove.add(tuple);
+                    removedPaths.add(fieldPath);
+                }
             }
         }
         if (!toRemove.isEmpty()) {
@@ -235,12 +244,35 @@ public class YamlConfig extends ConfigImpl {
     /**
      * Creates a new {@link YamlConfig} instance.
      *
+     * @param resource    A resource containing a yaml configuration. The resource will be created automatically if it
+     *                    does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @param description The description (comment) of this config file.
+     * @return A new {@link YamlConfig} instance.
+     */
+    public static @NotNull YamlConfig of(@NotNull Resource resource, @Nullable String description) {
+        return new YamlConfig(resource, description);
+    }
+
+    /**
+     * Creates a new {@link YamlConfig} instance.
+     *
+     * @param resource A resource containing a yaml configuration. The resource will be created automatically if it does
+     *                 not already exist and {@link #isReadOnly()} is {@code false}.
+     * @return A new {@link YamlConfig} instance.
+     */
+    public static @NotNull YamlConfig of(@NotNull Resource resource) {
+        return of(resource, null);
+    }
+
+    /**
+     * Creates a new {@link YamlConfig} instance.
+     *
      * @param file        The yaml file. The file will be created automatically if it does not already exist.
      * @param description The description (comment) of this config file.
      * @return A new {@link YamlConfig} instance.
      */
     public static @NotNull YamlConfig of(@NotNull File file, @Nullable String description) {
-        return new YamlConfig(file, description);
+        return of(Resource.of(file), description);
     }
 
     /**
@@ -250,7 +282,7 @@ public class YamlConfig extends ConfigImpl {
      * @return A new {@link YamlConfig} instance.
      */
     public static @NotNull YamlConfig of(@NotNull File file) {
-        return new YamlConfig(file, null);
+        return of(file, null);
     }
 
     static {

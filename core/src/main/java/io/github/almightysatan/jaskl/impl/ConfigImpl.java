@@ -25,6 +25,7 @@ import io.github.almightysatan.jaskl.ConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.*;
 
 public abstract class ConfigImpl implements Config {
@@ -54,6 +55,11 @@ public abstract class ConfigImpl implements Config {
     @Override
     public @Nullable String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean isReadOnly() throws IOException {
+        return false;
     }
 
     /**

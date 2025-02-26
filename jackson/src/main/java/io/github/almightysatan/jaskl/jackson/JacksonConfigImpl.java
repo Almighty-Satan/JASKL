@@ -24,13 +24,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
+import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
-import io.github.almightysatan.jaskl.impl.Util;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -38,14 +38,14 @@ import java.util.Map.Entry;
 public abstract class JacksonConfigImpl extends ConfigImpl {
 
     private final ObjectMapper mapper;
-    private final File file;
+    private final Resource resource;
     private ObjectNode root;
 
-    protected JacksonConfigImpl(@NotNull ObjectMapper mapper, @NotNull File file, @Nullable String description) {
+    protected JacksonConfigImpl(@NotNull ObjectMapper mapper, @NotNull Resource resource, @Nullable String description) {
         super(description);
         mapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true);
         this.mapper = Objects.requireNonNull(mapper);
-        this.file = Objects.requireNonNull(file);
+        this.resource = Objects.requireNonNull(resource);
     }
 
     @Override
@@ -61,10 +61,10 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
     public void reload() throws IOException, IllegalStateException {
         if (this.root == null)
             throw new IllegalStateException();
-        if (!this.file.exists())
+        if (!this.resource.exists())
             return;
 
-        JsonNode root = this.mapper.readTree(this.file);
+        JsonNode root = this.mapper.readTree(resource.getReader());
         if (root instanceof MissingNode)
             return;
         try {
@@ -87,7 +87,7 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
     public void write() throws IOException {
         if (this.root == null)
             throw new IllegalStateException();
-        Util.createFileAndPath(this.file);
+        this.resource.createIfNotExists();
 
         boolean shouldWrite = false;
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
@@ -98,17 +98,20 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
         }
 
         if (shouldWrite)
-            this.mapper.writerWithDefaultPrettyPrinter().writeValue(this.file, this.root);
+            this.mapper.writerWithDefaultPrettyPrinter().writeValue(this.resource.getWriter(), this.root);
     }
 
     @Override
-    public void strip() throws IOException {
+    public @Unmodifiable @NotNull Set<@NotNull String> prune() throws IOException {
         if (this.root == null)
             throw new IllegalStateException();
-        Util.createFileAndPath(this.file);
+        if (!this.resource.exists())
+            return Collections.emptySet();
 
-        if (stripNodes("", this.root, this.getPaths()))
-            this.mapper.writerWithDefaultPrettyPrinter().writeValue(this.file, this.root);
+        Set<String> pathsRemoved = new HashSet<>();
+        if (stripNodes("", this.root, this.getPaths(), pathsRemoved))
+            this.mapper.writerWithDefaultPrettyPrinter().writeValue(this.resource.getWriter(), this.root);
+        return Collections.unmodifiableSet(pathsRemoved);
     }
 
     @Override
@@ -137,7 +140,7 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
         node.set(pathSplit[pathSplit.length - 1], value);
     }
 
-    protected boolean stripNodes(@NotNull String path, @NotNull ObjectNode node, @NotNull Set<String> paths) {
+    protected boolean stripNodes(@NotNull String path, @NotNull ObjectNode node, @NotNull Set<String> paths, @NotNull Set<String> pathsRemoved) {
         boolean changed = false;
         List<String> toRemove = new ArrayList<>();
         Iterator<Entry<String, JsonNode>> it = node.fields();
@@ -148,12 +151,14 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
                 if (paths.contains(fieldPath))
                     continue;
                 ObjectNode child = (ObjectNode) field.getValue();
-                changed |= stripNodes(fieldPath, child, paths);
+                changed |= stripNodes(fieldPath, child, paths, pathsRemoved);
                 if (child.isEmpty())
                     toRemove.add(field.getKey());
             } else if (field.getValue() instanceof ArrayNode || field.getValue() instanceof ValueNode) {
-                if (!paths.contains(fieldPath))
+                if (!paths.contains(fieldPath)) {
+                    pathsRemoved.add(fieldPath);
                     toRemove.add(field.getKey());
+                }
             }
         }
         if (!toRemove.isEmpty()) {

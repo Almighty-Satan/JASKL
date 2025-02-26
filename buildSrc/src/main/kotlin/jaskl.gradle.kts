@@ -20,20 +20,21 @@ checkstyle {
 }
 
 group = "io.github.almighty-satan.jaskl"
-version = "1.4.1"
+version = "1.5.0"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compileOnly("org.jetbrains:annotations:24.0.1")
-    testFixturesCompileOnly("org.jetbrains:annotations:24.0.1")
+    compileOnly("org.jetbrains:annotations:26.0.1")
+    testFixturesCompileOnly("org.jetbrains:annotations:26.0.1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testFixturesImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testCompileOnly("org.jetbrains:annotations:26.0.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
+    testFixturesImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
     testImplementation(testFixtures(project(":core")))
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.3")
 }
 
 tasks.getByName<Test>("test") {
