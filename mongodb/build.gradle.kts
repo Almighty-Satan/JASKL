@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     api(project(":core"))
-    implementation("org.mongodb:mongodb-driver-sync:5.2.1")
+    implementation("org.mongodb:mongodb-driver-sync:5.3.1")
 }

@@ -27,14 +27,16 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.jetbrains:annotations:26.0.1")
-    testFixturesCompileOnly("org.jetbrains:annotations:26.0.1")
+    compileOnly("org.jetbrains:annotations:26.0.2")
+    testFixturesCompileOnly("org.jetbrains:annotations:26.0.2")
+    testCompileOnly("org.jetbrains:annotations:26.0.2")
 
-    testCompileOnly("org.jetbrains:annotations:26.0.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
-    testFixturesImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.12.0")
+    testFixturesImplementation("org.junit.jupiter:junit-jupiter-api:5.12.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.12.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.12.0")
+
     testImplementation(testFixtures(project(":core")))
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.3")
 }
 
 tasks.getByName<Test>("test") {
