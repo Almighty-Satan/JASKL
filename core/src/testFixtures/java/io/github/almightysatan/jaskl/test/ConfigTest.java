@@ -24,6 +24,8 @@ import io.github.almightysatan.jaskl.*;
 import io.github.almightysatan.jaskl.annotation.AnnotationManager;
 import io.github.almightysatan.jaskl.annotation.InvalidAnnotationConfigException;
 import io.github.almightysatan.jaskl.entries.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -488,25 +490,65 @@ public abstract class ConfigTest {
     public void testCustom() throws IOException {
         ExampleCustomObject value = new ExampleCustomObject("Default", 5, ExampleEnum.EXAMPLE);
         ExampleNestedCustomObject nestedValue = new ExampleNestedCustomObject(value);
+        ObjectMapper<ExampleCustomObject> mapper = new ObjectMapper<ExampleCustomObject>() {
+            @Override
+            public @NotNull ExampleCustomObject createInstance(@Unmodifiable @NotNull Map<@NotNull String, @NotNull Object> values) throws InvalidTypeException, ValidationException {
+                Assertions.assertFalse(values.containsKey("exampleOptionalString"));
+                Assertions.assertFalse(values.containsKey("exampleOptionalInt"));
+                Assertions.assertFalse(values.containsKey("exampleOptionalEnum"));
+                return new ExampleCustomObject((String) values.get("exampleString"), (int) values.get("exampleInt"), (ExampleEnum) values.get("exampleEnum"));
+            }
+
+            @Override
+            public @Unmodifiable @NotNull Map<@NotNull String, @NotNull Object> readValues(@NotNull ExampleCustomObject instance) throws InvalidTypeException {
+                Map<String, Object> values = new HashMap<>();
+                values.put("exampleString", instance.exampleString);
+                values.put("exampleInt", instance.exampleInt);
+                values.put("exampleEnum", instance.exampleEnum);
+                values.put("exampleOptionalString", null);
+                values.put("exampleOptionalInt", null);
+                values.put("exampleOptionalEnum", null);
+                return Collections.unmodifiableMap(values);
+            }
+
+            @Override
+            public @NotNull Class<ExampleCustomObject> getObjectClass() {
+                return ExampleCustomObject.class;
+            }
+
+            @Override
+            public @NotNull Property<?> @NotNull [] getProperties() {
+                return new Property[]{Property.of("exampleString", Type.STRING),
+                        Property.of("exampleInt", Type.INTEGER, true),
+                        Property.of("exampleEnum", Type.enumType(ExampleEnum.class)),
+                        Property.of("exampleOptionalString", Type.STRING, true),
+                        Property.of("exampleOptionalInt", Type.STRING, true),
+                        Property.of("exampleOptionalEnum", Type.STRING, true)
+                };
+            }
+        };
         Config config0 = this.createTestConfig();
         ConfigEntry<ExampleCustomObject> entry0 = CustomConfigEntry.of(config0, "example.custom", "Hello World", value, ExampleCustomObject.class);
         ConfigEntry<ExampleNestedCustomObject> entry1 = CustomConfigEntry.of(config0, "example.nestedCustom", "Hello World", nestedValue, ExampleNestedCustomObject.class);
+        ConfigEntry<ExampleCustomObject> entry2 = CustomConfigEntry.of(config0, "example.mapper.custom", "Hello World", value, mapper);
 
         config0.load();
         config0.write();
         config0.close();
 
         Config config1 = this.createTestConfig();
-        ConfigEntry<ExampleCustomObject> entry2 = CustomConfigEntry.of(config1, "example.custom", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE));
-        ConfigEntry<ExampleNestedCustomObject> entry3 = CustomConfigEntry.of(config1, "example.nestedCustom", "Hello World", new ExampleNestedCustomObject(new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE)));
+        ConfigEntry<ExampleCustomObject> entryLoaded0 = CustomConfigEntry.of(config1, "example.custom", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE));
+        ConfigEntry<ExampleNestedCustomObject> entryLoaded1 = CustomConfigEntry.of(config1, "example.nestedCustom", "Hello World", new ExampleNestedCustomObject(new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE)));
+        ConfigEntry<ExampleCustomObject> entryLoaded2 = CustomConfigEntry.of(config1, "example.mapper.custom", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE), mapper);
 
-        Assertions.assertThrows(InvalidAnnotationConfigException.class, () -> CustomConfigEntry.of(config1, "example.nestedCustom", new ExampleCircularCustomObject(), ExampleCircularCustomObject.class));
+        Assertions.assertThrows(InvalidAnnotationConfigException.class, () -> CustomConfigEntry.of(config1, "example.nestedCustomInvalid", new ExampleCircularCustomObject(), ExampleCircularCustomObject.class));
 
         config1.load();
         config1.close();
 
-        Assertions.assertEquals(value, entry2.getValue());
-        Assertions.assertEquals(nestedValue, entry3.getValue());
+        Assertions.assertEquals(value, entryLoaded0.getValue());
+        Assertions.assertEquals(nestedValue, entryLoaded1.getValue());
+        Assertions.assertEquals(value, entryLoaded2.getValue());
     }
 
     @Test

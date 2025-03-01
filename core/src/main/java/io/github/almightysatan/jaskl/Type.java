@@ -324,4 +324,54 @@ public interface Type<T> {
     static <T> @NotNull Type<T> custom(@NotNull Class<T> clazz) throws InvalidAnnotationConfigException {
         return AnnotationManagerImpl.INSTANCE.createCustomObjectType(clazz);
     }
+
+    @SuppressWarnings("unchecked")
+    static <T> @NotNull Type<T> custom(@NotNull ObjectMapper<T> objectMapper) {
+        Objects.requireNonNull(objectMapper);
+        Map<String, ObjectMapper.Property<?>> properties = new HashMap<>();
+        for (ObjectMapper.Property<?> property : objectMapper.getProperties())
+            if (properties.put(property.getKey(), ObjectMapper.Property.of(property.getKey(), property.getType(), property.isOptional())) != null)
+                throw new IllegalArgumentException("Duplicate key: " + property.getKey());
+        if (properties.isEmpty())
+            throw new IllegalArgumentException("Properties should not be empty");
+        return new Type<T>() {
+            @Override
+            public @NotNull T toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException {
+                if (objectMapper.getObjectClass().isAssignableFrom(value.getClass()))
+                    return (T) value;
+                if (!(value instanceof Map))
+                    throw new InvalidTypeException(Map.class, value.getClass());
+                Map<?, ?> mapValue = (Map<String, ?>) value;
+                Map<String, Object> newMap = new HashMap<>();
+                for (ObjectMapper.Property<?> property : properties.values()) {
+                    Object val = mapValue.get(property.getKey());
+                    if (val == null) {
+                        if (property.isOptional())
+                            continue;
+                        throw new InvalidTypeException(property.getKey());
+                    }
+                    newMap.put(STRING.toEntryType(property.getKey()), property.getType().toEntryType(val));
+                }
+
+                return objectMapper.createInstance(Collections.unmodifiableMap(newMap));
+            }
+
+            @Override
+            public @NotNull Object toWritable(@NotNull T value, @NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException {
+                Map<Object, Object> newMap = new HashMap<>();
+                Map<String, Object> values = objectMapper.readValues(value);
+                for (ObjectMapper.Property<?> property : properties.values()) {
+                    Object val = values.get(property.getKey());
+                    if (val == null) {
+                        if (property.isOptional())
+                            continue;
+                        throw new InvalidTypeException(property.getKey());
+                    }
+                    newMap.put(keyPreprocessor.apply(STRING.toWritable(property.getKey(), keyPreprocessor)), ((ObjectMapper.Property<Object>) property).getType().toWritable(val, keyPreprocessor));
+                }
+
+                return Collections.unmodifiableMap(newMap);
+            }
+        };
+    }
 }
