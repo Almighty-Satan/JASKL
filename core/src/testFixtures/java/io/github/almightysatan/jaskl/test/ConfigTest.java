@@ -25,6 +25,7 @@ import io.github.almightysatan.jaskl.annotation.AnnotationManager;
 import io.github.almightysatan.jaskl.annotation.InvalidAnnotationConfigException;
 import io.github.almightysatan.jaskl.entries.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +40,7 @@ public abstract class ConfigTest {
 
     protected abstract Config createEmptyConfig();
 
-    protected abstract Config createExampleConfig();
+    protected abstract Config createExampleConfig(@Nullable ExceptionHandler exceptionHandler);
 
     protected abstract Config createTestConfig();
 
@@ -57,7 +58,7 @@ public abstract class ConfigTest {
      */
     @Test
     public void testLoad() throws IOException {
-        Config config = this.createExampleConfig();
+        Config config = this.createExampleConfig(null);
         config.load();
 
         config.close();
@@ -68,7 +69,7 @@ public abstract class ConfigTest {
      */
     @Test
     public void testLoadAfterClosed() throws IOException {
-        Config config = this.createExampleConfig();
+        Config config = this.createExampleConfig(null);
         config.load();
         config.close();
         config.load();
@@ -81,7 +82,7 @@ public abstract class ConfigTest {
      */
     @Test
     public void testAlreadyLoaded() throws IOException {
-        Config config = this.createExampleConfig();
+        Config config = this.createExampleConfig(null);
         config.load();
         Assertions.assertThrows(IllegalStateException.class, config::load);
 
@@ -102,7 +103,7 @@ public abstract class ConfigTest {
      */
     @Test
     public void testLoadValues() throws IOException {
-        Config config = this.createExampleConfig();
+        Config config = this.createExampleConfig(null);
 
         ConfigEntry<Boolean> booleanConfigEntry = BooleanConfigEntry.of(config, "example.boolean", "Example Boolean", false);
         ConfigEntry<Double> doubleConfigEntry = DoubleConfigEntry.of(config, "example.double", "Example Double", 0.0D);
@@ -132,18 +133,35 @@ public abstract class ConfigTest {
      */
     @Test
     public void testValidation() {
-        Config config0 = this.createExampleConfig();
+        Config config0 = this.createExampleConfig(null);
 
         Assertions.assertThrows(ValidationException.class, () -> IntegerConfigEntry.of(config0, "example.integer", "Example Integer", 0, Validator.INTEGER_NOT_ZERO));
 
         config0.close();
 
-        Config config1 = this.createExampleConfig();
+        Config config1 = this.createExampleConfig(null);
         IntegerConfigEntry.of(config1, "example.integer", "Example Integer", -1, Validator.INTEGER_NEGATIVE);
 
         Assertions.assertThrows(ValidationException.class, config1::load);
 
         config1.close();
+    }
+
+    @Test
+    public void testValidationFailureHandler() throws IOException {
+        Config config = this.createExampleConfig(new ExceptionHandler() {
+            @Override
+            public <T> T handle(@NotNull ConfigEntry<T> entry, @Nullable Object value, @NotNull Throwable exception) throws InvalidTypeException, ValidationException {
+                return entry.getDefaultValue();
+            }
+        });
+        IntegerConfigEntry entry = IntegerConfigEntry.of(config, "example.integer", "Example Integer", -1, Validator.INTEGER_NEGATIVE);
+
+        config.load();
+
+        Assertions.assertEquals(entry.getDefaultValue(), entry.getValue());
+
+        config.close();
     }
 
     /**
@@ -152,7 +170,7 @@ public abstract class ConfigTest {
      */
     @Test
     public void testEnumValues() throws IOException {
-        Config config = this.createExampleConfig();
+        Config config = this.createExampleConfig(null);
 
         ConfigEntry<ExampleEnum> enumConfigEntry = EnumConfigEntry.of(config, "example.enum", "Example Enum", ExampleEnum.EXAMPLE);
 
@@ -169,7 +187,7 @@ public abstract class ConfigTest {
      */
     @Test
     public void testListValues() throws IOException {
-        Config config = this.createExampleConfig();
+        Config config = this.createExampleConfig(null);
 
         List<String> example0 = Arrays.asList("Example1", "Example2");
         ConfigEntry<List<String>> listConfigEntry = ListConfigEntry.of(config, "example.list", "Example List", example0, Type.STRING);
@@ -188,7 +206,7 @@ public abstract class ConfigTest {
      */
     @Test
     public void testMapValues() throws IOException {
-        Config config = this.createExampleConfig();
+        Config config = this.createExampleConfig(null);
 
         Map<String, String> example0 = new HashMap<>();
         example0.put("Hello", "World");

@@ -20,6 +20,7 @@
 
 package io.github.almightysatan.jaskl.impl;
 
+import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.InvalidTypeException;
 import io.github.almightysatan.jaskl.Type;
 import io.github.almightysatan.jaskl.ValidationException;
@@ -61,8 +62,12 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
     }
 
     @Override
-    public void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException {
-        this.value = this.toType(value);
+    public void putValue(@NotNull Object value, @NotNull ExceptionHandler exceptionHandler) throws InvalidTypeException, ValidationException {
+        try {
+            this.value = this.toType(value);
+        } catch (Throwable t) {
+            this.value = exceptionHandler.handle(this, value, t);
+        }
         this.modified = false;
     }
 

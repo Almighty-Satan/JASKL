@@ -22,6 +22,7 @@ package io.github.almightysatan.jaskl.hocon;
 
 import com.typesafe.config.*;
 import io.github.almightysatan.jaskl.ConfigEntry;
+import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
@@ -48,8 +49,8 @@ public class HoconConfig extends ConfigImpl {
     private final Resource resource;
     private Config config;
 
-    private HoconConfig(@NotNull Resource resource, @Nullable String description) {
-        super(description);
+    private HoconConfig(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
+        super(description, exceptionHandler);
         this.resource = Objects.requireNonNull(resource);
     }
 
@@ -73,7 +74,7 @@ public class HoconConfig extends ConfigImpl {
             WritableConfigEntry<?> configEntry = (WritableConfigEntry<?>) uncastedConfigEntry;
             try {
                 Object value = this.config.getValue(configEntry.getPath()).unwrapped();
-                configEntry.putValue(value);
+                configEntry.putValue(value, this.getExceptionHandler());
             } catch (ConfigException.Missing ignored) {
             }
         }
@@ -160,13 +161,26 @@ public class HoconConfig extends ConfigImpl {
     /**
      * Creates a new {@link HoconConfig} instance.
      *
+     * @param resource         A resource containing a hocon configuration. The resource will be created automatically if it
+     *                         does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @param description      The description (comment) of this config file.
+     * @param exceptionHandler The {@link ExceptionHandler}
+     * @return A new {@link HoconConfig} instance.
+     */
+    public static io.github.almightysatan.jaskl.Config of(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
+        return new HoconConfig(resource, description, exceptionHandler);
+    }
+
+    /**
+     * Creates a new {@link HoconConfig} instance.
+     *
      * @param resource    A resource containing a hocon configuration. The resource will be created automatically if it
      *                    does not already exist and {@link #isReadOnly()} is {@code false}.
      * @param description The description (comment) of this config file.
      * @return A new {@link HoconConfig} instance.
      */
     public static io.github.almightysatan.jaskl.Config of(@NotNull Resource resource, @Nullable String description) {
-        return new HoconConfig(resource, description);
+        return of(resource, description, null);
     }
 
     /**
@@ -178,6 +192,18 @@ public class HoconConfig extends ConfigImpl {
      */
     public static io.github.almightysatan.jaskl.Config of(@NotNull Resource resource) {
         return of(resource, null);
+    }
+
+    /**
+     * Creates a new {@link HoconConfig} instance.
+     *
+     * @param file             The hocon file. The file will be created automatically if it does not already exist.
+     * @param description      The description (comment) of this config file.
+     * @param exceptionHandler The {@link ExceptionHandler}
+     * @return A new {@link HoconConfig} instance.
+     */
+    public static io.github.almightysatan.jaskl.Config of(@NotNull File file, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
+        return of(Resource.of(file), description, exceptionHandler);
     }
 
     /**

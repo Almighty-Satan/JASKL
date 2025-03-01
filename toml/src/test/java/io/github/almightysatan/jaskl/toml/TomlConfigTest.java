@@ -21,7 +21,9 @@
 package io.github.almightysatan.jaskl.toml;
 
 import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.test.ConfigTest;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -37,8 +39,8 @@ public class TomlConfigTest extends ConfigTest {
     }
 
     @Override
-    protected Config createExampleConfig() {
-        return TomlConfig.of(FILE_EXAMPLE);
+    protected Config createExampleConfig(@Nullable ExceptionHandler exceptionHandler) {
+        return TomlConfig.of(FILE_EXAMPLE, exceptionHandler);
     }
 
     @Override

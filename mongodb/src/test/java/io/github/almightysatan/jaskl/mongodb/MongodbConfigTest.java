@@ -25,8 +25,10 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.test.ConfigTest;
 import org.bson.Document;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -77,8 +79,8 @@ public class MongodbConfigTest extends ConfigTest {
     }
 
     @Override
-    protected Config createExampleConfig() {
-        return MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE);
+    protected Config createExampleConfig(@Nullable ExceptionHandler exceptionHandler) {
+        return MongodbConfig.of(mongoAddress, DATABASE, COLLECTION_EXAMPLE, exceptionHandler);
     }
 
     @Override

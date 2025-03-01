@@ -30,7 +30,7 @@ public interface WritableConfigEntry<T> extends ConfigEntry<T> {
 
     @NotNull Type<T> getType();
 
-    void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException;
+    void putValue(@NotNull Object value, @NotNull ExceptionHandler exceptionHandler) throws InvalidTypeException, ValidationException;
 
     /**
      * Returns the value that should be written to a persistent config. This also sets modified to false.

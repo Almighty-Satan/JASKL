@@ -107,8 +107,8 @@ public class AnnotationManagerImpl implements AnnotationManager {
         }
 
         @Override
-        public void putValue(@NotNull Object value) throws InvalidTypeException, ValidationException {
-            super.putValue(value);
+        public void putValue(@NotNull Object value, @NotNull ExceptionHandler exceptionHandler) throws InvalidTypeException, ValidationException {
+            super.putValue(value, exceptionHandler);
             this.setField(super.getValue());
         }
 

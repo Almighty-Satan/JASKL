@@ -21,6 +21,7 @@
 package io.github.almightysatan.jaskl.json;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.jackson.JacksonConfigImpl;
 import org.jetbrains.annotations.NotNull;
@@ -30,8 +31,20 @@ import java.io.File;
 
 public class JsonConfig extends JacksonConfigImpl {
 
-    private JsonConfig(@NotNull Resource resource, @Nullable String description) {
-        super(new JsonMapper(), resource, description);
+    private JsonConfig(@NotNull Resource resource, @Nullable ExceptionHandler exceptionHandler) {
+        super(new JsonMapper(), resource, null, exceptionHandler);
+    }
+
+    /**
+     * Creates a new {@link JsonConfig} instance.
+     *
+     * @param resource         A resource containing a json configuration. The resource will be created automatically if it does
+     *                         not already exist and {@link #isReadOnly()} is {@code false}.
+     * @param exceptionHandler The {@link ExceptionHandler}
+     * @return A new {@link JsonConfig} instance.
+     */
+    public static JsonConfig of(@NotNull Resource resource, @Nullable ExceptionHandler exceptionHandler) {
+        return new JsonConfig(resource, exceptionHandler);
     }
 
     /**
@@ -42,7 +55,7 @@ public class JsonConfig extends JacksonConfigImpl {
      * @return A new {@link JsonConfig} instance.
      */
     public static JsonConfig of(@NotNull Resource resource) {
-        return new JsonConfig(resource, null);
+        return of(resource, null);
     }
 
     /**
@@ -56,6 +69,17 @@ public class JsonConfig extends JacksonConfigImpl {
     @Deprecated
     public static JsonConfig of(@NotNull File file, @Nullable String ignoredDescription) {
         return of(file);
+    }
+
+    /**
+     * Creates a new {@link JsonConfig} instance.
+     *
+     * @param file             The json file. The file will be created automatically if it does not already exist.
+     * @param exceptionHandler The {@link ExceptionHandler}
+     * @return A new {@link JsonConfig} instance.
+     */
+    public static JsonConfig of(@NotNull File file, @Nullable ExceptionHandler exceptionHandler) {
+        return of(Resource.of(file), exceptionHandler);
     }
 
     /**

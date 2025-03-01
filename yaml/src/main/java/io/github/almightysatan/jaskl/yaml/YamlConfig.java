@@ -20,6 +20,7 @@
 
 package io.github.almightysatan.jaskl.yaml;
 
+import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
@@ -53,8 +54,8 @@ public class YamlConfig extends ConfigImpl {
     private Yaml yaml;
     private MappingNode root;
 
-    private YamlConfig(@NotNull Resource resource, @Nullable String description) {
-        super(description);
+    private YamlConfig(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
+        super(description, exceptionHandler);
         this.resource = Objects.requireNonNull(resource);
     }
 
@@ -160,7 +161,7 @@ public class YamlConfig extends ConfigImpl {
             return false;
         Object value = CONSTRUCTOR.constructObject(node);
         if (value != null)
-            entry.putValue(value);
+            entry.putValue(value, this.getExceptionHandler());
         return true;
     }
 
@@ -244,13 +245,26 @@ public class YamlConfig extends ConfigImpl {
     /**
      * Creates a new {@link YamlConfig} instance.
      *
+     * @param resource         A resource containing a yaml configuration. The resource will be created automatically if it
+     *                         does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @param description      The description (comment) of this config file.
+     * @param exceptionHandler The {@link ExceptionHandler}
+     * @return A new {@link YamlConfig} instance.
+     */
+    public static @NotNull YamlConfig of(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
+        return new YamlConfig(resource, description, exceptionHandler);
+    }
+
+    /**
+     * Creates a new {@link YamlConfig} instance.
+     *
      * @param resource    A resource containing a yaml configuration. The resource will be created automatically if it
      *                    does not already exist and {@link #isReadOnly()} is {@code false}.
      * @param description The description (comment) of this config file.
      * @return A new {@link YamlConfig} instance.
      */
     public static @NotNull YamlConfig of(@NotNull Resource resource, @Nullable String description) {
-        return new YamlConfig(resource, description);
+        return of(resource, description, null);
     }
 
     /**
@@ -262,6 +276,18 @@ public class YamlConfig extends ConfigImpl {
      */
     public static @NotNull YamlConfig of(@NotNull Resource resource) {
         return of(resource, null);
+    }
+
+    /**
+     * Creates a new {@link YamlConfig} instance.
+     *
+     * @param file             The yaml file. The file will be created automatically if it does not already exist.
+     * @param description      The description (comment) of this config file.
+     * @param exceptionHandler The {@link ExceptionHandler}
+     * @return A new {@link YamlConfig} instance.
+     */
+    public static @NotNull YamlConfig of(@NotNull File file, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
+        return of(Resource.of(file), description, exceptionHandler);
     }
 
     /**

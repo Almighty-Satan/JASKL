@@ -21,6 +21,7 @@
 package io.github.almightysatan.jaskl.properties;
 
 import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.entries.ListConfigEntry;
 import io.github.almightysatan.jaskl.entries.MapConfigEntry;
@@ -39,8 +40,8 @@ public class PropertiesConfig extends ConfigImpl {
     private final Resource resource;
     private Properties config;
 
-    private PropertiesConfig(@NotNull Resource resource, @Nullable String description) {
-        super(description);
+    private PropertiesConfig(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
+        super(description, exceptionHandler);
         this.resource = Objects.requireNonNull(resource);
     }
 
@@ -145,8 +146,21 @@ public class PropertiesConfig extends ConfigImpl {
                 throw new UnsupportedOperationException("Lists are not supported in Property Configs.");
             Object value = this.config.get(configEntry.getPath());
             if (value != null)
-                configEntry.putValue(value);
+                configEntry.putValue(value, this.getExceptionHandler());
         }
+    }
+
+    /**
+     * Creates a new {@link PropertiesConfig} instance.
+     *
+     * @param resource         A resource containing a properties configuration. The resource will be created automatically
+     *                         if it does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @param description      The description (comment) of this config file.
+     * @param exceptionHandler The {@link ExceptionHandler}
+     * @return A new {@link PropertiesConfig} instance.
+     */
+    public static Config of(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
+        return new PropertiesConfig(resource, description, exceptionHandler);
     }
 
     /**
@@ -158,7 +172,7 @@ public class PropertiesConfig extends ConfigImpl {
      * @return A new {@link PropertiesConfig} instance.
      */
     public static Config of(@NotNull Resource resource, @Nullable String description) {
-        return new PropertiesConfig(resource, description);
+        return of(resource, description, null);
     }
 
     /**
@@ -169,7 +183,19 @@ public class PropertiesConfig extends ConfigImpl {
      * @return A new {@link PropertiesConfig} instance.
      */
     public static Config of(@NotNull Resource resource) {
-        return new PropertiesConfig(resource, null);
+        return of(resource, null);
+    }
+
+    /**
+     * Creates a new {@link PropertiesConfig} instance.
+     *
+     * @param file             The properties file. The file will be created automatically if it does not already exist.
+     * @param description      The description (comment) of this config file.
+     * @param exceptionHandler The {@link ExceptionHandler}
+     * @return A new {@link PropertiesConfig} instance.
+     */
+    public static Config of(@NotNull File file, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
+        return of(Resource.of(file), description, exceptionHandler);
     }
 
     /**

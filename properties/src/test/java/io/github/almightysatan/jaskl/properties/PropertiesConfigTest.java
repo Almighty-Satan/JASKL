@@ -21,8 +21,10 @@
 package io.github.almightysatan.jaskl.properties;
 
 import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.InvalidTypeException;
 import io.github.almightysatan.jaskl.test.ConfigTest;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -41,8 +43,8 @@ public class PropertiesConfigTest extends ConfigTest {
     }
 
     @Override
-    protected Config createExampleConfig() {
-        return PropertiesConfig.of(FILE_EXAMPLE);
+    protected Config createExampleConfig(@Nullable ExceptionHandler exceptionHandler) {
+        return PropertiesConfig.of(FILE_EXAMPLE, null, exceptionHandler);
     }
 
     @Override

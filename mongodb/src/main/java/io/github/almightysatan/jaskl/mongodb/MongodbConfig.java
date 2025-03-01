@@ -26,10 +26,12 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.*;
+import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.IOException;
@@ -48,8 +50,8 @@ public class MongodbConfig extends ConfigImpl {
     private MongoCollection<Document> mongoCollection;
 
 
-    private MongodbConfig(@NotNull String address, @NotNull String database, @NotNull String collection) {
-        super(null);
+    private MongodbConfig(@NotNull String address, @NotNull String database, @NotNull String collection, @Nullable ExceptionHandler exceptionHandler) {
+        super(null, exceptionHandler);
         this.address = Objects.requireNonNull(address);
         this.database = Objects.requireNonNull(database);
         this.collection = Objects.requireNonNull(collection);
@@ -86,7 +88,7 @@ public class MongodbConfig extends ConfigImpl {
             if (document != null) {
                 Object value = document.get("value");
                 if (value != null)
-                    configEntry.putValue(value);
+                    configEntry.putValue(value, this.getExceptionHandler());
             }
         }
     }
@@ -162,7 +164,19 @@ public class MongodbConfig extends ConfigImpl {
      * @param collection The name of the collection
      * @return A new {@link MongodbConfig} instance
      */
+    public static MongodbConfig of(@NotNull String address, @NotNull String database, @NotNull String collection, @Nullable ExceptionHandler exceptionHandler) {
+        return new MongodbConfig(address, database, collection, exceptionHandler);
+    }
+
+    /**
+     * Creates a new {@link MongodbConfig} instance.
+     *
+     * @param address    The address of the database. Example: {@code username:password@localhost:27017}
+     * @param database   The name of the database
+     * @param collection The name of the collection
+     * @return A new {@link MongodbConfig} instance
+     */
     public static MongodbConfig of(@NotNull String address, @NotNull String database, @NotNull String collection) {
-        return new MongodbConfig(address, database, collection);
+        return of(address, database, collection, null);
     }
 }

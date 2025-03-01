@@ -18,39 +18,12 @@
  * USA
  */
 
-package io.github.almightysatan.jaskl.test;
+package io.github.almightysatan.jaskl;
 
-import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.Set;
+public interface ExceptionHandler {
 
-public class NopConfigImpl extends ConfigImpl {
-
-    public NopConfigImpl() {
-        super(null, null);
-    }
-
-    @Override
-    public void load() {
-    }
-
-    @Override
-    public void reload() {
-    }
-
-    @Override
-    public void write() {
-    }
-
-    @Override
-    public @Unmodifiable @NotNull Set<@NotNull String> prune() {
-        return Collections.emptySet();
-    }
-
-    @Override
-    public void close() {
-    }
+    <T> T handle(@NotNull ConfigEntry<T> entry, @Nullable Object value, @NotNull Throwable exception) throws InvalidTypeException, ValidationException;
 }

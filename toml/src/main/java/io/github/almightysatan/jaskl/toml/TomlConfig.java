@@ -23,6 +23,7 @@ package io.github.almightysatan.jaskl.toml;
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 import com.fasterxml.jackson.dataformat.toml.TomlWriteFeature;
 import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.jackson.JacksonConfigImpl;
 import org.jetbrains.annotations.NotNull;
@@ -32,8 +33,20 @@ import java.io.File;
 
 public class TomlConfig extends JacksonConfigImpl {
 
-    private TomlConfig(@NotNull Resource resource, @Nullable String description) {
-        super(TomlMapper.builder().enable(TomlWriteFeature.FAIL_ON_NULL_WRITE).build(), resource, description);
+    private TomlConfig(@NotNull Resource resource, @Nullable ExceptionHandler exceptionHandler) {
+        super(TomlMapper.builder().enable(TomlWriteFeature.FAIL_ON_NULL_WRITE).build(), resource, null, exceptionHandler);
+    }
+
+    /**
+     * Creates a new {@link TomlConfig} instance.
+     *
+     * @param resource         A resource containing a toml configuration. The resource will be created automatically if it does
+     *                         not already exist and {@link #isReadOnly()} is {@code false}.
+     * @param exceptionHandler The {@link ExceptionHandler}
+     * @return A new {@link TomlConfig} instance.
+     */
+    public static Config of(@NotNull Resource resource, @Nullable ExceptionHandler exceptionHandler) {
+        return new TomlConfig(resource, exceptionHandler);
     }
 
     /**
@@ -44,7 +57,7 @@ public class TomlConfig extends JacksonConfigImpl {
      * @return A new {@link TomlConfig} instance.
      */
     public static Config of(@NotNull Resource resource) {
-        return new TomlConfig(resource, null);
+        return of(resource, null);
     }
 
     /**
@@ -58,6 +71,17 @@ public class TomlConfig extends JacksonConfigImpl {
     @Deprecated
     public static Config of(@NotNull File file, @Nullable String description) {
         return of(file);
+    }
+
+    /**
+     * Creates a new {@link TomlConfig} instance.
+     *
+     * @param file             The toml file. The file will be created automatically if it does not already exist.
+     * @param exceptionHandler The {@link ExceptionHandler}
+     * @return A new {@link TomlConfig} instance.
+     */
+    public static Config of(@NotNull File file, @Nullable ExceptionHandler exceptionHandler) {
+        return of(Resource.of(file), exceptionHandler);
     }
 
     /**

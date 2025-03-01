@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
+import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
@@ -41,8 +42,8 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
     private final Resource resource;
     private ObjectNode root;
 
-    protected JacksonConfigImpl(@NotNull ObjectMapper mapper, @NotNull Resource resource, @Nullable String description) {
-        super(description);
+    protected JacksonConfigImpl(@NotNull ObjectMapper mapper, @NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
+        super(description, exceptionHandler);
         mapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true);
         this.mapper = Objects.requireNonNull(mapper);
         this.resource = Objects.requireNonNull(resource);
@@ -79,7 +80,7 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
                 continue;
 
             Object value = this.mapper.treeToValue(node, Object.class);
-            configEntry.putValue(value);
+            configEntry.putValue(value, this.getExceptionHandler());
         }
     }
 

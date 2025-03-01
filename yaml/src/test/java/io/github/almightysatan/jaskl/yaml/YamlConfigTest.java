@@ -21,8 +21,10 @@
 package io.github.almightysatan.jaskl.yaml;
 
 import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.test.ConfigTest;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -39,9 +41,9 @@ public class YamlConfigTest extends ConfigTest {
     }
 
     @Override
-    protected Config createExampleConfig() {
+    protected Config createExampleConfig(@Nullable ExceptionHandler exceptionHandler) {
         try {
-            return YamlConfig.of(Resource.of(FILE_EXAMPLE.toURI().toURL())); // Test URL Resource
+            return YamlConfig.of(Resource.of(FILE_EXAMPLE.toURI().toURL()), null, exceptionHandler); // Test URL Resource
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }

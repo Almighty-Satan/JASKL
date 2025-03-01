@@ -20,8 +20,7 @@
 
 package io.github.almightysatan.jaskl.impl;
 
-import io.github.almightysatan.jaskl.Config;
-import io.github.almightysatan.jaskl.ConfigEntry;
+import io.github.almightysatan.jaskl.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,11 +29,24 @@ import java.util.*;
 
 public abstract class ConfigImpl implements Config {
 
+    public static final ExceptionHandler DEFAULT_EXCEPTION_HANDLER = new ExceptionHandler() {
+        @Override
+        public <T> T handle(@NotNull ConfigEntry<T> entry, @Nullable Object value, @NotNull Throwable exception) throws InvalidTypeException, ValidationException {
+            if (exception instanceof ValidationException)
+                throw (ValidationException) exception;
+            if (exception instanceof InvalidTypeException)
+                throw (InvalidTypeException) exception;
+            throw new InvalidTypeException(entry.getPath(), exception);
+        }
+    };
+
     private final String description;
     private final Map<String, ConfigEntry<?>> entries = new HashMap<>();
+    private final ExceptionHandler exceptionHandler;
 
-    public ConfigImpl(@Nullable String description) {
+    public ConfigImpl(@Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
         this.description = description;
+        this.exceptionHandler = exceptionHandler != null ? exceptionHandler : DEFAULT_EXCEPTION_HANDLER;
     }
 
     public void registerEntry(@NotNull ConfigEntry<?> entry) {
@@ -92,5 +104,9 @@ public abstract class ConfigImpl implements Config {
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected @NotNull Collection<WritableConfigEntry<?>> getCastedValues() {
         return (Collection<WritableConfigEntry<?>>) (Collection) getEntries().values();
+    }
+
+    public ExceptionHandler getExceptionHandler() {
+        return exceptionHandler;
     }
 }
