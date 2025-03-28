@@ -329,7 +329,9 @@ public class YamlConfig extends ConfigImpl {
 
         @Override
         protected Node representScalar(Tag tag, String value, DumperOptions.ScalarStyle style) {
-            return super.representScalar(tag, value, style == null && tag == Tag.STR ? DumperOptions.ScalarStyle.DOUBLE_QUOTED : style);
+            return super.representScalar(tag, value, tag == Tag.STR && (style == null
+                    || style == DumperOptions.ScalarStyle.PLAIN || style == DumperOptions.ScalarStyle.SINGLE_QUOTED)
+                    ? DumperOptions.ScalarStyle.DOUBLE_QUOTED : style);
         }
     }
 
