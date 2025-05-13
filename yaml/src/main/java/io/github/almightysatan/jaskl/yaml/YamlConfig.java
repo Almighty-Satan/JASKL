@@ -45,17 +45,21 @@ import java.util.*;
 
 public class YamlConfig extends ConfigImpl {
 
-    private static final DumperOptions DUMPER_OPTIONS;
     private static final CustomConstructor CONSTRUCTOR = new CustomConstructor();
-    private static final Representer REPRESENTER;
-    private static final Representer VALUE_REPRESENTER;
 
     private final Resource resource;
+    private final DumperOptions dumperOptions;
+    private final Representer representer;
+    private final Representer valueRepresenter;
     private Yaml yaml;
     private MappingNode root;
 
-    private YamlConfig(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
+    private YamlConfig(@NotNull Resource resource, @Nullable String description,
+           @Nullable ExceptionHandler exceptionHandler, @NotNull DumperOptions dumperOptions) {
         super(description, exceptionHandler);
+        this.dumperOptions = Objects.requireNonNull(dumperOptions);
+        this.representer = new Representer(dumperOptions);
+        this.valueRepresenter = new ValueRepresenter(dumperOptions);
         this.resource = Objects.requireNonNull(resource);
     }
 
@@ -63,7 +67,7 @@ public class YamlConfig extends ConfigImpl {
     public void load() throws IOException, IllegalStateException {
         if (this.yaml != null)
             throw new IllegalStateException();
-        this.yaml = new Yaml(CONSTRUCTOR, REPRESENTER, DUMPER_OPTIONS);
+        this.yaml = new Yaml(CONSTRUCTOR, this.representer, this.dumperOptions);
         this.reload();
     }
 
@@ -202,7 +206,7 @@ public class YamlConfig extends ConfigImpl {
     protected @NotNull NodeTuple newNodeTuple(@NotNull String path, @Nullable String comment, @NotNull Object value) {
         Node keyNode = this.yaml.represent(path);
         this.setComment(keyNode, comment);
-        Node valueNode = VALUE_REPRESENTER.represent(value);
+        Node valueNode = this.valueRepresenter.represent(value);
         return new NodeTuple(keyNode, valueNode);
     }
 
@@ -249,10 +253,26 @@ public class YamlConfig extends ConfigImpl {
      *                         does not already exist and {@link #isReadOnly()} is {@code false}.
      * @param description      The description (comment) of this config file.
      * @param exceptionHandler The {@link ExceptionHandler}
+     * @param dumperOptions    The {@link DumperOptions}
      * @return A new {@link YamlConfig} instance.
      */
-    public static @NotNull YamlConfig of(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
-        return new YamlConfig(resource, description, exceptionHandler);
+    public static @NotNull YamlConfig of(@NotNull Resource resource, @Nullable String description,
+             @Nullable ExceptionHandler exceptionHandler, @NotNull DumperOptions dumperOptions) {
+        return new YamlConfig(resource, description, exceptionHandler, dumperOptions);
+    }
+
+    /**
+     * Creates a new {@link YamlConfig} instance.
+     *
+     * @param resource         A resource containing a yaml configuration. The resource will be created automatically if it
+     *                         does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @param description      The description (comment) of this config file.
+     * @param exceptionHandler The {@link ExceptionHandler}
+     * @return A new {@link YamlConfig} instance.
+     */
+    public static @NotNull YamlConfig of(@NotNull Resource resource, @Nullable String description,
+             @Nullable ExceptionHandler exceptionHandler) {
+        return of(resource, description, exceptionHandler, getDefaultDumperOptions());
     }
 
     /**
@@ -311,13 +331,17 @@ public class YamlConfig extends ConfigImpl {
         return of(file, null);
     }
 
-    static {
-        DUMPER_OPTIONS = new DumperOptions();
-        DUMPER_OPTIONS.setProcessComments(true);
-        DUMPER_OPTIONS.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-
-        REPRESENTER = new Representer(DUMPER_OPTIONS);
-        VALUE_REPRESENTER = new ValueRepresenter(DUMPER_OPTIONS);
+    /**
+     * Returns a new instance of {@link DumperOptions}
+     *
+     * @return a new instance of {@link DumperOptions}
+     */
+    public static DumperOptions getDefaultDumperOptions() {
+        DumperOptions dumperOptions = new DumperOptions();
+        dumperOptions.setProcessComments(true);
+        dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        dumperOptions.setSplitLines(false);
+        return dumperOptions;
     }
 
     private static class ValueRepresenter extends Representer {
@@ -329,6 +353,7 @@ public class YamlConfig extends ConfigImpl {
 
         @Override
         protected Node representScalar(Tag tag, String value, DumperOptions.ScalarStyle style) {
+            // Force double quotes instead of plain or single quotes
             return super.representScalar(tag, value, tag == Tag.STR && (style == null
                     || style == DumperOptions.ScalarStyle.PLAIN || style == DumperOptions.ScalarStyle.SINGLE_QUOTED)
                     ? DumperOptions.ScalarStyle.DOUBLE_QUOTED : style);
