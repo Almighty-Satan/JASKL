@@ -144,9 +144,7 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
     protected boolean stripNodes(@NotNull String path, @NotNull ObjectNode node, @NotNull Set<String> paths, @NotNull Set<String> pathsRemoved) {
         boolean changed = false;
         List<String> toRemove = new ArrayList<>();
-        Iterator<Entry<String, JsonNode>> it = node.fields();
-        while (it.hasNext()) {
-            Entry<String, JsonNode> field = it.next();
+        for (Entry<String, JsonNode> field : node.properties()) {
             String fieldPath = path.isEmpty() ? field.getKey() : path + "." + field.getKey();
             if (field.getValue() instanceof ObjectNode) {
                 if (paths.contains(fieldPath))
