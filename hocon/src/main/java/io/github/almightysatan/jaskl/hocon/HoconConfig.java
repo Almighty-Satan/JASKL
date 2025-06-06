@@ -96,7 +96,7 @@ public class HoconConfig extends ConfigImpl {
                     entryValue = entryValue.toString();
                 ConfigValue value = ConfigValueFactory.fromAnyRef(entryValue);
                 if (configEntry.getDescription() != null)
-                    value = value.withOrigin(value.origin().withComments(Collections.singletonList(configEntry.getDescription())));
+                    value = value.withOrigin(value.origin().withComments(this.toCommentList(configEntry.getDescription())));
                 config = config.withValue(configEntry.getPath(), value);
             }
         }
@@ -130,7 +130,7 @@ public class HoconConfig extends ConfigImpl {
 
     protected void writeIfNecessary(@NotNull Config config, boolean setDescription) throws IOException {
         if (config != this.config) {
-            ConfigObject root = setDescription ? config.root().withOrigin(this.config.root().origin().withComments(this.getDescription() == null ? null : Collections.singletonList(this.getDescription()))) : config.root();
+            ConfigObject root = setDescription ? config.root().withOrigin(this.config.root().origin().withComments(this.toCommentList(this.getDescription()))) : config.root();
             String output = root.render(RENDER_OPTIONS);
             try (Writer fileWriter = this.resource.getWriter()) {
                 fileWriter.write(output);
@@ -156,6 +156,12 @@ public class HoconConfig extends ConfigImpl {
                 valuePathsRemoved.add(fieldPath);
             }
         }
+    }
+
+    protected @Nullable List<String> toCommentList(String description) {
+        if (description == null)
+            return null;
+        return Arrays.asList(description.split("\n"));
     }
 
     /**

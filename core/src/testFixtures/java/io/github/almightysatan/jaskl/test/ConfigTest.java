@@ -232,7 +232,7 @@ public abstract class ConfigTest {
     public void testWriteAndLoad() throws IOException {
         Config config0 = this.createTestConfig();
         ConfigEntry<String> stringConfigEntry0 = StringConfigEntry.of(config0, "example.string", "Example String", "default");
-        ConfigEntry<Integer> intConfigEntry0 = IntegerConfigEntry.of(config0, "example.integer", "Example Integer", 0);
+        ConfigEntry<Integer> intConfigEntry0 = IntegerConfigEntry.of(config0, "example.integer", "Example Integer\nAnother line", 0);
 
         config0.load();
 

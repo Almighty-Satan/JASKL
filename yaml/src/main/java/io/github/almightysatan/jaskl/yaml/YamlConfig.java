@@ -39,9 +39,13 @@ import org.yaml.snakeyaml.error.Mark;
 import org.yaml.snakeyaml.nodes.*;
 import org.yaml.snakeyaml.representer.Representer;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class YamlConfig extends ConfigImpl {
 
@@ -212,9 +216,11 @@ public class YamlConfig extends ConfigImpl {
 
     protected void setComment(@NotNull Node node, @Nullable String comment) {
         if (comment != null)
-            node.setBlockComments(Collections.singletonList(new CommentLine(null, null, " " + comment, CommentType.BLOCK)));
+            node.setBlockComments(Arrays.stream(comment.split("\n"))
+                    .map(line -> new CommentLine(null, null, " " + line, CommentType.BLOCK))
+                    .collect(Collectors.toList()));
         else
-            node.setBlockComments(new ArrayList<>(0)); // Remove comment
+            node.setBlockComments(Collections.emptyList()); // Remove comment
     }
 
     protected boolean stripNodes(@NotNull String path, @NotNull MappingNode node, @NotNull Set<String> paths, @NotNull Set<String> removedPaths) {
