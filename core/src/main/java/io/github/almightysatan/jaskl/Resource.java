@@ -20,12 +20,13 @@
 
 package io.github.almightysatan.jaskl;
 
-import io.github.almightysatan.jaskl.impl.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.URL;
 import java.net.UnknownServiceException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Objects;
 
 /**
@@ -37,7 +38,8 @@ public interface Resource {
      * Returns {@code true} if the resource exists
      *
      * @return {@code true} if the resource exists
-     * @throws IOException if an I/O exception occurs
+     * @throws IOException       if an I/O exception occurs
+     * @throws SecurityException if a security manager exists and denies access to an operation
      */
     boolean exists() throws IOException;
 
@@ -46,16 +48,18 @@ public interface Resource {
      *
      * @throws IOException                   if an I/O exception occurs
      * @throws UnsupportedOperationException if {@link Resource#isReadOnly} is {@code true}
+     * @throws SecurityException             if a security manager exists and denies access to an operation
      */
-    void createIfNotExists() throws IOException;
+    void createIfNotExists() throws IOException, SecurityException;
 
     /**
      * Returns a {@link Reader} for this resource
      *
      * @return a {@link Reader}
-     * @throws IOException if an I/O exception occurs
+     * @throws IOException       if an I/O exception occurs
+     * @throws SecurityException if a security manager exists and denies access to an operation
      */
-    @NotNull Reader getReader() throws IOException;
+    @NotNull Reader getReader() throws IOException, SecurityException;
 
     /**
      * Returns a {@link Writer} for this resource
@@ -63,16 +67,18 @@ public interface Resource {
      * @return a {@link Writer}
      * @throws IOException                   if an I/O exception occurs
      * @throws UnsupportedOperationException if {@link Resource#isReadOnly} is {@code true}
+     * @throws SecurityException             if a security manager exists and denies access to an operation
      */
-    @NotNull Writer getWriter() throws IOException;
+    @NotNull Writer getWriter() throws IOException, SecurityException;
 
     /**
      * Returns {@code true} if this resource is read-only
      *
      * @return {@code true} if this resource is read-only
-     * @throws IOException if an I/O exception occurs
+     * @throws IOException       if an I/O exception occurs
+     * @throws SecurityException if a security manager exists and denies access to an operation
      */
-    boolean isReadOnly() throws IOException;
+    boolean isReadOnly() throws IOException, SecurityException;
 
     /**
      * Returns a new {@link Resource} from the given {@link File}
@@ -84,32 +90,35 @@ public interface Resource {
         Objects.requireNonNull(file);
         return new Resource() {
             @Override
-            public boolean exists() throws IOException {
+            public boolean exists() throws IOException, SecurityException {
                 return file.exists();
             }
 
             @Override
-            public void createIfNotExists() throws IOException {
+            public void createIfNotExists() throws IOException, SecurityException {
                 if (this.isReadOnly())
                     throw new UnsupportedOperationException();
-                Util.createFileAndPath(file);
+                if (file.exists())
+                    return;
+                if (!file.getParentFile().exists() && !file.getParentFile().mkdirs())
+                    throw new IOException("Unable to create directory");
+                file.createNewFile();
             }
 
             @Override
-            public @NotNull Reader getReader() throws IOException {
-                return new FileReader(file);
+            public @NotNull Reader getReader() throws IOException, SecurityException {
+                return Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8);
             }
 
             @Override
-            public @NotNull Writer getWriter() throws IOException {
+            public @NotNull Writer getWriter() throws IOException, SecurityException {
                 if (this.isReadOnly())
                     throw new UnsupportedOperationException();
-                file.setWritable(true); // TODO I have no idea why this is necessary, but the tests fail without this
-                return new FileWriter(file);
+                return Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8);
             }
 
             @Override
-            public boolean isReadOnly() throws IOException {
+            public boolean isReadOnly() throws IOException, SecurityException {
                 return file.exists() && !file.canRead();
             }
         };
