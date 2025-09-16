@@ -1,12 +1,7 @@
-import org.jreleaser.model.Active
-import org.jreleaser.model.api.deploy.maven.MavenCentralMavenDeployer
-
 plugins {
     id("java-library")
     id("checkstyle")
     id("maven-publish")
-    id("org.jreleaser")
-    id("signing")
     id("java-test-fixtures")
 }
 
@@ -22,9 +17,6 @@ checkstyle {
     configDirectory.set(File("../checkstyle"))
     toolVersion = "9.3"
 }
-
-group = "io.github.almighty-satan.jaskl"
-version = "1.6.4"
 
 repositories {
     mavenCentral()
@@ -85,33 +77,7 @@ publishing {
         }
         repositories {
             maven {
-                setUrl(layout.buildDirectory.dir("staging-deploy"))
-            }
-        }
-    }
-}
-
-signing {
-    val signingKey = System.getenv("SIGNING_KEY")
-    val signingPassword = System.getenv("SIGNING_PASSWORD")
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(publishing.publications.getByName("release"))
-}
-
-jreleaser {
-    signing {
-        active = Active.RELEASE
-        armored = true
-    }
-    deploy {
-        maven {
-            mavenCentral {
-                register("sonatype") {
-                    stage = MavenCentralMavenDeployer.Stage.UPLOAD
-                    active = Active.RELEASE
-                    url = "https://central.sonatype.com/api/v1/publisher"
-                    stagingRepository("build/staging-deploy")
-                }
+                setUrl(rootProject.layout.buildDirectory.dir("staging-deploy"))
             }
         }
     }
