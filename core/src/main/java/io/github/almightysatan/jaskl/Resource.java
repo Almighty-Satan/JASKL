@@ -110,7 +110,7 @@ public interface Resource {
 
             @Override
             public boolean isReadOnly() throws IOException {
-                return file.exists() && !file.setReadOnly();
+                return file.exists() && !file.canRead();
             }
         };
     }
