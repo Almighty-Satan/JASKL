@@ -1,7 +1,11 @@
+import org.jreleaser.model.Active
+import org.jreleaser.model.api.deploy.maven.MavenCentralMavenDeployer
+
 plugins {
     id("java-library")
     id("checkstyle")
     id("maven-publish")
+    id("org.jreleaser")
     id("signing")
     id("java-test-fixtures")
 }
@@ -20,10 +24,11 @@ checkstyle {
 }
 
 group = "io.github.almighty-satan.jaskl"
-version = "1.6.3"
+version = "1.6.4"
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
 }
 
 dependencies {
@@ -80,11 +85,7 @@ publishing {
         }
         repositories {
             maven {
-                setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                credentials {
-                    username = System.getenv("OSSRH_USER")
-                    password = System.getenv("OSSRH_PASSWORD")
-                }
+                setUrl(layout.buildDirectory.dir("staging-deploy"))
             }
         }
     }
@@ -95,4 +96,23 @@ signing {
     val signingPassword = System.getenv("SIGNING_PASSWORD")
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications.getByName("release"))
+}
+
+jreleaser {
+    signing {
+        active = Active.RELEASE
+        armored = true
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                register("sonatype") {
+                    stage = MavenCentralMavenDeployer.Stage.UPLOAD
+                    active = Active.RELEASE
+                    url = "https://central.sonatype.com/api/v1/publisher"
+                    stagingRepository("build/staging-deploy")
+                }
+            }
+        }
+    }
 }
