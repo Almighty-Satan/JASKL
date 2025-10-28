@@ -130,7 +130,8 @@ public interface Resource {
      * @param url the {@link URL}
      * @return a new {@link Resource} from the given {@link URL}
      */
-    static Resource of(URL url) {
+    static Resource of(@NotNull URL url) {
+        Objects.requireNonNull(url);
         return new Resource() {
             @Override
             public boolean exists() throws IOException {
