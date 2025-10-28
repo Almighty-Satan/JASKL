@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.io.IOException;
 import java.util.Set;
 
-public interface Config {
+public interface Config extends AutoCloseable {
 
     /**
      * Loads the config from a storage location.
