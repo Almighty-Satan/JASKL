@@ -49,20 +49,24 @@ config.write(); // Save the config
 | MongoDB    | A NoSQL database based implementation for complex configs with remote saves.        | [mongodb-driver](https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync)        |
 
 ### Config Entry Types
-| Type                    | YAML | Hocon | JSON | TOML | Properties | MongoDB |
-|-------------------------|------|-------|------|------|------------|---------|
-| String                  | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
-| Boolean                 | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
-| Integer                 | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
-| Long                    | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
-| Float                   | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
-| Double                  | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
-| BigInteger / BigDecimal | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
-| Enum                    | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
-| List                    | ✅    | ✅     | ✅    | ✅    | ❌          | ✅       |
-| Map                     | ✅    | ✅     | ✅    | ✅    | ❌          | ✅       |
-| Custom Objects          | ✅    | ✅     | ✅    | ✅    | ❌          | ✅       |
-| Comments                | ✅    | ✅     | ❌    | ❌    | ✅*¹        | ❌       |  
+| Type                                     | YAML | Hocon | JSON | TOML | Properties | MongoDB |
+|------------------------------------------|------|-------|------|------|------------|---------|
+| String                                   | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Boolean                                  | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Integer                                  | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Long                                     | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Float                                    | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Double                                   | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| BigInteger / BigDecimal                  | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| UUID                                     | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Instant / OffsetDateTime / ZonedDateTime | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| LocalDate / LocalTime / LocalDateTime    | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Duration / Period                        | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| Enum                                     | ✅    | ✅     | ✅    | ✅    | ✅          | ✅       |
+| List / Set                               | ✅    | ✅     | ✅    | ✅    | ❌          | ✅       |
+| Map                                      | ✅    | ✅     | ✅    | ✅    | ❌          | ✅       |
+| Custom Objects                           | ✅    | ✅     | ✅    | ✅    | ❌          | ✅       |
+| Comments                                 | ✅    | ✅     | ❌    | ❌    | ✅*¹        | ❌       |  
 
 *¹ Properties only allows for a single comment at the beginning of the file
 

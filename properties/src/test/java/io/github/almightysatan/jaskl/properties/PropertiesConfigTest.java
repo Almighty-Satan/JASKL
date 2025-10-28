@@ -88,6 +88,12 @@ public class PropertiesConfigTest extends ConfigTest {
 
     @Test
     @Override
+    public void testWriteAndLoadSet() throws IOException {
+        Assertions.assertThrows(UnsupportedOperationException.class, super::testWriteAndLoadList);
+    }
+
+    @Test
+    @Override
     public void testWriteAndLoadListEnum() throws IOException {
         Assertions.assertThrows(UnsupportedOperationException.class, super::testWriteAndLoadListEnum);
     }

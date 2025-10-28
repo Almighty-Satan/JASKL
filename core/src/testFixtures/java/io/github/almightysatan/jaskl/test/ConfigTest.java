@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.*;
 import java.util.*;
 
 public abstract class ConfigTest {
@@ -281,6 +282,52 @@ public abstract class ConfigTest {
         config1.close();
     }
 
+    @Test
+    public void testWriteAndLoadStringTypes() throws IOException {
+        Config config0 = this.createTestConfig();
+
+        ConfigEntry<UUID> uuidConfigEntry0 = UuidConfigEntry.of(config0, "example.uuid", "Example UUID", UUID.randomUUID());
+        ConfigEntry<Instant> instantConfigEntry0 = InstantConfigEntry.of(config0, "example.instant", "Example Instant", Instant.parse("2000-01-01T01:00:00.00Z"));
+        ConfigEntry<OffsetDateTime> offsetDateTimeConfigEntry0 = OffsetDateTimeConfigEntry.of(config0, "example.offsetdatetime", "Example OffsetDateTime", OffsetDateTime.parse("2000-01-01T01:00:00+01:00"));
+        ConfigEntry<ZonedDateTime> zonedDateTimeConfigEntry0 = ZonedDateTimeConfigEntry.of(config0, "example.zoneddatetime", "Example ZonedDateTime", ZonedDateTime.parse("2000-01-01T01:00:00+01:00[Europe/Paris]"));
+        ConfigEntry<LocalDate> localDateConfigEntry0 = LocalDateConfigEntry.of(config0, "example.localdate", "Example LocalDate", LocalDate.parse("2000-01-01"));
+        ConfigEntry<LocalTime> localTimeConfigEntry0 = LocalTimeConfigEntry.of(config0, "example.localtime", "Example LocalTime", LocalTime.parse("01:00"));
+        ConfigEntry<LocalDateTime> localDateTimeConfigEntry0 = LocalDateTimeConfigEntry.of(config0, "example.localdatetime", "Example LocalDateTime", LocalDateTime.parse("2000-01-01T01:00:00"));
+        ConfigEntry<Duration> durationConfigEntry0 = DurationConfigEntry.of(config0, "example.duration", "Example Duration", Duration.parse("P2D"));
+        ConfigEntry<Period> periodConfigEntry0 = PeriodConfigEntry.of(config0, "example.period", "Example Period", Period.parse("P2Y"));
+
+        config0.load();
+        config0.write();
+        config0.close();
+
+        Assertions.assertTrue(this.testConfigExists());
+
+        Config config1 = this.createTestConfig();
+        ConfigEntry<UUID> uuidConfigEntry1 = UuidConfigEntry.of(config1, "example.uuid", "Example UUID", UUID.randomUUID());
+        ConfigEntry<Instant> instantConfigEntry1 = InstantConfigEntry.of(config1, "example.instant", "Example Instant", Instant.parse("2000-01-02T02:00:00.00Z"));
+        ConfigEntry<OffsetDateTime> offsetDateTimeConfigEntry1 = OffsetDateTimeConfigEntry.of(config1, "example.offsetdatetime", "Example OffsetDateTime", OffsetDateTime.parse("2000-01-02T02:00:00+01:00"));
+        ConfigEntry<ZonedDateTime> zonedDateTimeConfigEntry1 = ZonedDateTimeConfigEntry.of(config1, "example.zoneddatetime", "Example ZonedDateTime", ZonedDateTime.parse("2000-01-02T02:00:00+01:00[Europe/Paris]"));
+        ConfigEntry<LocalDate> localDateConfigEntry1 = LocalDateConfigEntry.of(config1, "example.localdate", "Example LocalDate", LocalDate.parse("2000-01-02"));
+        ConfigEntry<LocalTime> localTimeConfigEntry1 = LocalTimeConfigEntry.of(config1, "example.localtime", "Example LocalTime", LocalTime.parse("02:00"));
+        ConfigEntry<LocalDateTime> localDateTimeConfigEntry1 = LocalDateTimeConfigEntry.of(config1, "example.localdatetime", "Example LocalDateTime", LocalDateTime.parse("2000-01-02T02:00:00"));
+        ConfigEntry<Duration> durationConfigEntry1 = DurationConfigEntry.of(config1, "example.duration", "Example Duration", Duration.parse("P3D"));
+        ConfigEntry<Period> periodConfigEntry1 = PeriodConfigEntry.of(config1, "example.period", "Example Period", Period.parse("P3Y"));
+
+        config1.load();
+
+        Assertions.assertEquals(uuidConfigEntry0.getValue(), uuidConfigEntry1.getValue());
+        Assertions.assertEquals(instantConfigEntry0.getValue(), instantConfigEntry1.getValue());
+        Assertions.assertEquals(offsetDateTimeConfigEntry0.getValue(), offsetDateTimeConfigEntry1.getValue());
+        Assertions.assertEquals(zonedDateTimeConfigEntry0.getValue(), zonedDateTimeConfigEntry1.getValue());
+        Assertions.assertEquals(localDateConfigEntry0.getValue(), localDateConfigEntry1.getValue());
+        Assertions.assertEquals(localTimeConfigEntry0.getValue(), localTimeConfigEntry1.getValue());
+        Assertions.assertEquals(localDateTimeConfigEntry0.getValue(), localDateTimeConfigEntry1.getValue());
+        Assertions.assertEquals(durationConfigEntry0.getValue(), durationConfigEntry1.getValue());
+        Assertions.assertEquals(periodConfigEntry0.getValue(), periodConfigEntry1.getValue());
+
+        config1.close();
+    }
+
     /**
      * Test if a config can be created, saved and loaded again.
      * This test requires a valid file path.
@@ -338,6 +385,32 @@ public abstract class ConfigTest {
 
         Assertions.assertArrayEquals(list1.stream().map(list -> list.toArray(new Integer[0])).toArray(Integer[][]::new),
                 listConfigEntry1.getValue().stream().map(list -> list.toArray(new Integer[0])).toArray(Integer[][]::new));
+
+        config1.close();
+    }
+
+    @Test
+    public void testWriteAndLoadSet() throws IOException {
+        Config config0 = this.createTestConfig();
+
+        Set<Double> set0 = new HashSet<>(Arrays.asList(1.0, 2.0));
+        ConfigEntry<Set<Double>> setConfigEntry0 = SetConfigEntry.of(config0, "example.set", "Example Double Set", set0, Type.DOUBLE);
+        config0.load();
+
+        Set<Double> set1 = new HashSet<>(Arrays.asList(3.0, 4.0));
+        setConfigEntry0.setValue(set1);
+
+        config0.write();
+        config0.close();
+
+        Assertions.assertTrue(this.testConfigExists());
+
+        Config config1 = this.createTestConfig();
+        ConfigEntry<Set<Double>> setConfigEntry1 = SetConfigEntry.of(config1, "example.set", "Example Double Set", set0, Type.DOUBLE);
+
+        config1.load();
+
+        Assertions.assertArrayEquals(set1.toArray(new Double[0]), setConfigEntry1.getValue().toArray(new Double[0]));
 
         config1.close();
     }

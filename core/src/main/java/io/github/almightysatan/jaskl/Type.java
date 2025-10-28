@@ -22,13 +22,16 @@ package io.github.almightysatan.jaskl;
 
 import io.github.almightysatan.jaskl.annotation.InvalidAnnotationConfigException;
 import io.github.almightysatan.jaskl.impl.AnnotationManagerImpl;
+import io.github.almightysatan.jaskl.impl.SimpleStringType;
 import io.github.almightysatan.jaskl.impl.SimpleType;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.*;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public interface Type<T> {
 
@@ -238,6 +241,24 @@ public interface Type<T> {
         throw new InvalidTypeException(BigDecimal.class, value.getClass());
     };
 
+    Type<UUID> UUID = SimpleStringType.of(UUID.class, java.util.UUID::fromString);
+
+    Type<Instant> INSTANT = SimpleStringType.of(Instant.class, Instant::parse);
+
+    Type<OffsetDateTime> OFFSET_DATE_TIME = SimpleStringType.of(OffsetDateTime.class, OffsetDateTime::parse);
+
+    Type<ZonedDateTime> ZONED_DATE_TIME = SimpleStringType.of(ZonedDateTime.class, ZonedDateTime::parse);
+
+    Type<LocalDate> LOCAL_DATE = SimpleStringType.of(LocalDate.class, LocalDate::parse);
+
+    Type<LocalTime> LOCAL_TIME = SimpleStringType.of(LocalTime.class, LocalTime::parse);
+
+    Type<LocalDateTime> LOCAL_DATE_TIME = SimpleStringType.of(LocalDateTime.class, LocalDateTime::parse);
+
+    Type<Duration> DURATION = SimpleStringType.of(Duration.class, Duration::parse);
+
+    Type<Period> PERIOD = SimpleStringType.of(Period.class, Period::parse);
+
     @SuppressWarnings("unchecked")
     static <T extends Enum<T>> @NotNull Type<T> enumType(@NotNull Class<T> clazz) {
         Objects.requireNonNull(clazz);
@@ -287,6 +308,27 @@ public interface Type<T> {
                     newList.add(type.toWritable(element, keyPreprocessor));
 
                 return Collections.unmodifiableList(newList);
+            }
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    static <T> @NotNull Type<Set<T>> set(@NotNull Type<T> type) {
+        Objects.requireNonNull(type);
+        return new Type<Set<T>>() {
+            @Override
+            public @NotNull Set<T> toEntryType(@NotNull Object value) throws InvalidTypeException, ValidationException {
+                if (value instanceof Collection) {
+                    Collection<T> collection = (Collection<T>) value;
+                    return Collections.unmodifiableSet(collection.stream().map(type::toEntryType).collect(Collectors.toSet()));
+                }
+
+                throw new InvalidTypeException(List.class, value.getClass());
+            }
+
+            @Override
+            public @NotNull Object toWritable(@NotNull Set<T> value, @NotNull Function<@NotNull Object, @NotNull Object> keyPreprocessor) throws InvalidTypeException {
+                return Collections.unmodifiableSet(value.stream().map(element -> type.toWritable(element, keyPreprocessor)).collect(Collectors.toSet()));
             }
         };
     }
