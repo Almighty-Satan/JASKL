@@ -145,13 +145,13 @@ public interface Resource {
 
             @Override
             public @NotNull Reader getReader() throws IOException {
-                return new InputStreamReader(url.openStream());
+                return new InputStreamReader(url.openStream(), StandardCharsets.UTF_8);
             }
 
             @Override
             public @NotNull Writer getWriter() throws IOException {
                 try {
-                    return new OutputStreamWriter(url.openConnection().getOutputStream());
+                    return new OutputStreamWriter(url.openConnection().getOutputStream(), StandardCharsets.UTF_8);
                 } catch (UnknownServiceException e) {
                     throw new UnsupportedOperationException();
                 }
