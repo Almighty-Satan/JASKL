@@ -23,8 +23,11 @@ package io.github.almightysatan.jaskl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 public interface Config extends AutoCloseable {
@@ -105,4 +108,25 @@ public interface Config extends AutoCloseable {
      * @throws IOException if an I/O exception occurs
      */
     boolean isReadOnly() throws IOException;
+
+    /**
+     * Returns a map of all paths with their {@link ConfigEntry}.
+     *
+     * @return a map of all paths with their {@link ConfigEntry}
+     */
+    @UnmodifiableView @NotNull Map<@NotNull String, @NotNull ConfigEntry<?>> getEntryMap();
+
+    /**
+     * Returns a collection of all paths.
+     *
+     * @return a collection of all paths
+     */
+    @UnmodifiableView @NotNull Collection<@NotNull String> getPaths();
+
+    /**
+     * Returns a collection of all {@link ConfigEntry config entries}.
+     *
+     * @return a collection of all {@link ConfigEntry config entries}
+     */
+    @UnmodifiableView @NotNull Collection<@NotNull ConfigEntry<?>> getEntries();
 }

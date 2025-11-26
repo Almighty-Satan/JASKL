@@ -31,7 +31,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -91,7 +94,7 @@ public class PropertiesConfig extends ConfigImpl {
             return Collections.emptySet();
 
         Properties stripped = new Properties();
-        Set<String> paths = this.getPaths();
+        Collection<String> paths = this.getPaths();
         Set<String> pathsRemoved = new HashSet<>();
         for (Entry<Object, Object> entry : this.config.entrySet()) {
             String key = (String) entry.getKey();

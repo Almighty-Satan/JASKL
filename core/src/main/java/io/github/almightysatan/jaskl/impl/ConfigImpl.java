@@ -23,6 +23,7 @@ package io.github.almightysatan.jaskl.impl;
 import io.github.almightysatan.jaskl.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.io.IOException;
 import java.util.*;
@@ -74,36 +75,24 @@ public abstract class ConfigImpl implements Config {
         return false;
     }
 
-    /**
-     * Returns a map of all paths with their config entries.
-     *
-     * @return a map of all paths with their config entries
-     */
-    public @NotNull Map<String, ConfigEntry<?>> getEntries() {
-        return entries;
+    @Override
+    public @UnmodifiableView @NotNull Map<@NotNull String, @NotNull ConfigEntry<?>> getEntryMap() {
+        return Collections.unmodifiableMap(this.entries);
     }
 
-    /**
-     * Returns a set of all the paths of the config entries.
-     *
-     * @return a set of all the paths of the config entries
-     */
-    public @NotNull Set<String> getPaths() {
-        return this.getEntries().keySet();
+    @Override
+    public @UnmodifiableView @NotNull Collection<@NotNull String> getPaths() {
+        return Collections.unmodifiableCollection(this.getEntryMap().keySet());
     }
 
-    /**
-     * Returns a collection of all config entries.
-     *
-     * @return a collection of all config entries
-     */
-    public @NotNull Collection<ConfigEntry<?>> getValues() {
-        return this.getEntries().values();
+    @Override
+    public @UnmodifiableView @NotNull Collection<@NotNull ConfigEntry<?>> getEntries() {
+        return Collections.unmodifiableCollection(this.getEntryMap().values());
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected @NotNull Collection<WritableConfigEntry<?>> getCastedValues() {
-        return (Collection<WritableConfigEntry<?>>) (Collection) getEntries().values();
+        return (Collection<WritableConfigEntry<?>>) (Collection) getEntryMap().values();
     }
 
     public ExceptionHandler getExceptionHandler() {

@@ -129,7 +129,7 @@ public class MongodbConfig extends ConfigImpl {
 
         Set<String> pathsRemoved = new HashSet<>();
         try {
-            Set<String> paths = this.getPaths();
+            Collection<String> paths = this.getPaths();
             List<WriteModel<? extends Document>> writeModels = new ArrayList<>();
             FindIterable<Document> documents = this.mongoCollection.find();
             for (Document document : documents) {

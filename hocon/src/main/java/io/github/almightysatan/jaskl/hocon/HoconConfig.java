@@ -70,7 +70,7 @@ public class HoconConfig extends ConfigImpl {
     public void reload() throws IllegalStateException {
         if (this.config == null)
             throw new IllegalStateException();
-        for (ConfigEntry<?> uncastedConfigEntry : this.getValues()) {
+        for (ConfigEntry<?> uncastedConfigEntry : this.getEntries()) {
             WritableConfigEntry<?> configEntry = (WritableConfigEntry<?>) uncastedConfigEntry;
             try {
                 Object value = this.config.getValue(configEntry.getPath()).unwrapped();
@@ -139,7 +139,7 @@ public class HoconConfig extends ConfigImpl {
         }
     }
 
-    protected void resolvePathsToStrip(@NotNull String path, @NotNull ConfigObject node, @NotNull Set<String> paths, @NotNull Set<String> toRemove, @NotNull Set<String> valuePathsRemoved) {
+    protected void resolvePathsToStrip(@NotNull String path, @NotNull ConfigObject node, @NotNull Collection<String> paths, @NotNull Set<String> toRemove, @NotNull Set<String> valuePathsRemoved) {
         for (Map.Entry<String, ConfigValue> entry : node.entrySet()) {
             String fieldPath = (path.isEmpty() ? "" : path + ".") + entry.getKey();
             if (entry.getValue() instanceof ConfigObject) {

@@ -164,7 +164,7 @@ public class YamlConfig extends ConfigImpl {
      * @return true if the entry exists
      */
     protected boolean loadValueIfEntryExists(String path, Node node) {
-        WritableConfigEntry<?> entry = (WritableConfigEntry<?>) this.getEntries().get(path);
+        WritableConfigEntry<?> entry = (WritableConfigEntry<?>) this.getEntryMap().get(path);
         if (entry == null)
             return false;
         Object value = CONSTRUCTOR.constructObject(node);
@@ -223,7 +223,7 @@ public class YamlConfig extends ConfigImpl {
             node.setBlockComments(Collections.emptyList()); // Remove comment
     }
 
-    protected boolean stripNodes(@NotNull String path, @NotNull MappingNode node, @NotNull Set<String> paths, @NotNull Set<String> removedPaths) {
+    protected boolean stripNodes(@NotNull String path, @NotNull MappingNode node, @NotNull Collection<String> paths, @NotNull Set<String> removedPaths) {
         boolean changed = false;
         List<NodeTuple> toRemove = new ArrayList<>();
         for (NodeTuple tuple : node.getValue()) {
