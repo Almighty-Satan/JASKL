@@ -31,6 +31,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.*;
 import java.util.*;
 import java.util.function.Function;
 
@@ -298,6 +299,24 @@ public class AnnotationManagerImpl implements AnnotationManager {
             return Type.BIG_DECIMAL;
         if (typeClass == String.class)
             return Type.STRING;
+        if (typeClass == UUID.class)
+            return Type.UUID;
+        if (typeClass == Instant.class)
+            return Type.INSTANT;
+        if (typeClass == OffsetDateTime.class)
+            return Type.OFFSET_DATE_TIME;
+        if (typeClass == ZonedDateTime.class)
+            return Type.ZONED_DATE_TIME;
+        if (typeClass == LocalDate.class)
+            return Type.LOCAL_DATE;
+        if (typeClass == LocalTime.class)
+            return Type.LOCAL_TIME;
+        if (typeClass == LocalDateTime.class)
+            return Type.LOCAL_DATE_TIME;
+        if (typeClass == Duration.class)
+            return Type.DURATION;
+        if (typeClass == Period.class)
+            return Type.PERIOD;
         if (typeClass.isEnum())
             return Type.enumType((Class<? extends Enum>) typeClass);
         if (this.typeCache.containsKey(typeClass) | Arrays.stream(typeClass.getFields()).anyMatch(field -> field.getAnnotation(Entry.class) != null))
