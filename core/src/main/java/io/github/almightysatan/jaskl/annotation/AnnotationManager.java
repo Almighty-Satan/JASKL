@@ -52,10 +52,7 @@ public interface AnnotationManager {
      * @param <T>             the type of the validator
      * @throws IllegalArgumentException if the given class is not an annotation
      */
-    default <A, T> void addValidator(@NotNull Class<A> annotationClass, @NotNull Validator<T> validator) {
-        Objects.requireNonNull(validator);
-        this.addValidatorFunction(annotationClass, annotation -> validator);
-    }
+    <A, T> void addValidator(@NotNull Class<A> annotationClass, @NotNull Validator<T> validator);
 
     /**
      * Registers config entries for the given annotated class and returns an instance of that class.

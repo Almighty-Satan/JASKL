@@ -375,6 +375,12 @@ public interface Validate {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    @interface ListForEach {
+        Class<?>[] value();
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
     @interface MapNotEmpty {
     }
 
@@ -388,5 +394,17 @@ public interface Validate {
     @Target(ElementType.FIELD)
     @interface MapMaxSize {
         int value();
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    @interface MapForEachKey {
+        Class<?>[] value();
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    @interface MapForEachValue {
+        Class<?>[] value();
     }
 }

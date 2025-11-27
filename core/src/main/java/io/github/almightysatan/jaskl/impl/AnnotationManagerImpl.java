@@ -39,7 +39,8 @@ public class AnnotationManagerImpl implements AnnotationManager {
 
     public static final AnnotationManager INSTANCE = new AnnotationManagerImpl();
 
-    private final Map<Class<?>, Function<Object, Validator<Object>>> validators = new HashMap<>();
+    private final Map<Class<?>, Function<Object, Validator<Object>>> validatorFunctions = new HashMap<>();
+    private final Map<Class<?>, Validator<Object>> validators = new HashMap<>();
     private final Map<Class<?>, Type<?>> typeCache = new HashMap<>();
 
     public AnnotationManagerImpl() {
@@ -53,8 +54,29 @@ public class AnnotationManagerImpl implements AnnotationManager {
         Objects.requireNonNull(validatorFunction);
         if (!annotationClass.isAnnotation())
             throw new IllegalArgumentException("Class is not an annotation");
-        this.validators.put(annotationClass, (Function) validatorFunction);
+        if (this.validatorFunctions.containsKey(annotationClass))
+            throw new IllegalArgumentException("Class already registered");
+        this.validatorFunctions.put(annotationClass, (Function) validatorFunction);
         this.typeCache.clear();
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    public <A, T> void addValidator(@NotNull Class<A> annotationClass, @NotNull Validator<T> validator) {
+        this.addValidatorFunction(annotationClass, annotation -> validator);
+        this.validators.put(annotationClass, (Validator) validator);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private <T> @NotNull Validator<T> getValidator(Class<?>... annotationClasses) {
+        Validator[] validators = new Validator[annotationClasses.length];
+        for (int i = 0; i < annotationClasses.length; i++) {
+            Validator<?> validator = this.validators.get(annotationClasses[i]);
+            if (validator == null)
+                throw new InvalidAnnotationConfigException("Unknown validation annotation: " + annotationClasses[i].getName());
+            validators[i] = validator;
+        }
+        return Validator.of(validators);
     }
 
     @Override
@@ -245,7 +267,7 @@ public class AnnotationManagerImpl implements AnnotationManager {
                 }
 
                 for (Annotation a : field.getAnnotations()) {
-                    Function<Object, Validator<Object>> validatorFunction = this.validators.get(a.annotationType());
+                    Function<Object, Validator<Object>> validatorFunction = this.validatorFunctions.get(a.annotationType());
                     if (validatorFunction != null) {
                         Object annotationInstance = field.getAnnotation(a.annotationType());
                         try {
@@ -461,8 +483,11 @@ public class AnnotationManagerImpl implements AnnotationManager {
         this.addValidator(Validate.ListNotEmpty.class, Validator.listNotEmpty());
         this.addValidatorFunction(Validate.ListMinSize.class, annotation -> Validator.listMinSize(annotation.value()));
         this.addValidatorFunction(Validate.ListMaxSize.class, annotation -> Validator.listMaxSize(annotation.value()));
+        this.addValidatorFunction(Validate.ListForEach.class, annotation -> Validator.listForEach(getValidator(annotation.value())));
         this.addValidator(Validate.MapNotEmpty.class, Validator.mapNotEmpty());
         this.addValidatorFunction(Validate.MapMinSize.class, annotation -> Validator.mapMinSize(annotation.value()));
         this.addValidatorFunction(Validate.MapMaxSize.class, annotation -> Validator.mapMaxSize(annotation.value()));
+        this.addValidatorFunction(Validate.MapForEachKey.class, annotation -> Validator.mapForEachKey(getValidator(annotation.value())));
+        this.addValidatorFunction(Validate.MapForEachValue.class, annotation -> Validator.mapForEachValue(getValidator(annotation.value())));
     }
 }

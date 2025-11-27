@@ -30,6 +30,8 @@ import java.util.Map;
 public class ExampleAnnotationMapConfig {
 
     @Entry("test.annotation.map0")
+    @Validate.MapMaxSize(100)
+    @Validate.MapForEachKey(value={Validate.IntegerNotNegative.class})
     public Map<Integer, Map<Integer, String>> test0 = new HashMap<>();
 
     @Entry(value = "test.annotation.map1")
