@@ -434,6 +434,9 @@ public class AnnotationManagerImpl implements AnnotationManager {
         this.addValidatorFunction(Validate.BigDecimalLess.class, annotation -> Validator.bigDecimalLess(new BigDecimal(annotation.value())));
         this.addValidatorFunction(Validate.BigDecimalLessOrEqual.class, annotation -> Validator.bigDecimalLessOrEqual(new BigDecimal(annotation.value())));
         this.addValidator(Validate.StringNotEmpty.class, Validator.STRING_NOT_EMPTY);
+        this.addValidator(Validate.StringAlphabetic.class, Validator.STRING_ALPHABETIC);
+        this.addValidator(Validate.StringNumeric.class, Validator.STRING_NUMERIC);
+        this.addValidator(Validate.StringAlphanumeric.class, Validator.STRING_ALPHANUMERIC);
         this.addValidatorFunction(Validate.StringMinLength.class, annotation -> Validator.stringMinLength(annotation.value()));
         this.addValidatorFunction(Validate.StringMaxLength.class, annotation -> Validator.stringMaxLength(annotation.value()));
         this.addValidator(Validate.ListNotEmpty.class, Validator.listNotEmpty());
