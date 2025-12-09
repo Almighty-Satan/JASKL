@@ -90,6 +90,11 @@ public interface Config extends AutoCloseable {
     }
 
     /**
+     * Resets all entries to their default value.
+     */
+    void reset();
+
+    /**
      * Closes the corresponding data storage location.
      */
     void close();

@@ -66,6 +66,11 @@ public abstract class ConfigImpl implements Config {
     }
 
     @Override
+    public void reset() {
+        this.getEntries().forEach(ConfigEntry::reset);
+    }
+
+    @Override
     public @Nullable String getDescription() {
         return description;
     }

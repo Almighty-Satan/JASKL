@@ -71,6 +71,14 @@ public class WritableConfigEntryImpl<T> extends ConfigEntryImpl<T> implements Wr
         this.modified = false;
     }
 
+    @Override
+    public void reset() {
+        if (this.getDefaultValue().equals(this.value))
+            return;
+        this.value = this.getDefaultValue();
+        this.modified = true;
+    }
+
     private @NotNull T toType(@Nullable Object value) throws InvalidTypeException, ValidationException {
         if (value == null)
             throw new InvalidTypeException(this.getPath());

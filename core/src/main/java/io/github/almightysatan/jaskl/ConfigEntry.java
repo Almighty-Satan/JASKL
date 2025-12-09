@@ -66,6 +66,11 @@ public interface ConfigEntry<T> {
     void setValue(@NotNull T value) throws InvalidTypeException, ValidationException;
 
     /**
+     * Sets the value of this ConfigEntry to the default value.
+     */
+    void reset();
+
+    /**
      * Creates a new config entry.
      *
      * @param config       the config
