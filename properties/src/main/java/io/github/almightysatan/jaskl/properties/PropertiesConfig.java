@@ -26,6 +26,7 @@ import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.entries.ListConfigEntry;
 import io.github.almightysatan.jaskl.entries.MapConfigEntry;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
+import io.github.almightysatan.jaskl.impl.EntryDescriptor;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,7 +78,12 @@ public class PropertiesConfig extends ConfigImpl {
         boolean shouldWrite = false;
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             if (configEntry.isModified()) {
-                this.config.setProperty(configEntry.getPath(), configEntry.getValueToWrite().toString());
+                this.config.setProperty(configEntry.getPath(), configEntry.getValueToWrite(key -> {
+                    // Ignore all comments
+                    if (key instanceof EntryDescriptor)
+                        return ((EntryDescriptor) key).getValue();
+                    return key;
+                }).toString());
                 shouldWrite = true;
             }
         }

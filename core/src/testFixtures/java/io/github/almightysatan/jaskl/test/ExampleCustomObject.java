@@ -20,6 +20,7 @@
 
 package io.github.almightysatan.jaskl.test;
 
+import io.github.almightysatan.jaskl.annotation.Description;
 import io.github.almightysatan.jaskl.annotation.Entry;
 
 import java.util.Objects;
@@ -27,10 +28,12 @@ import java.util.Objects;
 public class ExampleCustomObject {
 
     @Entry("exampleString")
+    @Description("Example string description")
     public String exampleString;
     @Entry("exampleInt")
     public int exampleInt;
     @Entry("exampleEnum")
+    @Description("Example enum description")
     public ExampleEnum exampleEnum;
 
     public ExampleCustomObject() {}

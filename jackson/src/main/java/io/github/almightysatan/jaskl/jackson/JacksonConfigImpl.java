@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.node.*;
 import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.Resource;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
+import io.github.almightysatan.jaskl.impl.EntryDescriptor;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -93,7 +94,12 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
         boolean shouldWrite = false;
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
             if (configEntry.isModified()) {
-                this.putNode(configEntry.getPath(), this.mapper.valueToTree(configEntry.getValueToWrite()));
+                this.putNode(configEntry.getPath(), this.mapper.valueToTree(configEntry.getValueToWrite(key -> {
+                    // Ignore all comments
+                    if (key instanceof EntryDescriptor)
+                        return ((EntryDescriptor) key).getValue();
+                    return key;
+                })));
                 shouldWrite = true;
             }
         }

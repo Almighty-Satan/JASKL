@@ -66,9 +66,10 @@ config.write(); // Save the config
 | List / Set                               | ✅    | ✅     | ✅    | ✅    | ❌          | ✅       |
 | Map                                      | ✅    | ✅     | ✅    | ✅    | ❌          | ✅       |
 | Custom Objects                           | ✅    | ✅     | ✅    | ✅    | ❌          | ✅       |
-| Comments                                 | ✅    | ✅     | ❌    | ❌    | ✅*¹        | ❌       |  
+| Comments                                 | ✅    | ✅²    | ❌    | ❌    | ✅¹         | ❌       |  
 
-*¹ Properties only allows for a single comment at the beginning of the file
+¹ Properties only allows for a single comment at the beginning of the file  
+² Comments on custom objects are ignored
 
 ### Config Entry Validation
 JASKL can automatically validate config entries (e.g. ensure that a number is always greater than zero) and throws a

@@ -86,7 +86,7 @@ public class AnnotationManagerImpl implements AnnotationManager {
         try {
             T instance = configClass.newInstance();
 
-            for (Property property : this.loadProperties(configClass, instance, true, true, Collections.emptySet())) {
+            for (Property property : this.loadProperties(configClass, instance, true, Collections.emptySet())) {
                 WritableConfigEntry<?> entry = new WritableAnnotationConfigEntry<>(property.type, property.path, property.description, property.defaultValue, property.field, instance);
                 entry.register(config);
             }
@@ -184,7 +184,7 @@ public class AnnotationManagerImpl implements AnnotationManager {
         parentCustomClasses.add(typeClass);
 
         try {
-            Property[] properties = this.loadProperties(typeClass, typeClass.newInstance(), false, false, parentCustomClasses);
+            Property[] properties = this.loadProperties(typeClass, typeClass.newInstance(), false, parentCustomClasses);
 
             if (properties.length == 0)
                 throw new InvalidAnnotationConfigException("No annotated fields found");
@@ -220,7 +220,7 @@ public class AnnotationManagerImpl implements AnnotationManager {
                     Map<Object, Object> map = new HashMap<>();
                     for (Property property : properties)
                         try {
-                            map.put(keyPreprocessor.apply(property.path), property.type.toWritable(property.field.get(value), keyPreprocessor));
+                            map.put(keyPreprocessor.apply(new EntryDescriptor(property.path, property.description)), property.type.toWritable(property.field.get(value), keyPreprocessor));
                         } catch (IllegalAccessException e) {
                             throw new RuntimeException(e);
                         }
@@ -235,8 +235,7 @@ public class AnnotationManagerImpl implements AnnotationManager {
         }
     }
 
-    private <T> @NotNull Property @NotNull [] loadProperties(@NotNull Class<T> clazz, @NotNull T instance, boolean loadDescription,
-                                                             boolean loadDefaultValue, @NotNull Set<Class<?>> parentCustomClasses)
+    private <T> @NotNull Property @NotNull [] loadProperties(@NotNull Class<T> clazz, @NotNull T instance, boolean loadDefaultValue, @NotNull Set<Class<?>> parentCustomClasses)
             throws IllegalAccessException, InvalidAnnotationConfigException {
         List<Property> properties = new ArrayList<>();
 
@@ -259,12 +258,9 @@ public class AnnotationManagerImpl implements AnnotationManager {
                 Type<Object> type = (Type<Object>) (typeHintAnnotation != null ? this.resolveType(typeHintAnnotation.value(), parentCustomClasses) : this.resolveType(field, parentCustomClasses));
                 if (type == null)
                     throw new InvalidAnnotationConfigException(String.format("Unknown type for field %s", field.getName()));
-
-                String description = null;
-                if (loadDescription) {
-                    Description descriptionAnnotation = field.getAnnotation(Description.class);
-                    description = descriptionAnnotation != null ? descriptionAnnotation.value() : null;
-                }
+                
+                Description descriptionAnnotation = field.getAnnotation(Description.class);
+                String description = descriptionAnnotation != null ? descriptionAnnotation.value() : null;
 
                 for (Annotation a : field.getAnnotations()) {
                     Function<Object, Validator<Object>> validatorFunction = this.validatorFunctions.get(a.annotationType());

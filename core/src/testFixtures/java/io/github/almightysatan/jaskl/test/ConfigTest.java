@@ -622,6 +622,7 @@ public abstract class ConfigTest {
         ConfigEntry<ExampleCustomObject> entry0 = CustomConfigEntry.of(config0, "example.custom", "Hello World", value, ExampleCustomObject.class);
         ConfigEntry<ExampleNestedCustomObject> entry1 = CustomConfigEntry.of(config0, "example.nestedCustom", "Hello World", nestedValue, ExampleNestedCustomObject.class);
         ConfigEntry<ExampleCustomObject> entry2 = CustomConfigEntry.of(config0, "example.mapper.custom", "Hello World", value, mapper);
+        ListConfigEntry<ExampleCustomObject> entry3 = ListConfigEntry.of(config0, "example.list.custom", "Hello World", Collections.singletonList(value), Type.custom(ExampleCustomObject.class));
 
         config0.load();
         config0.write();
@@ -631,6 +632,7 @@ public abstract class ConfigTest {
         ConfigEntry<ExampleCustomObject> entryLoaded0 = CustomConfigEntry.of(config1, "example.custom", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE));
         ConfigEntry<ExampleNestedCustomObject> entryLoaded1 = CustomConfigEntry.of(config1, "example.nestedCustom", "Hello World", new ExampleNestedCustomObject(new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE)));
         ConfigEntry<ExampleCustomObject> entryLoaded2 = CustomConfigEntry.of(config1, "example.mapper.custom", "Hello World", new ExampleCustomObject("Default1", 6, ExampleEnum.ANOTHER_EXAMPLE), mapper);
+        ListConfigEntry<ExampleCustomObject> entryLoaded3 = ListConfigEntry.of(config1, "example.list.custom", "Hello World", Collections.emptyList(), Type.custom(ExampleCustomObject.class));
 
         Assertions.assertThrows(InvalidAnnotationConfigException.class, () -> CustomConfigEntry.of(config1, "example.nestedCustomInvalid", new ExampleCircularCustomObject(), ExampleCircularCustomObject.class));
 
@@ -640,6 +642,7 @@ public abstract class ConfigTest {
         Assertions.assertEquals(value, entryLoaded0.getValue());
         Assertions.assertEquals(nestedValue, entryLoaded1.getValue());
         Assertions.assertEquals(value, entryLoaded2.getValue());
+        Assertions.assertEquals(Collections.singletonList(value), entryLoaded3.getValue());
     }
 
     @Test
