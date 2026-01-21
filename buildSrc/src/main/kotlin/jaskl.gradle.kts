@@ -23,14 +23,18 @@ repositories {
     gradlePluginPortal()
 }
 
-dependencies {
-    compileOnly("org.jetbrains:annotations:26.0.2")
-    testFixturesCompileOnly("org.jetbrains:annotations:26.0.2")
-    testCompileOnly("org.jetbrains:annotations:26.0.2")
+val libs = extensions.getByType(VersionCatalogsExtension::class.java).named("libs")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
-    testFixturesImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+dependencies {
+    val annotations = libs.findLibrary("annotations").get()
+    compileOnly(annotations)
+    testFixturesCompileOnly(annotations)
+    testCompileOnly(annotations)
+
+    val junit = libs.findLibrary("junit").get()
+    testImplementation(junit)
+    testFixturesImplementation(junit)
+    testRuntimeOnly(libs.findLibrary("junitplatformlauncher").get())
 
     testImplementation(testFixtures(project(":core")))
 }

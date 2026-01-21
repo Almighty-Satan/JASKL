@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     api(project(":core"))
-    implementation("com.typesafe:config:1.4.3")
+    implementation(libs.hocon)
 }

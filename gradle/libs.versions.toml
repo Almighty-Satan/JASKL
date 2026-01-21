@@ -1,0 +1,21 @@
+[versions]
+annotations = "26.0.2"
+junit = "5.14.2"
+jreleaser = "1.22.0"
+
+hocon = "1.4.3"
+jackson = "2.21.0"
+mongodb = "5.6.2"
+snakeyaml = "2.5"
+
+[libraries]
+annotations = { module="org.jetbrains:annotations", version.ref="annotations" }
+junit = { module="org.junit.jupiter:junit-jupiter", version.ref="junit" }
+junitplatformlauncher = { module = "org.junit.platform:junit-platform-launcher" }
+jreleaser = { module="org.jreleaser:org.jreleaser.gradle.plugin", version.ref="jreleaser" }
+
+hocon = { module="com.typesafe:config", version.ref="hocon" }
+jackson-databind = { module="com.fasterxml.jackson.core:jackson-databind", version.ref="jackson" }
+jackson-dataformat-toml = { module="com.fasterxml.jackson.dataformat:jackson-dataformat-toml", version.ref="jackson" }
+mongodb = { module="org.mongodb:mongodb-driver-sync", version.ref="mongodb" }
+snakeyaml = { module="org.yaml:snakeyaml", version.ref="snakeyaml" }
