@@ -21,9 +21,9 @@
 package io.github.almightysatan.jaskl.hocon;
 
 import com.typesafe.config.*;
-import io.github.almightysatan.jaskl.ConfigEntry;
-import io.github.almightysatan.jaskl.ExceptionHandler;
-import io.github.almightysatan.jaskl.Resource;
+import com.typesafe.config.Config;
+import io.github.almightysatan.jaskl.*;
+import io.github.almightysatan.jaskl.impl.ConfigBuilderImpl;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -49,8 +50,8 @@ public class HoconConfig extends ConfigImpl {
     private final Resource resource;
     private Config config;
 
-    private HoconConfig(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
-        super(description, exceptionHandler);
+    private HoconConfig(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler, @Nullable DescriptionFormatter descriptionFormatter) {
+        super(description, exceptionHandler, descriptionFormatter);
         this.resource = Objects.requireNonNull(resource);
     }
 
@@ -95,8 +96,9 @@ public class HoconConfig extends ConfigImpl {
                 if (entryValue instanceof BigDecimal)
                     entryValue = entryValue.toString();
                 ConfigValue value = ConfigValueFactory.fromAnyRef(entryValue);
-                if (configEntry.getDescription() != null)
-                    value = value.withOrigin(value.origin().withComments(this.toCommentList(configEntry.getDescription())));
+                String comment = this.getCommentFormatter().formatEntryDescription(configEntry);
+                if (comment != null)
+                    value = value.withOrigin(value.origin().withComments(this.toCommentList(comment)));
                 config = config.withValue(configEntry.getPath(), value);
             }
         }
@@ -130,7 +132,8 @@ public class HoconConfig extends ConfigImpl {
 
     protected void writeIfNecessary(@NotNull Config config, boolean setDescription) throws IOException {
         if (config != this.config) {
-            ConfigObject root = setDescription ? config.root().withOrigin(this.config.root().origin().withComments(this.toCommentList(this.getDescription()))) : config.root();
+            ConfigObject root = setDescription ? config.root().withOrigin(this.config.root().origin()
+                    .withComments(this.toCommentList(this.getCommentFormatter().formatFileDescription(this)))): config.root();
             String output = root.render(RENDER_OPTIONS);
             try (Writer fileWriter = this.resource.getWriter()) {
                 fileWriter.write(output);
@@ -164,6 +167,40 @@ public class HoconConfig extends ConfigImpl {
         return Arrays.asList(description.split("\n"));
     }
 
+    public interface Builder extends ConfigBuilder.DescriptionConfigBuilder<HoconConfig, Builder> {}
+
+    private static class BuilderImpl extends ConfigBuilderImpl.DescriptionConfigBuilderImpl<HoconConfig, Builder> implements Builder {
+
+        public BuilderImpl(@NotNull Resource resource) {
+            super(resource);
+        }
+
+        public BuilderImpl(@NotNull File file) {
+            super(file);
+        }
+
+        public BuilderImpl(@NotNull URL url) {
+            super(url);
+        }
+
+        @Override
+        public @NotNull HoconConfig build() {
+            return new HoconConfig(this.resource, this.description, this.exceptionHandler, this.descriptionFormatter);
+        }
+    }
+
+    public static @NotNull Builder builder(@NotNull Resource resource) {
+        return new BuilderImpl(resource);
+    }
+
+    public static @NotNull Builder builder(@NotNull File file) {
+        return new BuilderImpl(file);
+    }
+
+    public static @NotNull Builder builder(@NotNull URL url) {
+        return new BuilderImpl(url);
+    }
+
     /**
      * Creates a new {@link HoconConfig} instance.
      *
@@ -174,7 +211,7 @@ public class HoconConfig extends ConfigImpl {
      * @return A new {@link HoconConfig} instance.
      */
     public static io.github.almightysatan.jaskl.Config of(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
-        return new HoconConfig(resource, description, exceptionHandler);
+        return new HoconConfig(resource, description, exceptionHandler, null);
     }
 
     /**

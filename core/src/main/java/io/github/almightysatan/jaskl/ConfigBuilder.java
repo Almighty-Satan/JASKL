@@ -18,39 +18,21 @@
  * USA
  */
 
-package io.github.almightysatan.jaskl.test;
+package io.github.almightysatan.jaskl;
 
-import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.Set;
+public interface ConfigBuilder<T, U> {
+    
+    @NotNull T build();
 
-public class NopConfigImpl extends ConfigImpl {
+    U withExceptionHandler(@Nullable ExceptionHandler exceptionHandler);
+    
+    interface DescriptionConfigBuilder<T, U> extends ConfigBuilder<T, U> {
 
-    public NopConfigImpl() {
-        super(null, null, null);
-    }
-
-    @Override
-    public void load() {
-    }
-
-    @Override
-    public void reload() {
-    }
-
-    @Override
-    public void write() {
-    }
-
-    @Override
-    public @Unmodifiable @NotNull Set<@NotNull String> prune() {
-        return Collections.emptySet();
-    }
-
-    @Override
-    public void close() {
+        U withDescription(@Nullable String description);
+        
+        U withDescriptionFormatter(@Nullable DescriptionFormatter descriptionFormatter);
     }
 }

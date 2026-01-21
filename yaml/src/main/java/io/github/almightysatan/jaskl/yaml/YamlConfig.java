@@ -20,8 +20,11 @@
 
 package io.github.almightysatan.jaskl.yaml;
 
+import io.github.almightysatan.jaskl.ConfigBuilder;
+import io.github.almightysatan.jaskl.DescriptionFormatter;
 import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.Resource;
+import io.github.almightysatan.jaskl.impl.ConfigBuilderImpl;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.EntryDescriptor;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
@@ -45,6 +48,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,11 +64,12 @@ public class YamlConfig extends ConfigImpl {
     private MappingNode root;
 
     private YamlConfig(@NotNull Resource resource, @Nullable String description,
-           @Nullable ExceptionHandler exceptionHandler, @NotNull DumperOptions dumperOptions) {
-        super(description, exceptionHandler);
-        this.dumperOptions = Objects.requireNonNull(dumperOptions);
-        this.representer = new Representer(dumperOptions);
-        this.valueRepresenter = new ValueRepresenter(dumperOptions);
+           @Nullable ExceptionHandler exceptionHandler, @Nullable DescriptionFormatter descriptionFormatter,
+           @Nullable DumperOptions dumperOptions) {
+        super(description, exceptionHandler, descriptionFormatter);
+        this.dumperOptions = dumperOptions != null ? dumperOptions : getDefaultDumperOptions();
+        this.representer = new Representer(this.dumperOptions);
+        this.valueRepresenter = new ValueRepresenter(this.dumperOptions);
         this.resource = Objects.requireNonNull(resource);
     }
 
@@ -99,7 +104,7 @@ public class YamlConfig extends ConfigImpl {
             throw new IllegalStateException();
         this.resource.createIfNotExists();
 
-        setComment(this.root, this.getDescription());
+        setComment(this.root, this.getCommentFormatter().formatFileDescription(this));
 
         boolean shouldWrite = false;
         for (WritableConfigEntry<?> configEntry : this.getCastedValues()) {
@@ -189,7 +194,7 @@ public class YamlConfig extends ConfigImpl {
                         node.getValue().replaceAll(nodeTuple -> {
                             if (nodeTuple != tuple)
                                 return nodeTuple;
-                            return this.newNodeTuple(pathSplit[pathSplit.length - 1], entry.getDescription(), entry.getValueToWrite());
+                            return this.newNodeTuple(pathSplit[pathSplit.length - 1], entry);
                         });
                         return;
                     }
@@ -202,16 +207,16 @@ public class YamlConfig extends ConfigImpl {
                 node.getValue().add(new NodeTuple(this.yaml.represent(pathSplit[i]), newNode));
                 node = newNode;
             } else {
-                node.getValue().add(this.newNodeTuple(pathSplit[pathSplit.length - 1], entry.getDescription(), entry.getValueToWrite()));
+                node.getValue().add(this.newNodeTuple(pathSplit[pathSplit.length - 1], entry));
                 return;
             }
         }
     }
 
-    protected @NotNull NodeTuple newNodeTuple(@NotNull String path, @Nullable String comment, @NotNull Object value) {
+    protected @NotNull NodeTuple newNodeTuple(@NotNull String path, @NotNull WritableConfigEntry<?> entry) {
         Node keyNode = this.yaml.represent(path);
-        setComment(keyNode, comment);
-        Node valueNode = this.valueRepresenter.represent(value);
+        setComment(keyNode, this.getCommentFormatter().formatEntryDescription(entry));
+        Node valueNode = this.valueRepresenter.represent(entry.getValueToWrite());
         return new NodeTuple(keyNode, valueNode);
     }
 
@@ -252,6 +257,50 @@ public class YamlConfig extends ConfigImpl {
         }
         return changed;
     }
+    
+    public interface Builder extends ConfigBuilder.DescriptionConfigBuilder<YamlConfig, Builder> {
+        Builder withDumperOptions(@Nullable DumperOptions dumperOptions);
+    }
+    
+    private static class BuilderImpl extends ConfigBuilderImpl.DescriptionConfigBuilderImpl<YamlConfig, Builder> implements Builder {
+
+        protected DumperOptions dumperOptions;
+
+        public BuilderImpl(@NotNull Resource resource) {
+            super(resource);
+        }
+
+        public BuilderImpl(@NotNull File file) {
+            super(file);
+        }
+
+        public BuilderImpl(@NotNull URL url) {
+            super(url);
+        }
+
+        @Override
+        public @NotNull YamlConfig build() {
+            return new YamlConfig(this.resource, this.description, this.exceptionHandler, this.descriptionFormatter, this.dumperOptions);
+        }
+
+        @Override
+        public Builder withDumperOptions(@Nullable DumperOptions dumperOptions) {
+            this.dumperOptions = dumperOptions;
+            return this;
+        }
+    }
+    
+    public static @NotNull Builder builder(@NotNull Resource resource) {
+        return new BuilderImpl(resource);
+    }
+
+    public static @NotNull Builder builder(@NotNull File file) {
+        return new BuilderImpl(file);
+    }
+
+    public static @NotNull Builder builder(@NotNull URL url) {
+        return new BuilderImpl(url);
+    }
 
     /**
      * Creates a new {@link YamlConfig} instance.
@@ -264,8 +313,8 @@ public class YamlConfig extends ConfigImpl {
      * @return A new {@link YamlConfig} instance.
      */
     public static @NotNull YamlConfig of(@NotNull Resource resource, @Nullable String description,
-             @Nullable ExceptionHandler exceptionHandler, @NotNull DumperOptions dumperOptions) {
-        return new YamlConfig(resource, description, exceptionHandler, dumperOptions);
+             @Nullable ExceptionHandler exceptionHandler, @Nullable DumperOptions dumperOptions) {
+        return new YamlConfig(resource, description, exceptionHandler, null, dumperOptions);
     }
 
     /**
@@ -279,7 +328,7 @@ public class YamlConfig extends ConfigImpl {
      */
     public static @NotNull YamlConfig of(@NotNull Resource resource, @Nullable String description,
              @Nullable ExceptionHandler exceptionHandler) {
-        return of(resource, description, exceptionHandler, getDefaultDumperOptions());
+        return of(resource, description, exceptionHandler, null);
     }
 
     /**

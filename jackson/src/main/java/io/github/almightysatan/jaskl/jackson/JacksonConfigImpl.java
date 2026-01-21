@@ -44,7 +44,7 @@ public abstract class JacksonConfigImpl extends ConfigImpl {
     private ObjectNode root;
 
     protected JacksonConfigImpl(@NotNull ObjectMapper mapper, @NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
-        super(description, exceptionHandler);
+        super(description, exceptionHandler, null);
         mapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true);
         this.mapper = Objects.requireNonNull(mapper);
         this.resource = Objects.requireNonNull(resource);

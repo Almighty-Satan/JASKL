@@ -23,18 +23,55 @@ package io.github.almightysatan.jaskl.toml;
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 import com.fasterxml.jackson.dataformat.toml.TomlWriteFeature;
 import io.github.almightysatan.jaskl.Config;
+import io.github.almightysatan.jaskl.ConfigBuilder;
 import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.Resource;
+import io.github.almightysatan.jaskl.impl.ConfigBuilderImpl;
 import io.github.almightysatan.jaskl.jackson.JacksonConfigImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.net.URL;
 
 public class TomlConfig extends JacksonConfigImpl {
 
     private TomlConfig(@NotNull Resource resource, @Nullable ExceptionHandler exceptionHandler) {
         super(TomlMapper.builder().enable(TomlWriteFeature.FAIL_ON_NULL_WRITE).build(), resource, null, exceptionHandler);
+    }
+
+    public interface Builder extends ConfigBuilder<TomlConfig, Builder> {}
+
+    private static class BuilderImpl extends ConfigBuilderImpl.ResourceConfigBuilderImpl<TomlConfig, Builder> implements Builder {
+
+        public BuilderImpl(@NotNull Resource resource) {
+            super(resource);
+        }
+
+        public BuilderImpl(@NotNull File file) {
+            super(file);
+        }
+
+        public BuilderImpl(@NotNull URL url) {
+            super(url);
+        }
+
+        @Override
+        public @NotNull TomlConfig build() {
+            return new TomlConfig(this.resource, this.exceptionHandler);
+        }
+    }
+
+    public static @NotNull Builder builder(@NotNull Resource resource) {
+        return new BuilderImpl(resource);
+    }
+
+    public static @NotNull Builder builder(@NotNull File file) {
+        return new BuilderImpl(file);
+    }
+
+    public static @NotNull Builder builder(@NotNull URL url) {
+        return new BuilderImpl(url);
     }
 
     /**

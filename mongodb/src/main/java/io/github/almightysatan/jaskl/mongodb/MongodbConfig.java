@@ -26,7 +26,9 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.*;
+import io.github.almightysatan.jaskl.ConfigBuilder;
 import io.github.almightysatan.jaskl.ExceptionHandler;
+import io.github.almightysatan.jaskl.impl.ConfigBuilderImpl;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
 import org.bson.Document;
@@ -49,9 +51,8 @@ public class MongodbConfig extends ConfigImpl {
     private MongoClient mongoClient;
     private MongoCollection<Document> mongoCollection;
 
-
     private MongodbConfig(@NotNull String address, @NotNull String database, @NotNull String collection, @Nullable ExceptionHandler exceptionHandler) {
-        super(null, exceptionHandler);
+        super(null, exceptionHandler, null);
         this.address = Objects.requireNonNull(address);
         this.database = Objects.requireNonNull(database);
         this.collection = Objects.requireNonNull(collection);
@@ -154,6 +155,30 @@ public class MongodbConfig extends ConfigImpl {
             this.mongoClient = null;
             this.mongoCollection = null;
         }
+    }
+
+    public interface Builder extends ConfigBuilder<MongodbConfig, Builder> {}
+
+    private static class BuilderImpl extends ConfigBuilderImpl<MongodbConfig, Builder> implements Builder {
+
+        private final String address;
+        private final String database;
+        private final String collection;
+
+        public BuilderImpl(@NotNull String address, @NotNull String database, @NotNull String collection) {
+            this.address = Objects.requireNonNull(address);
+            this.database = Objects.requireNonNull(database);
+            this.collection = Objects.requireNonNull(collection);
+        }
+
+        @Override
+        public @NotNull MongodbConfig build() {
+            return new MongodbConfig(this.address, this.database, this.collection, this.exceptionHandler);
+        }
+    }
+
+    public static @NotNull Builder builder(@NotNull String address, @NotNull String database, @NotNull String collection) {
+        return new BuilderImpl(address, database, collection);
     }
 
     /**

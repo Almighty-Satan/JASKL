@@ -21,18 +21,55 @@
 package io.github.almightysatan.jaskl.json;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.github.almightysatan.jaskl.ConfigBuilder;
 import io.github.almightysatan.jaskl.ExceptionHandler;
 import io.github.almightysatan.jaskl.Resource;
+import io.github.almightysatan.jaskl.impl.ConfigBuilderImpl;
 import io.github.almightysatan.jaskl.jackson.JacksonConfigImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.net.URL;
 
 public class JsonConfig extends JacksonConfigImpl {
 
     private JsonConfig(@NotNull Resource resource, @Nullable ExceptionHandler exceptionHandler) {
         super(new JsonMapper(), resource, null, exceptionHandler);
+    }
+
+    public interface Builder extends ConfigBuilder<JsonConfig, Builder> {}
+
+    private static class BuilderImpl extends ConfigBuilderImpl.ResourceConfigBuilderImpl<JsonConfig, Builder> implements Builder {
+
+        public BuilderImpl(@NotNull Resource resource) {
+            super(resource);
+        }
+
+        public BuilderImpl(@NotNull File file) {
+            super(file);
+        }
+
+        public BuilderImpl(@NotNull URL url) {
+            super(url);
+        }
+
+        @Override
+        public @NotNull JsonConfig build() {
+            return new JsonConfig(this.resource, this.exceptionHandler);
+        }
+    }
+
+    public static @NotNull Builder builder(@NotNull Resource resource) {
+        return new BuilderImpl(resource);
+    }
+
+    public static @NotNull Builder builder(@NotNull File file) {
+        return new BuilderImpl(file);
+    }
+
+    public static @NotNull Builder builder(@NotNull URL url) {
+        return new BuilderImpl(url);
     }
 
     /**

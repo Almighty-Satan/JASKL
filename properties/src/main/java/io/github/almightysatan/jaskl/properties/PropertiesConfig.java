@@ -20,11 +20,10 @@
 
 package io.github.almightysatan.jaskl.properties;
 
-import io.github.almightysatan.jaskl.Config;
-import io.github.almightysatan.jaskl.ExceptionHandler;
-import io.github.almightysatan.jaskl.Resource;
+import io.github.almightysatan.jaskl.*;
 import io.github.almightysatan.jaskl.entries.ListConfigEntry;
 import io.github.almightysatan.jaskl.entries.MapConfigEntry;
+import io.github.almightysatan.jaskl.impl.ConfigBuilderImpl;
 import io.github.almightysatan.jaskl.impl.ConfigImpl;
 import io.github.almightysatan.jaskl.impl.EntryDescriptor;
 import io.github.almightysatan.jaskl.impl.WritableConfigEntry;
@@ -36,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -44,8 +44,8 @@ public class PropertiesConfig extends ConfigImpl {
     private final Resource resource;
     private Properties config;
 
-    private PropertiesConfig(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
-        super(description, exceptionHandler);
+    private PropertiesConfig(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler, @Nullable DescriptionFormatter descriptionFormatter) {
+        super(description, exceptionHandler, descriptionFormatter);
         this.resource = Objects.requireNonNull(resource);
     }
 
@@ -131,7 +131,7 @@ public class PropertiesConfig extends ConfigImpl {
      */
     private void writeToFile() throws IOException {
         try (Writer writer = this.resource.getWriter()) {
-            this.config.store(writer, this.getDescription());
+            this.config.store(writer, this.getCommentFormatter().formatFileDescription(this));
         }
     }
 
@@ -159,6 +159,40 @@ public class PropertiesConfig extends ConfigImpl {
         }
     }
 
+    public interface Builder extends ConfigBuilder.DescriptionConfigBuilder<PropertiesConfig, Builder> {}
+
+    private static class BuilderImpl extends ConfigBuilderImpl.DescriptionConfigBuilderImpl<PropertiesConfig, Builder> implements Builder {
+
+        public BuilderImpl(@NotNull Resource resource) {
+            super(resource);
+        }
+
+        public BuilderImpl(@NotNull File file) {
+            super(file);
+        }
+
+        public BuilderImpl(@NotNull URL url) {
+            super(url);
+        }
+
+        @Override
+        public @NotNull PropertiesConfig build() {
+            return new PropertiesConfig(this.resource, this.description, this.exceptionHandler, this.descriptionFormatter);
+        }
+    }
+
+    public static @NotNull Builder builder(@NotNull Resource resource) {
+        return new BuilderImpl(resource);
+    }
+
+    public static @NotNull Builder builder(@NotNull File file) {
+        return new BuilderImpl(file);
+    }
+
+    public static @NotNull Builder builder(@NotNull URL url) {
+        return new BuilderImpl(url);
+    }
+
     /**
      * Creates a new {@link PropertiesConfig} instance.
      *
@@ -169,7 +203,7 @@ public class PropertiesConfig extends ConfigImpl {
      * @return A new {@link PropertiesConfig} instance.
      */
     public static Config of(@NotNull Resource resource, @Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
-        return new PropertiesConfig(resource, description, exceptionHandler);
+        return new PropertiesConfig(resource, description, exceptionHandler, null);
     }
 
     /**

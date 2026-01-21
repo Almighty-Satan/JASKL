@@ -40,14 +40,29 @@ public abstract class ConfigImpl implements Config {
             throw new InvalidTypeException(entry.getPath(), exception);
         }
     };
+    
+    public static final DescriptionFormatter DEFAULT_COMMENT_FORMATTER = new DescriptionFormatter() {
+
+        @Override
+        public @Nullable String formatFileDescription(Config config) {
+            return config.getDescription();
+        }
+
+        @Override
+        public @Nullable <T> String formatEntryDescription(ConfigEntry<T> entry) {
+            return entry.getDescription();
+        }
+    };
 
     private final String description;
     private final Map<String, ConfigEntry<?>> entries = new HashMap<>();
     private final ExceptionHandler exceptionHandler;
+    private final DescriptionFormatter descriptionFormatter;
 
-    public ConfigImpl(@Nullable String description, @Nullable ExceptionHandler exceptionHandler) {
+    public ConfigImpl(@Nullable String description, @Nullable ExceptionHandler exceptionHandler, @Nullable DescriptionFormatter descriptionFormatter) {
         this.description = description;
         this.exceptionHandler = exceptionHandler != null ? exceptionHandler : DEFAULT_EXCEPTION_HANDLER;
+        this.descriptionFormatter = descriptionFormatter != null ? descriptionFormatter : DEFAULT_COMMENT_FORMATTER;
     }
 
     public void registerEntry(@NotNull ConfigEntry<?> entry) {
@@ -100,7 +115,11 @@ public abstract class ConfigImpl implements Config {
         return (Collection<WritableConfigEntry<?>>) (Collection) getEntryMap().values();
     }
 
-    public ExceptionHandler getExceptionHandler() {
-        return exceptionHandler;
+    public @NotNull ExceptionHandler getExceptionHandler() {
+        return this.exceptionHandler;
+    }
+
+    public @NotNull DescriptionFormatter getCommentFormatter() {
+        return this.descriptionFormatter;
     }
 }
