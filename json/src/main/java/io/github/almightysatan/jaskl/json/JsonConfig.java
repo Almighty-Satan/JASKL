@@ -38,7 +38,11 @@ public class JsonConfig extends JacksonConfigImpl {
         super(new JsonMapper(), resource, null, exceptionHandler);
     }
 
-    public interface Builder extends ConfigBuilder<JsonConfig, Builder> {}
+    /**
+     * A builder that builds a {@link JsonConfig}.
+     */
+    public interface Builder extends ConfigBuilder<JsonConfig, Builder> {
+    }
 
     private static class BuilderImpl extends ConfigBuilderImpl.ResourceConfigBuilderImpl<JsonConfig, Builder> implements Builder {
 
@@ -60,14 +64,35 @@ public class JsonConfig extends JacksonConfigImpl {
         }
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param resource A {@link Resource} containing a json configuration. The {@link JsonConfig} will create the
+     *                 {@link Resource} automatically if it does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull Resource resource) {
         return new BuilderImpl(resource);
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param file A {@link File} containing a json configuration. The {@link JsonConfig} will create the file
+     *             automatically if it does not already exist.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull File file) {
         return new BuilderImpl(file);
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param url A {@link URL} containing a json configuration. The {@link JsonConfig} will create the file
+     *            automatically if it does not already exist.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull URL url) {
         return new BuilderImpl(url);
     }

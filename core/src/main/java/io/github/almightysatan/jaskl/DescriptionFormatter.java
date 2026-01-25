@@ -20,11 +20,30 @@
 
 package io.github.almightysatan.jaskl;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Formats comments of {@link Config Configs} and {@link ConfigEntry}
+ */
 public interface DescriptionFormatter {
 
-    @Nullable String formatFileDescription(Config config);
-    
-    <T> @Nullable String formatEntryDescription(ConfigEntry<T> entry);
+    /**
+     * Returns the formatted description of the given {@link Config}.
+     * If {@code null} is returned no comment will be written.
+     *
+     * @param config The config
+     * @return The formatted description
+     */
+    @Nullable String formatFileDescription(@NotNull Config config);
+
+    /**
+     * Returns the formatted description of the given {@link ConfigEntry}.
+     * If {@code null} is returned no comment will be written.
+     *
+     * @param entry The entry
+     * @param <T>   The type of the config entry
+     * @return The formatted description
+     */
+    <T> @Nullable String formatEntryDescription(@NotNull ConfigEntry<T> entry);
 }

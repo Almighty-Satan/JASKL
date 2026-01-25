@@ -133,7 +133,7 @@ public class HoconConfig extends ConfigImpl {
     protected void writeIfNecessary(@NotNull Config config, boolean setDescription) throws IOException {
         if (config != this.config) {
             ConfigObject root = setDescription ? config.root().withOrigin(this.config.root().origin()
-                    .withComments(this.toCommentList(this.getCommentFormatter().formatFileDescription(this)))): config.root();
+                    .withComments(this.toCommentList(this.getCommentFormatter().formatFileDescription(this)))) : config.root();
             String output = root.render(RENDER_OPTIONS);
             try (Writer fileWriter = this.resource.getWriter()) {
                 fileWriter.write(output);
@@ -167,7 +167,11 @@ public class HoconConfig extends ConfigImpl {
         return Arrays.asList(description.split("\n"));
     }
 
-    public interface Builder extends ConfigBuilder.DescriptionConfigBuilder<HoconConfig, Builder> {}
+    /**
+     * A {@link ConfigBuilder} that builds a {@link HoconConfig}.
+     */
+    public interface Builder extends ConfigBuilder.DescriptionConfigBuilder<HoconConfig, Builder> {
+    }
 
     private static class BuilderImpl extends ConfigBuilderImpl.DescriptionConfigBuilderImpl<HoconConfig, Builder> implements Builder {
 
@@ -189,14 +193,35 @@ public class HoconConfig extends ConfigImpl {
         }
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param resource A {@link Resource} containing a hocon configuration. The {@link HoconConfig} will create the
+     *                 {@link Resource} automatically if it does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull Resource resource) {
         return new BuilderImpl(resource);
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param file A {@link File} containing a hocon configuration. The {@link HoconConfig} will create the file
+     *             automatically if it does not already exist.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull File file) {
         return new BuilderImpl(file);
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param url A {@link URL} containing a hocon configuration. The {@link HoconConfig} will create the file
+     *            automatically if it does not already exist.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull URL url) {
         return new BuilderImpl(url);
     }

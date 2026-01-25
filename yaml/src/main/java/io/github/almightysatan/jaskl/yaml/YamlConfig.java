@@ -64,8 +64,8 @@ public class YamlConfig extends ConfigImpl {
     private MappingNode root;
 
     private YamlConfig(@NotNull Resource resource, @Nullable String description,
-           @Nullable ExceptionHandler exceptionHandler, @Nullable DescriptionFormatter descriptionFormatter,
-           @Nullable DumperOptions dumperOptions) {
+                       @Nullable ExceptionHandler exceptionHandler, @Nullable DescriptionFormatter descriptionFormatter,
+                       @Nullable DumperOptions dumperOptions) {
         super(description, exceptionHandler, descriptionFormatter);
         this.dumperOptions = dumperOptions != null ? dumperOptions : getDefaultDumperOptions();
         this.representer = new Representer(this.dumperOptions);
@@ -257,11 +257,14 @@ public class YamlConfig extends ConfigImpl {
         }
         return changed;
     }
-    
+
+    /**
+     * A {@link ConfigBuilder} that builds a {@link YamlConfig}.
+     */
     public interface Builder extends ConfigBuilder.DescriptionConfigBuilder<YamlConfig, Builder> {
         Builder withDumperOptions(@Nullable DumperOptions dumperOptions);
     }
-    
+
     private static class BuilderImpl extends ConfigBuilderImpl.DescriptionConfigBuilderImpl<YamlConfig, Builder> implements Builder {
 
         protected DumperOptions dumperOptions;
@@ -289,15 +292,36 @@ public class YamlConfig extends ConfigImpl {
             return this;
         }
     }
-    
+
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param resource A {@link Resource} containing a yaml configuration. The {@link YamlConfig} will create the
+     *                 {@link Resource} automatically if it does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull Resource resource) {
         return new BuilderImpl(resource);
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param file A {@link File} containing a yaml configuration. The {@link YamlConfig} will create the file
+     *             automatically if it does not already exist.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull File file) {
         return new BuilderImpl(file);
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param url A {@link URL} containing a yaml configuration. The {@link YamlConfig} will create the file
+     *            automatically if it does not already exist.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull URL url) {
         return new BuilderImpl(url);
     }
@@ -313,7 +337,7 @@ public class YamlConfig extends ConfigImpl {
      * @return A new {@link YamlConfig} instance.
      */
     public static @NotNull YamlConfig of(@NotNull Resource resource, @Nullable String description,
-             @Nullable ExceptionHandler exceptionHandler, @Nullable DumperOptions dumperOptions) {
+                                         @Nullable ExceptionHandler exceptionHandler, @Nullable DumperOptions dumperOptions) {
         return new YamlConfig(resource, description, exceptionHandler, null, dumperOptions);
     }
 
@@ -327,7 +351,7 @@ public class YamlConfig extends ConfigImpl {
      * @return A new {@link YamlConfig} instance.
      */
     public static @NotNull YamlConfig of(@NotNull Resource resource, @Nullable String description,
-             @Nullable ExceptionHandler exceptionHandler) {
+                                         @Nullable ExceptionHandler exceptionHandler) {
         return of(resource, description, exceptionHandler, null);
     }
 

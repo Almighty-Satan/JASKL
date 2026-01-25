@@ -157,7 +157,11 @@ public class MongodbConfig extends ConfigImpl {
         }
     }
 
-    public interface Builder extends ConfigBuilder<MongodbConfig, Builder> {}
+    /**
+     * A {@link ConfigBuilder} that builds a {@link MongodbConfig}.
+     */
+    public interface Builder extends ConfigBuilder<MongodbConfig, Builder> {
+    }
 
     private static class BuilderImpl extends ConfigBuilderImpl<MongodbConfig, Builder> implements Builder {
 
@@ -177,6 +181,14 @@ public class MongodbConfig extends ConfigImpl {
         }
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param address    The address of the database. Example: {@code username:password@localhost:27017}
+     * @param database   The name of the database
+     * @param collection The name of the collection
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull String address, @NotNull String database, @NotNull String collection) {
         return new BuilderImpl(address, database, collection);
     }
@@ -184,9 +196,9 @@ public class MongodbConfig extends ConfigImpl {
     /**
      * Creates a new {@link MongodbConfig} instance.
      *
-     * @param address    The address of the database. Example: {@code username:password@localhost:27017}
-     * @param database   The name of the database
-     * @param collection The name of the collection
+     * @param address          The address of the database. Example: {@code username:password@localhost:27017}
+     * @param database         The name of the database
+     * @param collection       The name of the collection
      * @param exceptionHandler The {@link ExceptionHandler}
      * @return A new {@link MongodbConfig} instance
      */

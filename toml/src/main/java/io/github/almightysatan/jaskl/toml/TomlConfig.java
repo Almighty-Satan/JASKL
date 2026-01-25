@@ -40,7 +40,11 @@ public class TomlConfig extends JacksonConfigImpl {
         super(TomlMapper.builder().enable(TomlWriteFeature.FAIL_ON_NULL_WRITE).build(), resource, null, exceptionHandler);
     }
 
-    public interface Builder extends ConfigBuilder<TomlConfig, Builder> {}
+    /**
+     * A {@link ConfigBuilder} that builds a {@link TomlConfig}.
+     */
+    public interface Builder extends ConfigBuilder<TomlConfig, Builder> {
+    }
 
     private static class BuilderImpl extends ConfigBuilderImpl.ResourceConfigBuilderImpl<TomlConfig, Builder> implements Builder {
 
@@ -62,14 +66,35 @@ public class TomlConfig extends JacksonConfigImpl {
         }
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param resource A {@link Resource} containing a toml configuration. The {@link TomlConfig} will create the
+     *                 {@link Resource} automatically if it does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull Resource resource) {
         return new BuilderImpl(resource);
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param file A {@link File} containing a toml configuration. The {@link TomlConfig} will create the file
+     *             automatically if it does not already exist.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull File file) {
         return new BuilderImpl(file);
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param url A {@link URL} containing a toml configuration. The {@link TomlConfig} will create the file
+     *            automatically if it does not already exist.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull URL url) {
         return new BuilderImpl(url);
     }

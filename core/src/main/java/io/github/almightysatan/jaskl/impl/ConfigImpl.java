@@ -44,12 +44,12 @@ public abstract class ConfigImpl implements Config {
     public static final DescriptionFormatter DEFAULT_COMMENT_FORMATTER = new DescriptionFormatter() {
 
         @Override
-        public @Nullable String formatFileDescription(Config config) {
+        public @Nullable String formatFileDescription(@NotNull Config config) {
             return config.getDescription();
         }
 
         @Override
-        public @Nullable <T> String formatEntryDescription(ConfigEntry<T> entry) {
+        public @Nullable <T> String formatEntryDescription(@NotNull ConfigEntry<T> entry) {
             return entry.getDescription();
         }
     };

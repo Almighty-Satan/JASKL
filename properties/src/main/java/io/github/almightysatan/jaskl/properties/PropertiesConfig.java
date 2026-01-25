@@ -159,7 +159,11 @@ public class PropertiesConfig extends ConfigImpl {
         }
     }
 
-    public interface Builder extends ConfigBuilder.DescriptionConfigBuilder<PropertiesConfig, Builder> {}
+    /**
+     * A {@link ConfigBuilder} that builds a {@link PropertiesConfig}.
+     */
+    public interface Builder extends ConfigBuilder.DescriptionConfigBuilder<PropertiesConfig, Builder> {
+    }
 
     private static class BuilderImpl extends ConfigBuilderImpl.DescriptionConfigBuilderImpl<PropertiesConfig, Builder> implements Builder {
 
@@ -181,14 +185,35 @@ public class PropertiesConfig extends ConfigImpl {
         }
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param resource A {@link Resource} containing a properties configuration. The {@link PropertiesConfig} will create the
+     *                 {@link Resource} automatically if it does not already exist and {@link #isReadOnly()} is {@code false}.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull Resource resource) {
         return new BuilderImpl(resource);
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param file A {@link File} containing a properties configuration. The {@link PropertiesConfig} will create the file
+     *             automatically if it does not already exist.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull File file) {
         return new BuilderImpl(file);
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @param url A {@link URL} containing a properties configuration. The {@link PropertiesConfig} will create the file
+     *            automatically if it does not already exist.
+     * @return A new builder
+     */
     public static @NotNull Builder builder(@NotNull URL url) {
         return new BuilderImpl(url);
     }

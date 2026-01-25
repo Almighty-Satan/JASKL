@@ -37,7 +37,7 @@ public abstract class ConfigBuilderImpl<T, U> implements ConfigBuilder<T, U> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public U withExceptionHandler(@Nullable ExceptionHandler exceptionHandler) {
+    public @NotNull U withExceptionHandler(@Nullable ExceptionHandler exceptionHandler) {
         this.exceptionHandler = exceptionHandler;
         return (U) this;
     }
@@ -79,14 +79,14 @@ public abstract class ConfigBuilderImpl<T, U> implements ConfigBuilder<T, U> {
 
         @SuppressWarnings("unchecked")
         @Override
-        public U withDescription(@Nullable String description) {
+        public @NotNull U withDescription(@Nullable String description) {
             this.description = description;
             return (U) this;
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public U withDescriptionFormatter(@Nullable DescriptionFormatter descriptionFormatter) {
+        public @NotNull U withDescriptionFormatter(@Nullable DescriptionFormatter descriptionFormatter) {
             this.descriptionFormatter = descriptionFormatter;
             return (U) this;
         }
