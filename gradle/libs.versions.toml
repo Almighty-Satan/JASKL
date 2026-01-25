@@ -3,7 +3,7 @@ annotations = "26.0.2"
 junit = "5.14.2"
 jreleaser = "1.22.0"
 
-hocon = "1.4.3"
+hocon = "1.4.5"
 jackson = "2.21.0"
 mongodb = "5.6.2"
 snakeyaml = "2.5"
