@@ -4,7 +4,7 @@ junit = "5.14.2"
 jreleaser = "1.25.0"
 
 hocon = "1.4.9"
-jackson = "2.21.1"
+jackson = "2.22.0"
 mongodb = "5.9.2"
 snakeyaml = "2.6"
 
