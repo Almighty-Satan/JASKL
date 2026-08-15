@@ -1,6 +1,6 @@
 [versions]
 annotations = "26.1.0"
-junit = "5.14.2"
+junit = "5.14.4"
 jreleaser = "1.25.0"
 
 hocon = "1.4.9"
