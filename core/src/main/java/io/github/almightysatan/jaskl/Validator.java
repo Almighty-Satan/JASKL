@@ -64,13 +64,13 @@ public interface Validator<T> {
 
     Validator<Double> DOUBLE_NEGATIVE = value -> { if (value >= 0) throw new ValidationException("should be negative"); };
 
-    static @NotNull Validator<Double> doubleGreater(double other) { return value -> { if (value > other) throw new ValidationException("should be greater than " + other); }; }
+    static @NotNull Validator<Double> doubleGreater(double other) { return value -> { if (value <= other) throw new ValidationException("should be greater than " + other); }; }
 
-    static @NotNull Validator<Double> doubleGreaterOrEqual(double other) { return value -> { if (value >= other) throw new ValidationException("should be greater than or equal to " + other); }; }
+    static @NotNull Validator<Double> doubleGreaterOrEqual(double other) { return value -> { if (value < other) throw new ValidationException("should be greater than or equal to " + other); }; }
 
-    static @NotNull Validator<Double> doubleLess(double other) { return value -> { if (value < other) throw new ValidationException("should be less than " + other); }; }
+    static @NotNull Validator<Double> doubleLess(double other) { return value -> { if (value >= other) throw new ValidationException("should be less than " + other); }; }
 
-    static @NotNull Validator<Double> doubleLessOrEqual(double other) { return value -> { if (value <= other) throw new ValidationException("should be less than or equal to " + other); }; }
+    static @NotNull Validator<Double> doubleLessOrEqual(double other) { return value -> { if (value > other) throw new ValidationException("should be less than or equal to " + other); }; }
 
     Validator<Float> FLOAT_NOT_ZERO = value -> { if (value == 0) throw new ValidationException("should not be 0"); };
 
@@ -82,13 +82,13 @@ public interface Validator<T> {
 
     Validator<Float> FLOAT_NEGATIVE = value -> { if (value >= 0) throw new ValidationException("should be negative"); };
 
-    static @NotNull Validator<Float> floatGreater(float other) { return value -> { if (value > other) throw new ValidationException("should be greater than " + other); }; }
+    static @NotNull Validator<Float> floatGreater(float other) { return value -> { if (value <= other) throw new ValidationException("should be greater than " + other); }; }
 
-    static @NotNull Validator<Float> floatGreaterOrEqual(float other) { return value -> { if (value >= other) throw new ValidationException("should be greater than or equal to " + other); }; }
+    static @NotNull Validator<Float> floatGreaterOrEqual(float other) { return value -> { if (value < other) throw new ValidationException("should be greater than or equal to " + other); }; }
 
-    static @NotNull Validator<Float> floatLess(float other) { return value -> { if (value < other) throw new ValidationException("should be less than " + other); }; }
+    static @NotNull Validator<Float> floatLess(float other) { return value -> { if (value >= other) throw new ValidationException("should be less than " + other); }; }
 
-    static @NotNull Validator<Float> floatLessOrEqual(float other) { return value -> { if (value <= other) throw new ValidationException("should be less than or equal to " + other); }; }
+    static @NotNull Validator<Float> floatLessOrEqual(float other) { return value -> { if (value > other) throw new ValidationException("should be less than or equal to " + other); }; }
 
     Validator<Integer> INTEGER_NOT_ZERO = value -> { if (value == 0) throw new ValidationException("should not be 0"); };
 
@@ -100,13 +100,13 @@ public interface Validator<T> {
 
     Validator<Integer> INTEGER_NEGATIVE = value -> { if (value >= 0) throw new ValidationException("should be negative"); };
 
-    static @NotNull Validator<Integer> integerGreater(int other) { return value -> { if (value > other) throw new ValidationException("should be greater than " + other); }; }
+    static @NotNull Validator<Integer> integerGreater(int other) { return value -> { if (value <= other) throw new ValidationException("should be greater than " + other); }; }
 
-    static @NotNull Validator<Integer> integerGreaterOrEqual(int other) { return value -> { if (value >= other) throw new ValidationException("should be greater than or equal to " + other); }; }
+    static @NotNull Validator<Integer> integerGreaterOrEqual(int other) { return value -> { if (value < other) throw new ValidationException("should be greater than or equal to " + other); }; }
 
-    static @NotNull Validator<Integer> integerLess(int other) { return value -> { if (value < other) throw new ValidationException("should be less than " + other); }; }
+    static @NotNull Validator<Integer> integerLess(int other) { return value -> { if (value >= other) throw new ValidationException("should be less than " + other); }; }
 
-    static @NotNull Validator<Integer> integerLessOrEqual(int other) { return value -> { if (value <= other) throw new ValidationException("should be less than or equal to " + other); }; }
+    static @NotNull Validator<Integer> integerLessOrEqual(int other) { return value -> { if (value > other) throw new ValidationException("should be less than or equal to " + other); }; }
 
     Validator<Long> LONG_NOT_ZERO = value -> { if (value == 0) throw new ValidationException("should not be 0"); };
 
@@ -118,13 +118,13 @@ public interface Validator<T> {
 
     Validator<Long> LONG_NEGATIVE = value -> { if (value >= 0) throw new ValidationException("should be negative"); };
 
-    static @NotNull Validator<Long> longGreater(long other) { return value -> { if (value > other) throw new ValidationException("should be greater than " + other); }; }
+    static @NotNull Validator<Long> longGreater(long other) { return value -> { if (value <= other) throw new ValidationException("should be greater than " + other); }; }
 
-    static @NotNull Validator<Long> longGreaterOrEqual(long other) { return value -> { if (value >= other) throw new ValidationException("should be greater than or equal to " + other); }; }
+    static @NotNull Validator<Long> longGreaterOrEqual(long other) { return value -> { if (value < other) throw new ValidationException("should be greater than or equal to " + other); }; }
 
-    static @NotNull Validator<Long> longLess(long other) { return value -> { if (value < other) throw new ValidationException("should be less than " + other); }; }
+    static @NotNull Validator<Long> longLess(long other) { return value -> { if (value >= other) throw new ValidationException("should be less than " + other); }; }
 
-    static @NotNull Validator<Long> longLessOrEqual(long other) { return value -> { if (value <= other) throw new ValidationException("should be less than or equal to " + other); }; }
+    static @NotNull Validator<Long> longLessOrEqual(long other) { return value -> { if (value > other) throw new ValidationException("should be less than or equal to " + other); }; }
 
     Validator<BigInteger> BIG_INTEGER_NOT_ZERO = value -> { if (value.signum() == 0) throw new ValidationException("should not be 0"); };
 
