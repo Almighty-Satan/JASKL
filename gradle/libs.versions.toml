@@ -1,7 +1,7 @@
 [versions]
 annotations = "26.0.2-1"
 junit = "5.14.2"
-jreleaser = "1.22.0"
+jreleaser = "1.23.0"
 
 hocon = "1.4.5"
 jackson = "2.21.0"
