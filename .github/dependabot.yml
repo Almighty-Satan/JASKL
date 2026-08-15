@@ -7,3 +7,4 @@ updates:
     ignore:
       - dependency-name: "org.junit.jupiter:junit-jupiter"
         versions: [ ">=6.0.0" ]
+      - dependency-name: "gradle-wrapper"
