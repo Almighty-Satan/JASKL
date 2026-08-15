@@ -1,5 +1,5 @@
 [versions]
-annotations = "26.0.2-1"
+annotations = "26.1.0"
 junit = "5.14.2"
 jreleaser = "1.23.0"
 
