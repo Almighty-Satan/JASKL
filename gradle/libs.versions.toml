@@ -6,7 +6,7 @@ jreleaser = "1.25.0"
 hocon = "1.4.9"
 jackson = "2.22.0"
 mongodb = "5.9.2"
-snakeyaml = "2.6"
+snakeyaml = "2.7"
 
 [libraries]
 annotations = { module="org.jetbrains:annotations", version.ref="annotations" }
